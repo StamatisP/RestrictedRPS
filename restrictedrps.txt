@@ -1,0 +1,41 @@
+"restrictedrps"
+{
+	"base"		"base"
+	"title"		"Restricted Rock Paper Scissors"
+	"maps"		"^rps_"
+	"menusystem"	"1"
+	"workshopid"	"155"
+
+	"settings"
+	{
+		1
+		{
+			"name"		"rps_maxtimeblah"
+			"text"		"Max Time"
+			"help"		"Max time for the round"
+			"type"		"Numeric"
+			"default"	"20"
+		}
+
+
+		2
+		{
+			"name"		"rps_interestrateblah"
+			"text"		"Changes the interest rate."
+			"help"		"What I just said. Changes the interest rate."
+			"type"		"Numeric"
+			"default"	"0.015"
+		}
+
+		3
+		{
+			"name"		"rps_interestrepeatblah"
+			"text"		"Changes how often interest is done."
+			"help"		"Changes how often interest is done."
+			"type"		"Numeric"
+			"default"	"75"
+		}
+
+	}
+
+}

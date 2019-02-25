@@ -1,0 +1,235 @@
+AddCSLuaFile("cl_init.lua")
+AddCSLuaFile("shared.lua")
+
+include("shared.lua")
+
+function ENT:Initialize()
+
+	self:SetModel("models/props_spytech/work_table001.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_NONE)
+	self:SetSolid(SOLID_VPHYSICS)
+	self:SetUseType(SIMPLE_USE)
+	self:SetTableStarted(false)
+
+	local phys = self:GetPhysicsObject()
+
+	phys:EnableMotion(false)
+
+	if phys:IsValid() then
+		phys:Wake()
+	end
+end	
+
+ENT.playersTable = {}
+ENT.players = {}
+ENT.player1 = nil
+ENT.player2 = nil
+
+local data = {
+	Rock = {"Scissors"};
+	Paper = {"Rock"};
+	Scissors = {"Paper"};
+}
+
+function ENT:CheckWins(unit, unit2)
+	for _, v in pairs(data[unit]) do
+		if v == unit2 then
+			return true
+		end
+	end
+	return false
+end
+
+function ENT:TableStart()
+	//print(self, type(self))
+	if self:GetTableStarted() then return end
+	print("table start!")
+	self:SetTableStarted(true)
+	self.player1:SetNWBool("PlayingTable", true)
+	self.player2:SetNWBool("PlayingTable", true)
+	self:CheckPhase()
+end	
+
+--[[-------------------------------------------------------------------------
+TableStatus list
+0 - Not active
+1 - Check phase
+2 - Set phase
+3 - Open phase
+---------------------------------------------------------------------------]]
+
+function ENT:CheckTableStatus()
+	if !self:GetTableStarted() then return end
+	return self:GetTableStatus()
+end
+
+function ENT:CheckPhase()
+	if !self:GetTableStarted() then return end
+	//players must select their card, do a net send/broadcast or something
+	net.Start("PlayerTableCheckGUIEnable")
+	net.Send(self.playersTable)
+end
+
+ENT.player1Name = nil
+ENT.player1Ready = nil
+ENT.player2Name = nil
+ENT.player2Ready = nil
+
+// https://i.imgur.com/weQFbLT.png
+net.Receive("ArePlayersReady", function(len, ply)
+	if !ply:GetNWBool("TableView") then return end
+	local ent = net.ReadEntity()
+	ent:PlayerReadyCheck()
+end)
+
+function ENT:PlayerReadyCheck()
+
+	print("player ready check")
+	if (self.player1Name == nil) then
+		self.player1Name = net.ReadString()
+		self.player1Ready = net.ReadBool()
+	elseif (self.player2Name == nil) then
+		self.player2Name = net.ReadString()
+		self.player2Ready = net.ReadBool()
+	end
+	
+	if self.player1Ready && self.player2Ready then
+		self:SetPhase()
+	end
+
+end
+
+function ENT:SetPhase()
+	if !self:GetTableStarted() then return end
+	//card is placed down on table upside down
+	// you could bet here i guess, but thats for later
+	self:OpenPhase()
+end
+
+function ENT:OpenPhase()
+	if !self:GetTableStarted() then return end
+	//cards are revealed, winner is decided
+	local player1Choice = player1:GetInfo("rps_selection")
+	local player2Choice = player2:GetInfo("rps_selection")
+
+	if player1Choice == "Rock" then self:GetPlayer1():inventoryTakeItem("rockcards", 1)
+	elseif player1Choice == "Paper" then self:GetPlayer1():inventoryTakeItem("papercards", 1)
+	elseif player1Choice == "Scissors" then self:GetPlayer1():inventoryTakeItem("scissorscards", 1)
+	else print("player1choice is not rock, paper, or scissors... " .. player1Choice)
+	end
+	//wheres my fucking switch statement, lua
+	if player2Choice == "Rock" then self:GetPlayer2():inventoryTakeItem("rockcards", 1)
+	elseif player2Choice == "Paper" then self:GetPlayer2():inventoryTakeItem("papercards", 1)
+	elseif player2Choice == "Scissors" then self:GetPlayer2():inventoryTakeItem("scissorscards", 1)
+	else print("player2choice is not rock, paper, or scissors... " .. player2Choice)
+	end
+	
+	if player1Choice == player2Choice then
+		print("this ends in a tie.")
+	else
+		if (self:CheckWins(player1Choice, player2Choice)) then
+			// for v in pairs(data[player1choice]) do
+			// if v == player2choice then return true. at the end, return false
+			// player 1 wins
+			print(player1Choice .. " beats " .. player2Choice .. "!")
+			print(self.player1:GetName() .. " beats " .. self.player2:GetName() .. "!")
+		elseif (self:CheckWins(player2Choice, player1Choice)) then
+			// player 2 wins
+			print(player2Choice .. " beats " .. player1Choice .. "!")
+			print(self.player2:GetName() .. " beats " .. self.player1:GetName() .. "!")
+		elseif (player1Choice == "Broken" || player2Choice == "Broken") then
+			// choice broke
+			print(player1Choice .. " or " .. player2Choice .. " is broken")
+		end
+	end
+	self:SetTableStarted(false)
+	self:GetPlayer1():SetNWBool("TableView", false)
+	self:GetPlayer2():SetNWBool("TableView", false)
+	self:SetPlayer1(nil)
+	self:SetPlayer2(nil)
+	table.Empty(players)
+	table.Empty(playersTable)
+	self.player1 = nil
+	self.player2 = nil
+	self.player1Name = nil
+	self.player2Name = nil
+	self.player1Ready = nil
+	self.player2Ready = nil
+	// put this all in a function like CleanState() shit like that 
+end
+
+function ENT:Use(activator, caller)
+
+	if (table.Count(self.players) >= 2) then 
+		print("full table :(")
+		return
+	end
+
+	if (table.Count(self.players) == 0) then
+		
+		self:SetPlayer1(activator)
+		table.insert(self.players, activator:GetName())
+		table.insert(self.playersTable, activator)
+		print("you are first player")
+		activator:SetNWBool("TableView", true)
+		return
+	end
+
+	self.player1 = self:GetPlayer1()
+
+	if (table.Count(self.players) == 1) then
+		//print("one player in table")
+		//print(activator:GetName() .. " activator")
+		//print(player1:GetName() .. " player1")
+		if (activator:GetName() == self:GetPlayer1():GetName()) then
+			print("you're already in")
+			return
+		end
+		self:SetPlayer2(activator)
+		table.insert(self.players, activator:GetName())
+		table.insert(self.playersTable, activator)
+		print("you are second player")
+		activator:SetNWBool("TableView", true)
+	end
+
+	self.player2 = self:GetPlayer2()
+
+	if (table.Count(self.players) == 2) then
+		print("table start time")
+		if self:GetTableStarted() then return end
+		// table start!
+		self:TableStart()
+	end
+
+	//activator:Freeze(true)
+	//activator:Spectate(OBS_MODE_CHASE)
+	//activator:SpectateEntity(self)
+	// i want orbitcamera to start on the player when they are in the table
+	// i want the table to start (a function probably) when 2 players are in
+	// i want players to be able to leave the table
+
+	PrintTable(self.playersTable)
+end
+
+net.Receive("RemovePlayer", function(len, ply)
+	table.RemoveByValue(self.players, ply:GetName())
+	table.RemoveByValue(self.playersTable, ply:GetName()) // experiment
+	print("is this even running")
+
+	if IsValid(self.player1) && IsValid(self.player2) then
+		if self.player1:GetName() == ply:GetName() then
+			print("player1 is player")
+			self.player1 = nil
+		elseif self.player2:GetName() == ply:GetName() then
+			print("player 2 is player")
+			self.player2 = nil
+		else
+			print(self.player1:GetName() .. " is not " .. ply:GetName())
+		end
+	else
+		print("player1: " .. tostring(IsValid(self.player1)) .. " ; " .. "player2: " .. tostring(IsValid(self.player2)))
+	end
+	
+	print("removing " .. ply:GetName() .. " from table players")
+end)
