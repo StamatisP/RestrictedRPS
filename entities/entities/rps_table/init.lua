@@ -134,6 +134,7 @@ function ENT:OpenPhase()
 			// player 1 wins
 			print(player1Choice .. " beats " .. player2Choice .. "!")
 			print(self.player1:GetName() .. " beats " .. self.player2:GetName() .. "!")
+			// net.send a chat.AddText notifying when someone wins, and with what cards
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
 			// player 2 wins
 			print(player2Choice .. " beats " .. player1Choice .. "!")
@@ -213,22 +214,23 @@ function ENT:Use(activator, caller)
 end
 
 net.Receive("RemovePlayer", function(len, ply)
-	table.RemoveByValue(self.players, ply:GetName())
-	table.RemoveByValue(self.playersTable, ply:GetName()) // experiment
+	local ent = net.ReadEntity()
+	table.RemoveByValue(ent.players, ply:GetName())
+	table.RemoveByValue(ent.playersTable, ply:GetName()) // experiment
 	print("is this even running")
 
-	if IsValid(self.player1) && IsValid(self.player2) then
-		if self.player1:GetName() == ply:GetName() then
+	if IsValid(ent.player1) && IsValid(ent.player2) then
+		if ent.player1:GetName() == ply:GetName() then
 			print("player1 is player")
-			self.player1 = nil
-		elseif self.player2:GetName() == ply:GetName() then
+			ent.player1 = nil
+		elseif ent.player2:GetName() == ply:GetName() then
 			print("player 2 is player")
-			self.player2 = nil
+			ent.player2 = nil
 		else
-			print(self.player1:GetName() .. " is not " .. ply:GetName())
+			print(ent.player1:GetName() .. " is not " .. ply:GetName())
 		end
 	else
-		print("player1: " .. tostring(IsValid(self.player1)) .. " ; " .. "player2: " .. tostring(IsValid(self.player2)))
+		print("player1: " .. tostring(IsValid(ent.player1)) .. " ; " .. "player2: " .. tostring(IsValid(ent.player2)))
 	end
 	
 	print("removing " .. ply:GetName() .. " from table players")

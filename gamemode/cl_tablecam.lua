@@ -17,7 +17,13 @@ function OrbitCamera(p,a1,x)
 end
 
 function myCalcView(Player, Origin, Angles, FieldOfView)--LookAtPoint is where-ever you want to look at. 1000 is how far away you want the camera to be
-	TablePlayerIsUsing = LocalPlayer():GetEyeTrace().Entity
+	local eyetrace = LocalPlayer():GetEyeTrace()
+	// check if eyetrace hit sky or world
+	if eyetrace.HitSky == false then
+		if eyetrace.HitWorld == false then
+			TablePlayerIsUsing = eyetrace.Entity			
+		end
+	end
 	if !Player:GetNWBool("TableView", false) then
 		//print(LocalPlayer():GetNWBool("TableView"))
 		//print("normal view time")
@@ -80,6 +86,7 @@ hook.Add("KEY_USE", "ExitTable", function()
 			net.WriteBool(false)
 		net.SendToServer()
 		net.Start("RemovePlayer")
+			net.WriteEntity(TablePlayerIsUsing)
 		net.SendToServer()
 		print("tableview is false, setting nwbool tableview to false")
 		// in the future, i should offload the key_use thing to another script or something
