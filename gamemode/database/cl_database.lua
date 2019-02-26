@@ -207,7 +207,7 @@ function inventoryMenu()
 	ps:AddSheet("Items", items,"icon16/box.png", false, false, "Your items are here...")
 end
 function databaseFinish()
-	print("cl database has finished running")
+	//print("cl database has finished running")
 	return true
 end
 

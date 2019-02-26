@@ -67,8 +67,8 @@ hook.Add("CalcView", "CameraView", myCalcView)
 
 // problem here: pressing E makes you sometimes leave the table right when you enter it. the delay needs to be reset upon entering a table
 hook.Add("KEY_USE", "ExitTable", function()
-	if !LocalPlayer():GetNWBool("TableView") then return end
-	if LocalPlayer():GetNWBool("PlayingTable", false) then return end
+	if !LocalPlayer():GetNWBool("TableView") then print("tableview false") return end
+	if LocalPlayer():GetNWBool("PlayingTable", false) then print("playingtable true") return end
 	local timeElapsed = CurTime() - lastOccurrence
 	//print(timeElapsed .. " time elapsed")
 	//print(lastOccurrence .. " last occurrence")

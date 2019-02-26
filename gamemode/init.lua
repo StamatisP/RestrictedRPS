@@ -73,6 +73,7 @@ end*/
 
 function GM:PlayerSpawn(ply)
 	ply:SetModel("models/player/group01/male_07.mdl")
+	ply:SetupHands()
 end
 
 function GM:PlayerConnect(name, ip) 

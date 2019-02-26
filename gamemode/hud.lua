@@ -93,10 +93,30 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	//rockcards = table.ToString(inv["rockcards"])
 	//print(string.match(rockcards, "%d+"))
 	//if !IsValid(inventoryGetItem) then return end
-	local rockcards = inventoryGetItem("rockcards")
-	local papercards = inventoryGetItem("papercards")
-	local scissorscards = inventoryGetItem("scissorscards")
-	local stars = inventoryGetItem("stars")
+	local rockcards = nil
+	local papercards = nil
+	local scissorscard = nil
+	local stars = nil
+	if (inventoryHasItem("rockcards")) then
+		rockcards = inventoryGetItem("rockcards")
+	else
+		rockcards = "0"
+	end
+	if (inventoryHasItem("papercards")) then
+		papercards = inventoryGetItem("papercards")
+	else
+		papercards = "0"
+	end
+	if (inventoryHasItem("scissorscards")) then
+		scissorscards = inventoryGetItem("scissorscards")
+	else
+		scissorscards = "0"
+	end
+	if (inventoryHasItem("stars")) then
+		stars = inventoryGetItem("stars")
+	else
+		stars = "0"
+	end
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
 	draw.SimpleText("Rock: " ..rockcards, "CardText", ScrW() * 0.30, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
@@ -109,7 +129,8 @@ end)
 local function CardChoiceGUI(enabled)
 	if enabled then
 		local choice = nil
-		local confirmColor = Color(100, 100, 100, 255)
+		local confirmColor = Color(71, 158, 215, 255)
+		local defaultColor = Color(225, 228, 227, 255)
 		local frame = vgui.Create("DFrame")
 		frame:SetSize(300, 250)
 		frame:Center()
@@ -123,11 +144,11 @@ local function CardChoiceGUI(enabled)
 		dButtonRock:SetPos(25, 50)
 		dButtonRock:SetSize(250, 30)
 		dButtonRock.Paint = function (self, w, h)
-			local defaultColor = dButtonRock:GetColor()
 			if choice == "Rock" then
-				dButtonRock:SetColor(confirmColor)
+				//dButtonRock:SetColor(confirmColor)
+				draw.RoundedBox(0,0,0,w,h,confirmColor)
 			elseif choice != "Rock" then
-				dButtonRock:SetColor(defaultColor)
+				draw.RoundedBox(0,0,0,w,h,defaultColor)
 			end
 		end
 		dButtonRock.DoClick = function()
@@ -140,11 +161,10 @@ local function CardChoiceGUI(enabled)
 		dButtonPaper:SetPos(25, 100)
 		dButtonPaper:SetSize(250, 30)
 		dButtonPaper.Paint = function(self, w, h)
-			local defaultColor = dButtonPaper:GetColor()
 			if choice == "Paper" then
-				dButtonPaper:SetColor(confirmColor)
+				draw.RoundedBox(0,0,0,w,h,confirmColor)
 			elseif choice != "Paper" then
-				dButtonPaper:SetColor(defaultColor)
+				draw.RoundedBox(0,0,0,w,h,defaultColor)
 			end
 		end
 		dButtonPaper.DoClick = function()
@@ -158,16 +178,23 @@ local function CardChoiceGUI(enabled)
 		dButtonScissors:SetPos(25, 150)
 		dButtonScissors:SetSize(250, 30)
 		dButtonScissors.Paint = function(self, w, h)
-			local defaultColor = dButtonScissors:GetColor()
 			if choice == "Scissors" then
-				dButtonScissors:SetColor(confirmColor)
+				draw.RoundedBox(0,0,0,w,h,confirmColor)
 			elseif choice != "Scissors" then
-				dButtonScissors:SetColor(defaultColor)
+				draw.RoundedBox(0,0,0,w,h,defaultColor)
 			end
 		end
 		dButtonScissors.DoClick = function()
 			RunConsoleCommand("rps_selection", "Scissors")
 			choice = "Scissors"
+		end
+
+		if (inventoryHasItem("rockcards")) then
+			dButtonRock:SetEnabled(false)
+		elseif (inventoryHasItem("papercards")) then
+			dButtonPaper:SetEnabled(false)
+		elseif (inventoryHasItem("scissorscards")) then
+			dButtonScissors:SetEnabled(false)
 		end
 
 		local dButtonReady = vgui.Create("DButton", frame)

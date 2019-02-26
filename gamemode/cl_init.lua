@@ -17,11 +17,12 @@ hook.Add("InitPostEntity", "GetLocal", function()
 end)
 
 local function keyUse()
-	if hook.Run("StartChat") then return end
+	if hook.Run("StartChat") then print("startchat true") return end
 	if input.IsKeyDown(KEY_E) then 
 		print(TablePlayerIsUsing)
 		local timeElapsed = CurTime() - lastOccurrence
 		if timeElapsed < delay then 
+			//print(timeElapsed .. " < " .. delay)
 			return
 		end
 		lastOccurrence = CurTime()
@@ -35,6 +36,7 @@ end
 
 local function inputManager()
 	if input.IsKeyDown(KEY_Z) then
+		//print(LocalPlayer():GetNWBool("TableView"))
 		local timeElapsed = CurTime() - lastOccurrence
 		if timeElapsed < delay then
 			return

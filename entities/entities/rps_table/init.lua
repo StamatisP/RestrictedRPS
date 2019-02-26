@@ -5,7 +5,7 @@ include("shared.lua")
 
 function ENT:Initialize()
 
-	self:SetModel("models/props_spytech/work_table001.mdl")
+	self:SetModel("models/props_c17/furnituretable002a.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_VPHYSICS)
@@ -110,13 +110,20 @@ end
 function ENT:OpenPhase()
 	if !self:GetTableStarted() then return end
 	//cards are revealed, winner is decided
-	local player1Choice = player1:GetInfo("rps_selection")
-	local player2Choice = player2:GetInfo("rps_selection")
+	local player1Choice = self.player1:GetInfo("rps_selection")
+	local player2Choice = self.player2:GetInfo("rps_selection")
 
-	if player1Choice == "Rock" then self:GetPlayer1():inventoryTakeItem("rockcards", 1)
-	elseif player1Choice == "Paper" then self:GetPlayer1():inventoryTakeItem("papercards", 1)
-	elseif player1Choice == "Scissors" then self:GetPlayer1():inventoryTakeItem("scissorscards", 1)
-	else print("player1choice is not rock, paper, or scissors... " .. player1Choice)
+	if player1Choice == "Rock" then
+		if (!self:GetPlayer1():inventoryHasItem("rockcards", 1)) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
+		self:GetPlayer1():inventoryTakeItem("rockcards", 1)
+	elseif player1Choice == "Paper" then 
+		if (!self:GetPlayer1():inventoryHasItem("papercards", 1)) then ErrorNoHalt("Player does not have required paper cards!!! exploit?") end
+		self:GetPlayer1():inventoryTakeItem("papercards", 1)
+	elseif player1Choice == "Scissors" then
+		if (!self:GetPlayer1():inventoryHasItem("scissorscards", 1)) then ErrorNoHalt("Player does not have required scissors cards!!! exploit?") end	 
+		self:GetPlayer1():inventoryTakeItem("scissorscards", 1)
+	else 
+		ErrorNoHalt("player1choice is not rock, paper, or scissors... " .. player1Choice)
 	end
 	//wheres my fucking switch statement, lua
 	if player2Choice == "Rock" then self:GetPlayer2():inventoryTakeItem("rockcards", 1)
@@ -147,10 +154,12 @@ function ENT:OpenPhase()
 	self:SetTableStarted(false)
 	self:GetPlayer1():SetNWBool("TableView", false)
 	self:GetPlayer2():SetNWBool("TableView", false)
+	self:GetPlayer1():SetNWBool("PlayingTable", false)
+	self:GetPlayer2():SetNWBool("PlayingTable", false)
 	self:SetPlayer1(nil)
 	self:SetPlayer2(nil)
-	table.Empty(players)
-	table.Empty(playersTable)
+	table.Empty(self.players)
+	table.Empty(self.playersTable)
 	self.player1 = nil
 	self.player2 = nil
 	self.player1Name = nil

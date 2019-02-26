@@ -79,6 +79,7 @@ local function openLobby()
 				draw.RoundedBox(0,0,0,PlayerPanel:GetWide(),PlayerPanel:GetTall(),Color(50, 50, 50, 255))
 				draw.RoundedBox(0,0,49,PlayerPanel:GetWide(),1,Color(255, 255, 255, 255))
 
+				// put a check here if they even have a name
 				draw.SimpleText(v:GetName(), "DermaDefault", 50, 15, Color(255, 255, 255))
 				draw.SimpleText("Ping: " .. v:Ping(), "DermaDefault", PlayerList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
 			end
@@ -93,6 +94,8 @@ local function openLobby()
 
 	local moneyEntryText = moneyEntry:GetTextArea()
 	moneyEntryText:SetSize(100, 50)
+
+	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 
 	if (!IsValid(LocalPlayer()) || !LocalPlayer():IsAdmin()) then print("either localplayer isnt valid or you arent admin, "..tostring(LocalPlayer())) return end -- If not admin, dont execute code below in this function
 	print("dbutton create, " ..tostring(LocalPlayer()))
