@@ -21,7 +21,9 @@ function myCalcView(Player, Origin, Angles, FieldOfView)--LookAtPoint is where-e
 	// check if eyetrace hit sky or world
 	if eyetrace.HitSky == false then
 		if eyetrace.HitWorld == false then
-			TablePlayerIsUsing = eyetrace.Entity			
+			if !eyetrace.Entity:IsPlayer() then
+				TablePlayerIsUsing = eyetrace.Entity
+			end	
 		end
 	end
 	if !Player:GetNWBool("TableView", false) then

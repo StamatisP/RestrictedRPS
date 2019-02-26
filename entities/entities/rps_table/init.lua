@@ -82,6 +82,7 @@ net.Receive("ArePlayersReady", function(len, ply)
 	local ent = net.ReadEntity()
 	if ent == nil then
 		ErrorNoHalt("Entity is nil! Player " .. ply .. " brought this up!")
+		// implement a way to make the match end in a tie if this happens
 		return
 	end
 	ent:PlayerReadyCheck()
