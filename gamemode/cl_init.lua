@@ -49,8 +49,23 @@ local function inputManager()
 	end
 end
 
+local tab = {
+	[ "$pp_colour_addr" ] = 0.05,
+	[ "$pp_colour_addg" ] = 0,
+	[ "$pp_colour_addb" ] = 0,
+	[ "$pp_colour_brightness" ] = 0,
+	[ "$pp_colour_contrast" ] = 1.1,
+	[ "$pp_colour_colour" ] = 0.8,
+	[ "$pp_colour_mulr" ] = 0.06,
+	[ "$pp_colour_mulg" ] = 0,
+	[ "$pp_colour_mulb" ] = 0
+}
+
 hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
+hook.Add("RenderScreenspaceEffects", "testingcolor", function()
+	DrawColorModify(tab)
+end)
 
 net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	local player1 = net.ReadString()
@@ -60,9 +75,9 @@ net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	local isTie = net.ReadBool()
 
 	if !isTie then 
-		chat.AddText(player1 .. " has beaten " .. player2 .. ", with " .. player1Choice .. " vs " .. player2Choice)
+		chat.AddText(player1 .. " has beaten " .. player2 .. ", with " .. player1Choice .. " vs " .. player2Choice .. ".")
 	elseif isTie then
-		chat.AddText("This match has ended in a tie! The match was " .. player1Choice .. " vs " .. player2Choice)
+		chat.AddText("This match ended in a tie! The match was " .. player1Choice .. " vs " .. player2Choice .. ".")
 	end
 end)
 

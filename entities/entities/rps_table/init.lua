@@ -151,7 +151,8 @@ function ENT:OpenPhase()
 			// for v in pairs(data[player1choice]) do
 			// if v == player2choice then return true. at the end, return false
 			// player 1 wins
-			print(player1Choice .. " beats " .. player2Choice .. "!")
+			self.player2:inventoryTakeItem("stars", 1)
+			self.player1:inventoryGiveItem("stars", 1)
 			net.Start("AnnounceWinnerOfMatch")
 				net.WriteString(self.player1:GetName())
 				net.WriteString(self.player2:GetName())
@@ -160,10 +161,12 @@ function ENT:OpenPhase()
 				net.WriteBool(false)
 			net.Broadcast()
 			print(self.player1:GetName() .. " beats " .. self.player2:GetName() .. "!")
+			print(player1Choice .. " beats " .. player2Choice .. "!")
 			// net.send a chat.AddText notifying when someone wins, and with what cards
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
 			// player 2 wins
-			print(player2Choice .. " beats " .. player1Choice .. "!")
+			self.player1:inventoryTakeItem("stars", 1)
+			self.player2:inventoryGiveItem("stars", 1)
 			net.Start("AnnounceWinnerOfMatch")
 				net.WriteString(self.player2:GetName())
 				net.WriteString(self.player1:GetName())
@@ -171,6 +174,7 @@ function ENT:OpenPhase()
 				net.WriteString(player1Choice)
 				net.WriteBool(false)
 			net.Broadcast()
+			print(player2Choice .. " beats " .. player1Choice .. "!")
 			print(self.player2:GetName() .. " beats " .. self.player1:GetName() .. "!")
 		elseif (player1Choice == "Broken" || player2Choice == "Broken") then
 			// choice broke
