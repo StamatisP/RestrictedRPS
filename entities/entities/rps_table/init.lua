@@ -137,6 +137,13 @@ function ENT:OpenPhase()
 	end
 	
 	if player1Choice == player2Choice then
+		net.Start("AnnounceWinnerOfMatch")
+				net.WriteString(self.player1:GetName())
+				net.WriteString(self.player2:GetName())
+				net.WriteString(player1Choice)
+				net.WriteString(player2Choice)
+				net.WriteBool(true)
+			net.Broadcast()
 		print("this ends in a tie.")
 	else
 		if (self:CheckWins(player1Choice, player2Choice)) then
@@ -144,11 +151,25 @@ function ENT:OpenPhase()
 			// if v == player2choice then return true. at the end, return false
 			// player 1 wins
 			print(player1Choice .. " beats " .. player2Choice .. "!")
+			net.Start("AnnounceWinnerOfMatch")
+				net.WriteString(self.player1:GetName())
+				net.WriteString(self.player2:GetName())
+				net.WriteString(player1Choice)
+				net.WriteString(player2Choice)
+				net.WriteBool(false)
+			net.Broadcast()
 			print(self.player1:GetName() .. " beats " .. self.player2:GetName() .. "!")
 			// net.send a chat.AddText notifying when someone wins, and with what cards
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
 			// player 2 wins
 			print(player2Choice .. " beats " .. player1Choice .. "!")
+			net.Start("AnnounceWinnerOfMatch")
+				net.WriteString(self.player2:GetName())
+				net.WriteString(self.player1:GetName())
+				net.WriteString(player2Choice)
+				net.WriteString(player1Choice)
+				net.WriteBool(false)
+			net.Broadcast()
 			print(self.player2:GetName() .. " beats " .. self.player1:GetName() .. "!")
 		elseif (player1Choice == "Broken" || player2Choice == "Broken") then
 			// choice broke

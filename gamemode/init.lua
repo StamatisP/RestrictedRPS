@@ -34,6 +34,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("FadeInMusic")
 	util.AddNetworkString("PlayerTableCheckGUIEnable")
 	util.AddNetworkString("ArePlayersReady")
+	util.AddNetworkString("AnnounceWinnerOfMatch")
 end
 
 GM:AddNetworkStrings()

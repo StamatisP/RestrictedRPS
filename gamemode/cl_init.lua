@@ -52,5 +52,19 @@ end
 hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
 
+net.Receive("AnnounceWinnerOfMatch", function(len, ply)
+	local player1 = net.ReadString()
+	local player2 = net.ReadString()
+	local player1Choice = net.ReadString()
+	local player2Choice = net.ReadString()
+	local isTie = net.ReadBool()
+
+	if !isTie then 
+		chat.AddText(player1 .. " has beaten " .. player2 .. ", with " .. player1Choice .. " vs " .. player2Choice)
+	elseif isTie then
+		chat.AddText("This match has ended in a tie! The match was " .. player1Choice .. " vs " .. player2Choice)
+	end
+end)
+
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")
 CreateClientConVar("rps_selection", "Broken", false, true, "Your card selection.")
