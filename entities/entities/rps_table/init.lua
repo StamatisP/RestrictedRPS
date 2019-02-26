@@ -80,6 +80,10 @@ ENT.player2Ready = nil
 net.Receive("ArePlayersReady", function(len, ply)
 	if !ply:GetNWBool("TableView") then return end
 	local ent = net.ReadEntity()
+	if ent == nil then
+		ErrorNoHalt("Entity is nil! Player " .. ply .. " brought this up!")
+		return
+	end
 	ent:PlayerReadyCheck()
 end)
 

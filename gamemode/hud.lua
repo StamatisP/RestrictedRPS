@@ -139,6 +139,22 @@ local function CardChoiceGUI(enabled)
 		frame:SetDraggable(true)
 		frame:MakePopup()
 
+		local dButtonReady = vgui.Create("DButton", frame)
+		dButtonReady:SetText("Confirm Choice")
+		dButtonReady:SetPos(25, 200)
+		dButtonReady:SetSize(100, 30)
+		dButtonReady:SetEnabled(false)
+		dButtonReady.DoClick = function()
+			frame:Close()
+			// i need to write the entity that the player is looking at...
+			local ent = TablePlayerIsUsing
+			net.Start("ArePlayersReady")
+			net.WriteEntity(ent)
+			net.WriteString(LocalPlayer():GetName())
+			net.WriteBool(true)
+			net.SendToServer()
+		end
+
 		local dButtonRock = vgui.Create("DButton", frame)
 		dButtonRock:SetText("Rock")
 		dButtonRock:SetPos(25, 50)
@@ -154,6 +170,7 @@ local function CardChoiceGUI(enabled)
 		dButtonRock.DoClick = function()
 			RunConsoleCommand("rps_selection", "Rock")
 			choice = "Rock"
+			dButtonReady:SetEnabled(true)
 		end
 
 		local dButtonPaper = vgui.Create("DButton", frame)
@@ -170,6 +187,7 @@ local function CardChoiceGUI(enabled)
 		dButtonPaper.DoClick = function()
 			RunConsoleCommand("rps_selection", "Paper")
 			choice = "Paper"
+			dButtonReady:SetEnabled(true)
 			// couldn't i just like... dButtonPaper:SetColor(confirmcolor) dButtonRock:SetColor(defaultcolor) etc with scissors
 		end
 
@@ -187,29 +205,17 @@ local function CardChoiceGUI(enabled)
 		dButtonScissors.DoClick = function()
 			RunConsoleCommand("rps_selection", "Scissors")
 			choice = "Scissors"
+			dButtonReady:SetEnabled(true)
 		end
 
-		if (inventoryHasItem("rockcards")) then
+		if (!inventoryHasItem("rockcards")) then
 			dButtonRock:SetEnabled(false)
-		elseif (inventoryHasItem("papercards")) then
-			dButtonPaper:SetEnabled(false)
-		elseif (inventoryHasItem("scissorscards")) then
-			dButtonScissors:SetEnabled(false)
 		end
-
-		local dButtonReady = vgui.Create("DButton", frame)
-		dButtonReady:SetText("Confirm Choice")
-		dButtonReady:SetPos(25, 200)
-		dButtonReady:SetSize(100, 30)
-		dButtonReady.DoClick = function()
-			frame:Close()
-			// i need to write the entity that the player is looking at...
-			local ent = TablePlayerIsUsing
-			net.Start("ArePlayersReady")
-			net.WriteEntity(ent)
-			net.WriteString(LocalPlayer():GetName())
-			net.WriteBool(true)
-			net.SendToServer()
+		if (!inventoryHasItem("papercards")) then
+			dButtonPaper:SetEnabled(false)
+		end
+		if (!inventoryHasItem("scissorscards")) then
+			dButtonScissors:SetEnabled(false)
 		end
 		
 	elseif !enabled then
