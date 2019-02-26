@@ -18,6 +18,7 @@ end)
 
 local function keyUse()
 	if hook.Run("StartChat") then print("startchat true") return end
+	if gui.IsConsoleVisible() then return end
 	if input.IsKeyDown(KEY_E) then 
 		print(TablePlayerIsUsing)
 		local timeElapsed = CurTime() - lastOccurrence

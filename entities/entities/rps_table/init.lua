@@ -138,6 +138,7 @@ function ENT:OpenPhase()
 	end
 	
 	if player1Choice == player2Choice then
+		
 		net.Start("AnnounceWinnerOfMatch")
 				net.WriteString(self.player1:GetName())
 				net.WriteString(self.player2:GetName())
@@ -148,6 +149,7 @@ function ENT:OpenPhase()
 		print("this ends in a tie.")
 	else
 		if (self:CheckWins(player1Choice, player2Choice)) then
+
 			// for v in pairs(data[player1choice]) do
 			// if v == player2choice then return true. at the end, return false
 			// player 1 wins
@@ -164,6 +166,7 @@ function ENT:OpenPhase()
 			print(player1Choice .. " beats " .. player2Choice .. "!")
 			// net.send a chat.AddText notifying when someone wins, and with what cards
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
+
 			// player 2 wins
 			self.player1:inventoryTakeItem("stars", 1)
 			self.player2:inventoryGiveItem("stars", 1)
@@ -181,6 +184,12 @@ function ENT:OpenPhase()
 			print(player1Choice .. " or " .. player2Choice .. " is broken")
 		end
 	end
+
+	self:CleanSlate()
+	// put this all in a function like CleanState() shit like that 
+end
+
+function ENT:CleanSlate()
 	self:SetTableStarted(false)
 	self:GetPlayer1():SetNWBool("TableView", false)
 	self:GetPlayer2():SetNWBool("TableView", false)
@@ -196,7 +205,6 @@ function ENT:OpenPhase()
 	self.player2Name = nil
 	self.player1Ready = nil
 	self.player2Ready = nil
-	// put this all in a function like CleanState() shit like that 
 end
 
 function ENT:Use(activator, caller)
