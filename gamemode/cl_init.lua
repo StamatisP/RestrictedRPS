@@ -68,6 +68,8 @@ hook.Add("RenderScreenspaceEffects", "testingcolor", function()
 	DrawColorModify(tab)
 end)
 
+//i should implement credits one day... thank you bass
+
 net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	local player1 = net.ReadString()
 	local player2 = net.ReadString()

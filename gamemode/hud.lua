@@ -84,6 +84,7 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	draw.RoundedBox(5, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
 
 	local roundedMoney = math.Round(databaseGetValue("money"), 2)
+	// somehow add a lerp?
 	local moneyAfterFormat = formatMoney(roundedMoney)
 	//print(moneyAfterFormat)
 

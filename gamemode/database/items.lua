@@ -14,7 +14,7 @@ items["rockcards"] = {
 	name = "Rock Card",
 	description = "Rock card.",
 	ent = "item_basic",
-	model = "models/props_junk/PopCan01a.mdl",
+	model = "models/gamecard/gamecard.mdl",
 	use = (function(ply, ent)
 		if ply:IsValid() then
 			//ply:AddHealth
@@ -33,7 +33,7 @@ items["papercards"] = {
 	name = "Paper Card",
 	description = "Paper card.",
 	ent = "item_basic",
-	model = "models/props_junk/PopCan01a.mdl",
+	model = "models/gamecard/gamecard.mdl",
 	use = (function(ply, ent)
 		if ply:IsValid() then
 			//ply:AddHealth
@@ -52,7 +52,7 @@ items["scissorscards"] = {
 	name = "Scissors Card",
 	description = "Scissors card.",
 	ent = "item_basic",
-	model = "models/props_junk/PopCan01a.mdl",
+	model = "models/gamecard/gamecard.mdl",
 	use = (function(ply, ent)
 		if ply:IsValid() then
 			//ply:AddHealth
