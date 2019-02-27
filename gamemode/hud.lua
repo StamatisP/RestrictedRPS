@@ -77,12 +77,14 @@ local height = ScrH()
 hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 
 	if !hook.Run("ClDatabaseFinish") then return end
+	if RoundStarted == false then return end
 	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 240))
 	draw.RoundedBox(5, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
 	draw.RoundedBox(5, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
 	draw.RoundedBox(5, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
 	draw.RoundedBox(5, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
 
+	if (inventoryGetValue("money") == nil) then return end
 	local roundedMoney = math.Round(databaseGetValue("money"), 2)
 	// somehow add a lerp?
 	local moneyAfterFormat = formatMoney(roundedMoney)

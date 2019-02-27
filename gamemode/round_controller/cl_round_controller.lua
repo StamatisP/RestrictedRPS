@@ -4,6 +4,7 @@ local round_status = 0
 net.Receive("UpdateRoundStatus",function(len)
 
 	round_status = net.ReadInt(4);
+	RoundStarted = true
 end)
 
 function getRoundStatus(  )

@@ -10,6 +10,7 @@ include("sh_soundmanager.lua")
 
 local delay = 2
 local lastOccurrence = -delay
+RoundStarted = false
 
 MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function() 

@@ -42,6 +42,9 @@ GM:AddNetworkStrings()
 resource.AddFile("materials/models/gamecard/GameCard_Rock.vmt")
 resource.AddFile("materials/models/gamecard/GameCard_Paper.vmt")
 resource.AddFile("materials/models/gamecard/GameCard_Scissors.vmt")
+resource.AddFile("sound/music/littlezawa_loop_by_bass.wav")
+resource.AddFile("sound/ambient/zawa1.wav")
+resource.AddFile("sound/ambient/zawa2.wav")
 
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
@@ -62,6 +65,7 @@ if file.Exists("server/rrps/players","DATA") then
 	file.PurgeDirectory("server/rrps/players")
 	print("purging rps directory")
 end
+
 
 
 local startWeapons = {
