@@ -39,6 +39,10 @@ end
 
 GM:AddNetworkStrings()
 
+resource.AddFile("materials/models/gamecard/GameCard_Rock.vmt")
+resource.AddFile("materials/models/gamecard/GameCard_Paper.vmt")
+resource.AddFile("materials/models/gamecard/GameCard_Scissors.vmt")
+
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
 	local files, directories = file.Find(name .. "/*", "DATA");

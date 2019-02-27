@@ -4,7 +4,7 @@
 	"title"		"Restricted Rock Paper Scissors"
 	"maps"		"^rps_"
 	"menusystem"	"1"
-	"workshopid"	"155"
+	"workshopid"	"1556988459"
 
 	"settings"
 	{
