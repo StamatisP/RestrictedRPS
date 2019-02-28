@@ -78,6 +78,7 @@ net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	local player2Choice = net.ReadString()
 	local isTie = net.ReadBool()
 
+	if player1:GetName() != LocalPlayer():GetName() || player2:GetName() != LocalPlayer():GetName() then return end
 	if !isTie then 
 		chat.AddText(player1 .. " has beaten " .. player2 .. ", with " .. player1Choice .. " vs " .. player2Choice .. ".")
 	elseif isTie then
