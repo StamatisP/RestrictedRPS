@@ -5,7 +5,7 @@ include("shared.lua")
 
 function ENT:Initialize()
 
-	self:SetModel("models/props_c17/furnituretable002a.mdl")
+	self:SetModel("models/table/table.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_VPHYSICS)
@@ -222,7 +222,7 @@ function ENT:Use(activator, caller)
 	if (table.Count(self.players) == 0) then
 		
 		self:SetPlayer1(activator)
-		table.insert(self.players, activator:GetName())
+		table.insert(self.players, activator:GetName()) // why do we have two player tables...
 		table.insert(self.playersTable, activator)
 		print("you are first player")
 		activator:SetNWBool("TableView", true)
