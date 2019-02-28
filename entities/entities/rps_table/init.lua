@@ -148,6 +148,7 @@ function ENT:OpenPhase()
 			net.Broadcast()
 		print("this ends in a tie.")
 	else
+
 		if (self:CheckWins(player1Choice, player2Choice)) then
 
 			// for v in pairs(data[player1choice]) do
@@ -165,6 +166,7 @@ function ENT:OpenPhase()
 			print(self.player1:GetName() .. " beats " .. self.player2:GetName() .. "!")
 			print(player1Choice .. " beats " .. player2Choice .. "!")
 			// net.send a chat.AddText notifying when someone wins, and with what cards
+
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
 
 			// player 2 wins
@@ -179,6 +181,7 @@ function ENT:OpenPhase()
 			net.Broadcast()
 			print(player2Choice .. " beats " .. player1Choice .. "!")
 			print(self.player2:GetName() .. " beats " .. self.player1:GetName() .. "!")
+
 		elseif (player1Choice == "Broken" || player2Choice == "Broken") then
 			// choice broke
 			print(player1Choice .. " or " .. player2Choice .. " is broken")
@@ -208,6 +211,8 @@ function ENT:CleanSlate()
 end
 
 function ENT:Use(activator, caller)
+
+	//if !activator:inventoryHasItem("stars", 1) then print(activator:GetName() .. " has no stars") return end
 
 	if (table.Count(self.players) >= 2) then 
 		print("full table :(")

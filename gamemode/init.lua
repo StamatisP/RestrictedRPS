@@ -135,6 +135,17 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	end
 end)
 
+hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
+	if (!IsValid(ent)) then return end
+
+	if (ent:GetName() == "rps_table") then
+		if !ply:inventoryHasItem("stars", 1) then 
+			print(ply:GetName() .. " has no stars") 
+			return false
+		end
+	end
+end)
+
 function GM:CanPlayerSuicide( ply )
 	return ply:IsSuperAdmin()
 end
