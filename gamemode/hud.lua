@@ -40,6 +40,8 @@ local hide = {
 
 local ply = LocalPlayer()
 local cardChoice = false;
+local moneyAfterFormat = 0
+local debtAfterFormat = 0
 
 hook.Add("HUDShouldDraw","hideHud",function(name)
 	if (hide[name]) then return false end
@@ -78,28 +80,20 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 
 	if !hook.Run("ClDatabaseFinish") then return end
 	if RoundStarted == false then return end
-	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 240))
-	draw.RoundedBox(5, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
-	draw.RoundedBox(5, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
-	draw.RoundedBox(5, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
-	draw.RoundedBox(5, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 240))
+	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
+	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
+	draw.RoundedBox(5, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
+	draw.RoundedBox(5, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
+	draw.RoundedBox(5, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // scissors 
+	draw.RoundedBox(5, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // stars
 
-	if (inventoryGetValue("money") == nil) then return end
-	local roundedMoney = math.Round(databaseGetValue("money"), 2)
-	// somehow add a lerp?
-	local moneyAfterFormat = formatMoney(roundedMoney)
-	//print(moneyAfterFormat)
 
-	
-
-	//local inv = inventoryTable()
-	//rockcards = table.ToString(inv["rockcards"])
-	//print(string.match(rockcards, "%d+"))
-	//if !IsValid(inventoryGetItem) then return end
 	local rockcards = nil
 	local papercards = nil
 	local scissorscard = nil
 	local stars = nil
+	// in the future, getting items from the database in hudpaint might fuck up performance. 
+	// have it update on a delay, call a hook when it is updated manually (via inventory pickups/drops/table rounds)
 	if (inventoryHasItem("rockcards")) then
 		rockcards = inventoryGetItem("rockcards")
 	else
@@ -126,8 +120,26 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	draw.SimpleText("Paper: " ..papercards, "CardText", ScrW() * 0.50, ScrH() * 0.935, Color(114, 189, 208, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText("Scissors: " ..scissorscards, "CardText", ScrW() * 0.70, ScrH() * 0.935, Color(161, 193, 36, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(moneyAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.935, Color(48, 221, 55, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText(debtAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.015, Color(255, 80, 80, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText("Stars: " ..stars, "CardText", ScrW() * 0.90, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 end)
+
+local function UpdateDebt()
+	if (databaseGetValue("debt") == nil) then return end
+	local roundedDebt = math.Round(databaseGetValue("debt"), 2)
+	debtAfterFormat = formatMoney(roundedDebt)
+end
+
+local function UpdateMoney() 
+	if (databaseGetValue("money") == nil) then return end
+	local roundedMoney = math.Round(databaseGetValue("money"), 2)
+	// somehow add a lerp?
+	moneyAfterFormat = formatMoney(roundedMoney)
+end
+
+timer.Create("UpdateMoney", 5, 0, UpdateMoney)
+
+timer.Create("UpdateDebt", 5, 0, UpdateDebt)
 
 local function CardChoiceGUI(enabled)
 	if enabled then

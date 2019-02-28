@@ -1,8 +1,9 @@
 //local ply = FindMetaTable("Player")
 print("cl_lobby load")
-lobbyOpened = false
+local lobbyOpened = false
 local playerList = nil
-lobbysound = nil
+local lobbysound = nil
+// YO DUDE PUT A MUSIC PLAYER HERE
 
 local function openLobby() 
 

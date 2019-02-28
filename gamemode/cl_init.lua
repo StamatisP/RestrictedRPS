@@ -11,6 +11,7 @@ include("sh_soundmanager.lua")
 local delay = 2
 local lastOccurrence = -delay
 RoundStarted = false
+TablePlayerIsUsing = nil
 
 MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function() 
@@ -21,6 +22,15 @@ local function keyUse()
 	if hook.Run("StartChat") then print("startchat true") return end
 	if gui.IsConsoleVisible() then return end
 	if input.IsKeyDown(KEY_E) then 
+		local eyetrace = LocalPlayer():GetEyeTrace()
+		// check if eyetrace hit sky or world
+		if eyetrace.HitSky == false then
+			if eyetrace.HitWorld == false then
+				if !eyetrace.Entity:IsPlayer() then
+					TablePlayerIsUsing = eyetrace.Entity
+				end	
+			end
+		end
 		print(TablePlayerIsUsing)
 		local timeElapsed = CurTime() - lastOccurrence
 		if timeElapsed < delay then 

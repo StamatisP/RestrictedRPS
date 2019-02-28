@@ -2,7 +2,7 @@ local pmeta = FindMetaTable("Player")
 local isLobbyStarted = false
 print("sv_lobby start")
 
-function enterLobby()
+local function enterLobby()
 
 	if isLobbyStarted == true then return end
 	//isLobbyStarted = true
@@ -38,20 +38,22 @@ end
 
 end*/
 
-function giveMoney()
+local function giveMoney()
 	//print("moved")
 	for k, v in pairs(player.GetAll()) do
 		if v:GetInfoNum("rps_money", 1000000) >= 1000000 or v:GetInfoNum("rps_money", 1000000) <= 10000000 then
 			print(v:GetInfoNum("rps_money", 1000000))
 			v:databaseSetValue("money", v:GetInfoNum("rps_money", 1000000))
+			v:databaseSetValue("debt", v:GetInfoNum("rps_money", 1000000))
 		else
 			print("you're a dirty cheater, aren't you?")
 			v:databaseSetValue("money", math.random(1000000, 10000000))
+			v:databaseSetValue("debt", math.random(1000000, 10000000))
 		end
 	end
 end
 
-net.Receive("moneyUpdate", function(len, ply)
+/*net.Receive("moneyUpdate", function(len, ply)
 		local money = net.ReadInt(28)
 		if money < 1000000 or money > 10000000 then
 			print("you dumb cheater big dumb head dumb")
@@ -62,7 +64,7 @@ net.Receive("moneyUpdate", function(len, ply)
 			print(money .. " is your current balance")
 			ply:databaseSetValue("money", money)
 		end
-	end)
+end)*/
 
 net.Receive("StartGame", function(len, ply) 
 	if !ply:IsSuperAdmin() then return end

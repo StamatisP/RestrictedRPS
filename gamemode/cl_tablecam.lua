@@ -2,7 +2,6 @@ local tableView = false
 local calcviewTable = {}
 local delay = 2
 local lastOccurrence = -delay
-TablePlayerIsUsing = nil
 
 local function NormalView(ply, pos, angles, fov)
 	//	print("normal view time")
@@ -17,15 +16,6 @@ function OrbitCamera(p,a1,x)
 end
 
 function myCalcView(Player, Origin, Angles, FieldOfView)--LookAtPoint is where-ever you want to look at. 1000 is how far away you want the camera to be
-	local eyetrace = LocalPlayer():GetEyeTrace()
-	// check if eyetrace hit sky or world
-	if eyetrace.HitSky == false then
-		if eyetrace.HitWorld == false then
-			if !eyetrace.Entity:IsPlayer() then
-				TablePlayerIsUsing = eyetrace.Entity
-			end	
-		end
-	end
 	if !Player:GetNWBool("TableView", false) then
 		//print(LocalPlayer():GetNWBool("TableView"))
 		//print("normal view time")

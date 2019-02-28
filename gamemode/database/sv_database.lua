@@ -20,6 +20,7 @@ end
 function ply:databaseDefault()
 
 	self:databaseSetValue("money", 1000000)
+	self:databaseSetValue("debt", 0)
 	--self:databaseSetValue("rockCards", 4)
 	--self:databaseSetValue("paperCards", 4)
 	--self:databaseSetValue("scissorsCards", 4)
@@ -36,8 +37,10 @@ end
 function ply:databaseNetworkedData()
 	local money = self:databaseGetValue("money")
 	local stars = self:databaseGetValue("stars")
+	local debt = self:databaseGetValue("debt")
 	print("databaseNetworkedData")
 	self:SetNWInt("money", money)
+	self:SetNWInt("debt", debt)
 	self:SetNWInt("stars", stars)
 
 	self:KillSilent()
