@@ -45,6 +45,12 @@ resource.AddFile("materials/models/gamecard/GameCard_Scissors.vmt")
 resource.AddFile("sound/music/littlezawa_loop_by_bass.wav")
 resource.AddFile("sound/ambient/zawa1.wav")
 resource.AddFile("sound/ambient/zawa2.wav")
+resource.AddFile("models/table/table.dx80.vtx")
+resource.AddFile("models/table/table.dx90.vtx")
+resource.AddFile("models/table/table.mdl")
+resource.AddFile("models/table/table.phy")
+resource.AddFile("models/table/table.sw.vtx")
+resource.AddFile("models/table/table.vvd")
 
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
