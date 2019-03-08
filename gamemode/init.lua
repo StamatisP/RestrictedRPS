@@ -1,20 +1,20 @@
 AddCSLuaFile( "cl_init.lua" )
-AddCSLuaFile("database/cl_database.lua")
-AddCSLuaFile("database/items.lua")
+AddCSLuaFile("cl_database.lua")
+AddCSLuaFile("items.lua")
 AddCSLuaFile( "shared.lua" )
-AddCSLuaFile("round_controller/cl_round_controller.lua")
-AddCSLuaFile("lobby_manager/cl_lobby.lua")
+AddCSLuaFile("cl_round_controller.lua")
+AddCSLuaFile("cl_lobby.lua")
 AddCSLuaFile("hud.lua")
 AddCSLuaFile("cl_tablecam.lua")
 AddCSLuaFile("sounds.lua")
 AddCSLuaFile("sh_soundmanager.lua")
 AddCSLuaFile("cl_options.lua")
 
-include("database/sv_database.lua")
-include("database/items.lua")
+include("sv_database.lua")
+include("items.lua")
 include( "shared.lua" )
-include("round_controller/sv_round_controller.lua")
-include("lobby_manager/sv_lobby.lua")
+include("sv_round_controller.lua")
+include("sv_lobby.lua")
 include("sv_tablecam.lua")
 include("sounds.lua")
 include("sh_soundmanager.lua")
@@ -52,6 +52,8 @@ resource.AddFile("models/table/table.phy")
 resource.AddFile("models/table/table.sw.vtx")
 resource.AddFile("models/table/table.vvd")
 
+CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
+
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
 	local files, directories = file.Find(name .. "/*", "DATA");
@@ -71,8 +73,6 @@ if file.Exists("server/rrps/players","DATA") then
 	file.PurgeDirectory("server/rrps/players")
 	print("purging rps directory")
 end
-
-
 
 local startWeapons = {
 	"weapon_fists"
@@ -111,7 +111,7 @@ end
 hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	local playerMsg = string.lower(text)
 	playerMsg = string.Explode(" ", playerMsg)
-
+	// drop money command
 	if (playerMsg[1] == "/dropmoney") then
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
@@ -126,7 +126,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 			return ""
 		end
 	end
-
+	// give money command
 	if (playerMsg[1] == "/givemoney") then
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
@@ -138,6 +138,21 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 
 			return ""
 		end
+	end
+	// check cards command
+	if (playerMsg[1] == "/cards") then
+		local rockcardAmount = 0
+		local papercardAmount = 0
+		local scissorscardAmount = 0
+		for k, v in pairs(player.GetAll()) do
+			//if (v:databaseGetValue("rockcards") == nil) then ErrorNoHalt("what is goin on") return end
+			//print(v:inventoryGetItemAmount("rockcards"))
+			rockcardAmount = rockcardAmount + v:inventoryGetItemAmount("rockcards")
+			//print(rockcardAmount)
+			papercardAmount = papercardAmount + v:inventoryGetItemAmount("papercards")
+			scissorscardAmount = scissorscardAmount + v:inventoryGetItemAmount("scissorscards")
+		end
+		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
 	end
 end)
 

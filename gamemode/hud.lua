@@ -42,6 +42,8 @@ local ply = LocalPlayer()
 local cardChoice = false;
 local moneyAfterFormat = 0
 local debtAfterFormat = 0
+local compoundTimeLeft = 0
+local compoundTimeRate = GetGlobalFloat("interestrepeat", 0)
 
 hook.Add("HUDShouldDraw","hideHud",function(name)
 	if (hide[name]) then return false end
@@ -76,22 +78,37 @@ end
 local width = ScrW()
 local height = ScrH()
 
+local function normalize(min, max, val) 
+    local delta = max - min
+    return (val - min) / delta
+end
+
 hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 
 	if !hook.Run("ClDatabaseFinish") then return end
-	if RoundStarted == false then return end
+	if not GetGlobalBool("IsRoundStarted", false) then return end
+	//print("fuck")
 	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
 	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
+	draw.RoundedBox(5, ScrW() * 0.85, ScrH() * 0.005, width / 8, height / 10, Color(50, 50, 50, 220)) // time left
+	//draw.RoundedBox(5, ScrW() * 0.85, ScrH() * 0.015, width / 8, height / 15.36, Color(50, 50, 50, 220)) // compound time left
 	draw.RoundedBox(5, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
 	draw.RoundedBox(5, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
 	draw.RoundedBox(5, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // scissors 
 	draw.RoundedBox(5, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // stars
 
-
+	local roundColor
+	local compoundColor
 	local rockcards = nil
 	local papercards = nil
 	local scissorscard = nil
 	local stars = nil
+	local timeLeft = math.max(0, GetGlobalFloat("endroundtime", 0) - CurTime()) // look at how awesomestrike did it, init.lua
+	//print("why the fuck is this running?????")
+	//local compoundTimeLeft = math.max(0, compoundTimeRate - CurTime()) // the problem is here: it must reset every 75 seconds. create a timer, maybe?
+	local compoundTxt = nil
+	//print(GetGlobalFloat("endroundtime"))
+	local txt = nil
 	// in the future, getting items from the database in hudpaint might fuck up performance. 
 	// have it update on a delay, call a hook when it is updated manually (via inventory pickups/drops/table rounds)
 	if (inventoryHasItem("rockcards")) then
@@ -115,14 +132,39 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 		stars = "0"
 	end
 
+	txt = string.ToMinutesSeconds(timeLeft)
+	compoundTxt = string.ToMinutesSeconds(compoundTimeLeft)
+	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
+	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
+
+	//if compoundTimeLeft <= 0 then compoundTimeLeft = GetGlobalFloat("interestrepeat") end
+	//print(compoundTimeLeft)
+	// okay so the problem here is i want it to go from 75 to 0, and then loop back to 75. how can i do that. im tired
+	//roundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), timeLeft) * 255, 0, 0)
+	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetConVar("rps_roundtime"):GetFloat(), timeLeft)
+	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
+	//compoundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), compoundTimeLeft) * 255, 0, 0) // what the fuck am i doing???? 
+
 	// in the future, if scrw > 1920, switch to a different, bigger font
 	draw.SimpleText("Rock: " ..rockcards, "CardText", ScrW() * 0.30, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText("Paper: " ..papercards, "CardText", ScrW() * 0.50, ScrH() * 0.935, Color(114, 189, 208, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText("Scissors: " ..scissorscards, "CardText", ScrW() * 0.70, ScrH() * 0.935, Color(161, 193, 36, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(moneyAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.935, Color(48, 221, 55, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(debtAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.015, Color(255, 80, 80, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText(txt, "NormalText", ScrW() * 0.88, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText(compoundTxt, "NormalText", ScrW() * 0.88, ScrH() * 0.055, compoundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText("Stars: " ..stars, "CardText", ScrW() * 0.90, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 end)
+
+function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
+	local hsvStart = ColorToHSV(finishcolor)
+	local hsvFinish = ColorToHSV(startcolor)
+	local hueLerp = Lerp(normalize(0, maxvalue, currentvalue), hsvStart, hsvFinish)
+	//print(hsvStart)
+	local finalHsv = HSVToColor(hueLerp, 1, 1)
+	//PrintTable(finalHsv)
+	return finalHsv
+end
 
 local function UpdateDebt()
 	if (databaseGetValue("debt") == nil) then return end
@@ -137,9 +179,21 @@ local function UpdateMoney()
 	moneyAfterFormat = formatMoney(roundedMoney)
 end
 
-timer.Create("UpdateMoney", 5, 0, UpdateMoney)
+local function UpdateCompoundTime()
+	compoundTimeLeft = GetGlobalFloat("interestrepeat") // time to take a break
+end
 
+function GM:Think()
+	compoundTimeLeft = compoundTimeLeft - RealFrameTime()
+	if compoundTimeLeft <= 0 then 
+		compoundTimeLeft = compoundTimeLeft + GetGlobalFloat("interestrepeat", 2)
+		//compoundTimeLeft = compoundTimeLeft + CurTime()
+	end
+end
+
+timer.Create("UpdateMoney", 5, 0, UpdateMoney)
 timer.Create("UpdateDebt", 5, 0, UpdateDebt)
+//timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)
 	if enabled then

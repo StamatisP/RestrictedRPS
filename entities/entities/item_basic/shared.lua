@@ -3,4 +3,4 @@ ENT.Base = "base_entity"
 ENT.PrintName = "item"
 ENT.Author = "Mineturtle"
 
-print("shared")
+//print("shared")

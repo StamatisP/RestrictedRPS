@@ -1,8 +1,8 @@
 include( "shared.lua" )
-include("database/cl_database.lua")
-include("database/items.lua")
-include("round_controller/cl_round_controller.lua")
-include("lobby_manager/cl_lobby.lua")
+include("cl_database.lua")
+include("items.lua")
+include("cl_round_controller.lua")
+include("cl_lobby.lua")
 include("hud.lua")
 include("cl_tablecam.lua")
 include("cl_options.lua")
@@ -31,7 +31,7 @@ local function keyUse()
 				end	
 			end
 		end
-		print(TablePlayerIsUsing)
+		//print(TablePlayerIsUsing)
 		local timeElapsed = CurTime() - lastOccurrence
 		if timeElapsed < delay then 
 			//print(timeElapsed .. " < " .. delay)

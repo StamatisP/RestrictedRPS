@@ -167,6 +167,21 @@ function ply:inventoryHasItem(name, amount)
 	end
 end
 
+function ply:inventoryGetItemAmount(name)
+	if not name then ErrorNoHalt("forgot name in inventoryGetItemAmount") return end
+	local i = self:inventoryGet()
+
+	if i then
+		if i[name].amount then
+			return i[name].amount
+		else
+			ErrorNoHalt("amount may be nil?")
+		end
+	else
+		ErrorNoHalt("inventory failed to get")
+	end
+end
+
 function ply:inventoryTakeItem(name, amount)
 	if not amount then amount = 1 end
 	local i = self:inventoryGet()

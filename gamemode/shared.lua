@@ -3,11 +3,18 @@ GM.Author = "Mineturtle"
 GM.Email = "no"
 GM.Website = "nah"
 
+GM.roundstart = 6
+GM.endroundtime = 66
+
 DeriveGamemode("base")
 
 function GM:Initialize()
 	-- Do stuff
 	self.BaseClass.Initialize(self)
+end
+
+function GM:GetRoundTime()
+	return GetConVarNumber("rps_roundtime")
 end
 
 CreateConVar("rps_maxtime", 20, FCVAR_REPLICATED,"Max time for the round.")

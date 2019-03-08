@@ -68,7 +68,7 @@ end)*/
 
 net.Receive("StartGame", function(len, ply) 
 	if !ply:IsSuperAdmin() then return end
-	beginRound()
+	gmod.GetGamemode():BeginRound()
 	//ply:GiveLoadout()
 	giveMoney()
 	isLobbyStarted = true
