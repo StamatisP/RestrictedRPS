@@ -101,7 +101,7 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	local compoundColor
 	local rockcards = nil
 	local papercards = nil
-	local scissorscard = nil
+	local scissorscards = nil
 	local stars = nil
 	local timeLeft = math.max(0, GetGlobalFloat("endroundtime", 0) - CurTime()) // look at how awesomestrike did it, init.lua
 	//print("why the fuck is this running?????")
