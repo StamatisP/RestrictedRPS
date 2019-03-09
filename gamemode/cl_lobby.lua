@@ -8,6 +8,7 @@ local lobbysound = nil
 local function openLobby() 
 
 	if lobbyOpened then return end // this is to prevent the lobby opening on players joining in after it opened
+	if GetGlobalBool("IsRoundStarted", false) then return end
 	lobbyOpened = true
 	print("openlobby call")
 	local frame = vgui.Create("DFrame")

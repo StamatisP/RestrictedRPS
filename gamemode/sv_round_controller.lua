@@ -1,11 +1,10 @@
 GM.round_status = 0 -- 0 equals end, 1 = active
-local players = player.GetAll()
 local ply = FindMetaTable("Player")
 
 function GM:BeginRound()
 	if GetGlobalBool("IsRoundStarted", false) then return end
 	gamemode.Call("RoundStarted")
-	PrintTable(players)
+	//PrintTable(players)
 	local convar = GetConVar("rps_interestrepeat")
 	print(convar:GetFloat() .. ": interest repeat rate")
 	self.round_status = 1
@@ -15,9 +14,15 @@ function GM:BeginRound()
 		//print("interest time!")
 		CompoundInterest()
 	end)
+	local players = player.GetAll()
 	self.roundstart = CurTime()
 	SetGlobalFloat("roundstart", self.roundstart)
+	SetGlobalFloat("RoundTime", GetConVar("rps_roundtime"):GetFloat())
 	SetGlobalBool("IsRoundStarted", true)
+	for k, v in pairs(players) do
+		v:SetNWInt("Luck", 50)
+		// luck will be used for determining what songs auto play
+	end
 	// update money here
 end
 
@@ -28,6 +33,8 @@ function GM:Think()
 		//print("is this even running")
 		self.roundstart = math.huge
 	elseif self.endroundtime <= CurTime() then
+		if not (GetGlobalBool("IsRoundStarted", false)) then return end
+		SetGlobalBool("IsRoundStarted", false)
 		self:EndRound()
 		print("end round time")
 	end

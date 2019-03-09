@@ -54,6 +54,8 @@ resource.AddFile("models/table/table.vvd")
 
 CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
 
+local developerMode = false
+
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
 	local files, directories = file.Find(name .. "/*", "DATA");
@@ -153,6 +155,16 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 			scissorscardAmount = scissorscardAmount + v:inventoryGetItemAmount("scissorscards")
 		end
 		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
+	end
+	if (playerMsg[1] == "/developer") then
+		if not ply:IsSuperAdmin() then return "" end
+		if (tonumber(playerMsg[2])) then
+			if (playerMsg[2] == "0") then developerMode = false end
+			if (playerMsg[2] == "1") then developerMode = true end
+
+			phy:ChatPrint("Setting developer mode to " .. developerMode)
+			return ""
+		end
 	end
 end)
 

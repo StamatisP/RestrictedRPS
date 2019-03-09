@@ -186,8 +186,12 @@ function ply:inventoryTakeItem(name, amount)
 	if not amount then amount = 1 end
 	local i = self:inventoryGet()
 
+	local item = getItems(name)
+	if not item then return end
+
 	if self:inventoryHasItem(name, amount) then
 		i[name].amount = i[name].amount - amount
+		self:PrintMessage(HUD_PRINTTALK, "You have lost a " .. item.name .. ".")
 		print("item taken")
 
 		self:inventorySave(i)
@@ -207,9 +211,9 @@ function ply:inventoryGiveItem(name, amount)
 	if not item then return end
 
 	if amount == 1 then
-		self:PrintMessage(HUD_PRINTTALK,"You received a " .. item.name)
+		self:PrintMessage(HUD_PRINTTALK,"You received a " .. item.name .. ".")
 	elseif amount > 1 then
-		self:PrintMessage(HUD_PRINTTALK,"You received " .. amount .. " " .. item.name .. "s")
+		self:PrintMessage(HUD_PRINTTALK,"You received " .. amount .. " " .. item.name .. "s.")
 	end
 
 	if self:inventoryHasItem(name, amount) then

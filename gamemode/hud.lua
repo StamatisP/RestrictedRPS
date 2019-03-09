@@ -141,7 +141,7 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	//print(compoundTimeLeft)
 	// okay so the problem here is i want it to go from 75 to 0, and then loop back to 75. how can i do that. im tired
 	//roundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), timeLeft) * 255, 0, 0)
-	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetConVar("rps_roundtime"):GetFloat(), timeLeft)
+	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("rps_roundtime"), timeLeft)
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 	//compoundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), compoundTimeLeft) * 255, 0, 0) // what the fuck am i doing???? 
 
@@ -160,9 +160,7 @@ function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
 	local hsvStart = ColorToHSV(finishcolor)
 	local hsvFinish = ColorToHSV(startcolor)
 	local hueLerp = Lerp(normalize(0, maxvalue, currentvalue), hsvStart, hsvFinish)
-	//print(hsvStart)
 	local finalHsv = HSVToColor(hueLerp, 1, 1)
-	//PrintTable(finalHsv)
 	return finalHsv
 end
 
