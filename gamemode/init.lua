@@ -163,23 +163,41 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		end
 		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
 	end
+
 	if (playerMsg[1] == "/developer") then
 		if not ply:IsSuperAdmin() then return "" end
 		if (tonumber(playerMsg[2])) then
 			if (playerMsg[2] == "0") then developerMode = false end
 			if (playerMsg[2] == "1") then developerMode = true end
 
-			phy:ChatPrint("Setting developer mode to " .. developerMode)
+			ply:ChatPrint("Setting developer mode to " .. tostring(developerMode))
 			return ""
 		end
+	end
+
+	if (playerMsg[1] == "/setnwint") then
+		//print(playerMsg[2], playerMsg[3])
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		if not playerMsg[2] or not playerMsg[3] then print("hu???", playerMsg[2], playerMsg[3]) return "" end
+		if (playerMsg[2] == "luck") then ply:SetNWInt("Luck", tonumber(playerMsg[3])) end
+		print("fug")
+		//ply:SetNWInt(playerMsg[2], tonumber(playerMsg[3]))
+		return ""
+	end
+
+	if (playerMsg[1] == "/getnwint") then
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		if not playerMsg[2] then return "" end
+		if (playerMsg[2] == "luck") then ply:ChatPrint(ply:GetNWInt("Luck", 69)) end
+		return ""
 	end
 end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
-	if (!IsValid(ent)) then return end
+	if not (IsValid(ent)) then return end
 
 	if (ent:GetName() == "rps_table") then
-		if !ply:inventoryHasItem("stars", 1) then 
+		if not ply:inventoryHasItem("stars", 1) then 
 			print(ply:GetName() .. " has no stars") 
 			return false
 		end
