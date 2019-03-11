@@ -104,6 +104,10 @@ function GM:PlayerInitialSpawn(ply)
 	print("Player "..ply:Name().." has spawned.")
 end
 
+function GM:ShowTeam(ply)
+	ply:ConCommand("jukebox")
+end
+
 function GM:PlayerAuthed(ply, steamID, uniqueID)
 	print("Player: ".. ply:Nick() .. ", has gotten authed.")
 	ply:databaseCheck()
