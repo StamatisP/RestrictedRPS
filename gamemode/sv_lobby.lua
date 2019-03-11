@@ -5,7 +5,7 @@ print("sv_lobby start")
 local function enterLobby()
 
 	if isLobbyStarted == true then return end
-	//isLobbyStarted = true
+	isLobbyStarted = true
 	
 	print("enter lobby")
 	net.Start("OpenLobby")
