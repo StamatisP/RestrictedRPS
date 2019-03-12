@@ -18,7 +18,7 @@ surface.CreateFont( "SongTitle", {
 
 local medialib = include("medialib.lua")
 local availableSongs = {}
-local frame, play, mediaclip, pause, vol, service, title, label
+local frame, play, mediaclip, pause, vol, service, title, label, selectedSong
 local jukeboxOpen = false
 local CLIP
 local autoplaylistEnabled = true
@@ -78,6 +78,17 @@ local function GetRandomSong()
 	return musicTable
 end
 
+local function GetSelectedSong()
+	for k, v in pairs(musicPlaylist) do
+		local i = musicPlaylist[k]
+		if i then
+			if i.title == selectedSong then
+				return i
+			end
+		end
+	end
+end
+
 local function JukeboxFrame()
 	if not jukeboxOpen then 
 		frame = vgui.Create("DFrame")
@@ -88,15 +99,23 @@ local function JukeboxFrame()
 
 		play = frame:Add("DButton")
 		play:SetPos(10, 460)
-		play:SetSize(80, 30)
+		play:SetSize(30, 30)
 		play:SetText("Play")
-		play.DoClick = function() 
-			//mediaclip:play()
-			math.randomseed(os.time())
-			local randsong = GetRandomSong()
-			PlayMusic(randsong)
-			label:SetText(randsong.title)
+		play.DoClick = function()
+			PlayMusic(GetSelectedSong())
+			label:SetText(selectedSong)
 			label:SizeToContents()
+			label:SetContentAlignment(5)
+		end
+
+		local stop = frame:Add("DButton")
+		stop:SetPos(50, 460)
+		stop:SetSize(30, 30)
+		stop:SetText("Stop")
+		stop.DoClick = function()
+			CLIP:stop()
+			label:SetText("Stopped.")
+			label:SizeToContents() // make this a function
 		end
 
 		volume = frame:Add("Slider")
@@ -126,25 +145,47 @@ local function JukeboxFrame()
 		end
 
 		label = frame:Add("DLabel")
-		label:SetPos(220, 50)
+		label:SetPos(200, 25)
 		label:SetFont("SongTitle")
-		label:SetText("No song currently playing...")
+		label:SetText("No song currently playing.")
+		label:SetContentAlignment(5)
 		label:SizeToContents()
+
+		local f = frame:Add("DPanel")
+		f:SetSize(400, 400)
+		f:SetPos(50, 50)
+
+		local songList = f:Add("DListView")
+		songList:Dock(FILL)
+		songList:SetMultiSelect(false)
+		songList:AddColumn("Song Title")
+		for k, v in pairs(musicPlaylist) do
+			local i = musicPlaylist[k]
+
+			if i then
+				songList:AddLine(i.title)
+			end
+		end
+		songList:SortByColumn(1, false)
+		songList.OnRowSelected = function(list, index, panel)
+			selectedSong = panel:GetColumnText(1)
+			print(selectedSong)
+		end
 
 		frame:MakePopup()
 		jukeboxOpen = true
 	elseif jukeboxOpen then
 
 		frame:ToggleVisible()
-		PrintTable(availableSongs)
+		//PrintTable(availableSongs)
 
 	end
 end
 
 local function AutoPlaylist()
-	if not autoplaylistEnabled then return end
-	if IsValid(CLIP) then return end
-	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if not autoplaylistEnabled then print("ap not enabled") return end
+	if IsValid(CLIP) then print("music already playing") return end
+	if not GetGlobalBool("IsRoundStarted", false) then print("round not started") return end
 
 	local randsong = GetRandomSong()
 
@@ -152,10 +193,11 @@ local function AutoPlaylist()
 	if not label then return end
 	label:SetText(randsong.title)
 	label:SizeToContents()
+	label:SetContentAlignment(5)
 end
 
 
-timer.Create("AutoPlaylist", math.random(5, 10), 0, function()
+timer.Create("AutoPlaylist", math.random(15, 30), 0, function()
 	math.randomseed(os.time())
 	AutoPlaylist()
 end)
