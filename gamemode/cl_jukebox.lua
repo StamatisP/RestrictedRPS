@@ -85,6 +85,7 @@ local function GetRandomSong()
 end
 
 local function GetSelectedSong()
+	if not selectedSong then return end
 	for k, v in pairs(musicPlaylist) do
 		local i = musicPlaylist[k]
 		if i then
@@ -108,6 +109,7 @@ local function JukeboxFrame()
 		play:SetSize(30, 30)
 		play:SetText("Play")
 		play.DoClick = function()
+			if not GetSelectedSong() then return end
 			PlayMusic(GetSelectedSong())
 			label:SetText(selectedSong)
 			label:SizeToContents()
@@ -119,9 +121,22 @@ local function JukeboxFrame()
 		stop:SetSize(30, 30)
 		stop:SetText("Stop")
 		stop.DoClick = function()
+			if not IsValid(CLIP) then return end
 			CLIP:stop()
 			label:SetText("Stopped.")
 			label:SizeToContents() // make this a function
+		end
+
+		local shuffle = frame:Add("DButton")
+		shuffle:SetPos(90, 460)
+		shuffle:SetSize(50, 30)
+		shuffle:SetText("Shuffle")
+		shuffle.DoClick = function()
+			local randsong = GetRandomSong()
+			PlayMusic(randsong)
+			if not label then return end
+			label:SetText(randsong.title)
+			label:SizeToContents()
 		end
 
 		volume = frame:Add("Slider")
@@ -138,7 +153,7 @@ local function JukeboxFrame()
 		end
 
 		local playlistCheck = vgui.Create("DCheckBoxLabel", frame)
-		playlistCheck:SetPos(100, 470)
+		playlistCheck:SetPos(150, 470)
 		playlistCheck:SetValue(1)
 		playlistCheck:SetText("Auto Playlist")
 
@@ -156,6 +171,7 @@ local function JukeboxFrame()
 		label:SetText("No song currently playing.")
 		label:SetContentAlignment(5)
 		label:SizeToContents()
+		label:SetTextColor(Color(255, 255, 255))
 
 		local f = frame:Add("DPanel")
 		f:SetSize(400, 400)

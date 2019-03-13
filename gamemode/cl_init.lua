@@ -77,9 +77,9 @@ local tab = {
 
 hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
-hook.Add("RenderScreenspaceEffects", "testingcolor", function()
+/*hook.Add("RenderScreenspaceEffects", "testingcolor", function()
 	DrawColorModify(tab)
-end)
+end)*/
 
 //i should implement credits one day... thank you bass
 

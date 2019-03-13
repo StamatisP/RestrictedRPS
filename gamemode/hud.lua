@@ -146,14 +146,14 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	//compoundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), compoundTimeLeft) * 255, 0, 0) // what the fuck am i doing???? 
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
-	draw.SimpleText("Rock: " ..rockcards, "CardText", ScrW() * 0.30, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-	draw.SimpleText("Paper: " ..papercards, "CardText", ScrW() * 0.50, ScrH() * 0.935, Color(114, 189, 208, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-	draw.SimpleText("Scissors: " ..scissorscards, "CardText", ScrW() * 0.70, ScrH() * 0.935, Color(161, 193, 36, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText("Rock: " ..rockcards, "CardText", ScrW() * 0.33, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Paper: " ..papercards, "CardText", ScrW() * 0.53, ScrH() * 0.935, Color(114, 189, 208, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Scissors: " ..scissorscards, "CardText", ScrW() * 0.73, ScrH() * 0.935, Color(161, 193, 36, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	draw.SimpleText(moneyAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.935, Color(48, 221, 55, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(debtAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.015, Color(255, 80, 80, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-	draw.SimpleText(txt, "NormalText", ScrW() * 0.88, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-	draw.SimpleText(compoundTxt, "NormalText", ScrW() * 0.88, ScrH() * 0.055, compoundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-	draw.SimpleText("Stars: " ..stars, "CardText", ScrW() * 0.90, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText(txt, "NormalText", ScrW() * 0.885, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText(compoundTxt, "NormalText", ScrW() * 0.885, ScrH() * 0.055, compoundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
+	draw.SimpleText("Stars: " ..stars, "CardText", ScrW() * 0.93, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 end)
 
 function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
