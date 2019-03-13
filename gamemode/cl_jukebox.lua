@@ -39,6 +39,12 @@ local function PlayMusic(tab)
 	elseif mediaclip:isPlaying() then
 		mediaclip:setVolume(vol)
 	end
+	mediaclip:on("ended", function()
+		timer.UnPause("AutoPlaylist")
+	end)
+	mediaclip:on("playing", function()
+		timer.Pause("AutoPlaylist")
+	end)
 end
 
 local function AssembleAvailableSongs()
