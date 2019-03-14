@@ -99,16 +99,13 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 
 	local roundColor
 	local compoundColor
-	local rockcards = nil
-	local papercards = nil
-	local scissorscards = nil
-	local stars = nil
-	local timeLeft = math.max(0, GetGlobalFloat("endroundtime", 0) - CurTime()) // look at how awesomestrike did it, init.lua
-	//print("why the fuck is this running?????")
-	//local compoundTimeLeft = math.max(0, compoundTimeRate - CurTime()) // the problem is here: it must reset every 75 seconds. create a timer, maybe?
-	local compoundTxt = nil
-	//print(GetGlobalFloat("endroundtime"))
-	local txt = nil
+	local rockcards 
+	local papercards 
+	local scissorscards 
+	local stars 
+	local timeLeft = math.max(0, GetGlobalFloat("endroundtime", 0) - CurTime())
+	local compoundTxt
+	local txt
 	// in the future, getting items from the database in hudpaint might fuck up performance. 
 	// have it update on a delay, call a hook when it is updated manually (via inventory pickups/drops/table rounds)
 	if (inventoryHasItem("rockcards")) then
@@ -132,18 +129,11 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 		stars = "0"
 	end
 
-	txt = string.ToMinutesSeconds(timeLeft)
-	compoundTxt = string.ToMinutesSeconds(compoundTimeLeft)
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
 
-	//if compoundTimeLeft <= 0 then compoundTimeLeft = GetGlobalFloat("interestrepeat") end
-	//print(compoundTimeLeft)
-	// okay so the problem here is i want it to go from 75 to 0, and then loop back to 75. how can i do that. im tired
-	//roundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), timeLeft) * 255, 0, 0)
 	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("rps_roundtime"), timeLeft)
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
-	//compoundColor = Color(normalize(0, GetConVar("rps_roundtime"):GetFloat(), compoundTimeLeft) * 255, 0, 0) // what the fuck am i doing???? 
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
 	draw.SimpleText("Rock: " ..rockcards, "CardText", ScrW() * 0.33, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
@@ -184,6 +174,7 @@ local function UpdateCompoundTime()
 end
 
 function GM:Think()
+	if not GetGlobalBool("IsRoundStarted", false) then return end
 	compoundTimeLeft = compoundTimeLeft - RealFrameTime()
 	if compoundTimeLeft <= 0 then 
 		compoundTimeLeft = compoundTimeLeft + GetGlobalFloat("interestrepeat", 2)

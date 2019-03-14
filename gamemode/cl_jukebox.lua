@@ -22,7 +22,7 @@ local frame, play, mediaclip, pause, vol, service, title, label, selectedSong
 local jukeboxOpen = false
 local CLIP
 local autoplaylistEnabled = true
-local vol = 0.1
+local vol = 0.05
 
 local function PlayMusic(tab)
 	if IsValid(CLIP) then CLIP:stop() end
@@ -144,7 +144,7 @@ local function JukeboxFrame()
 		volume:SetWide(250)
 		volume:SetMin(0)
 		volume:SetMax(1.0)
-		volume:SetValue(0.1)
+		volume:SetValue(0.05)
 		volume:SetDecimals(2)
 		volume.OnValueChanged = function(_, val)
 			vol = val
@@ -219,7 +219,7 @@ local function AutoPlaylist()
 end
 
 
-timer.Create("AutoPlaylist", math.random(15, 30), 0, function()
+timer.Create("AutoPlaylist", math.random(30, 60), 0, function()
 	math.randomseed(os.time())
 	AutoPlaylist()
 end)

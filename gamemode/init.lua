@@ -40,6 +40,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("AnnounceWinnerOfMatch")
 	util.AddNetworkString("UpdatePlayerVar")
 	util.AddNetworkString("RRPS_InitializeVars")
+	util.AddNetworkString("RRPS_VarDisconnect")
 end
 
 GM:AddNetworkStrings()
@@ -271,4 +272,10 @@ concommand.Add("_sendRRPSvars", function(ply)
 	if ply.RRPSvarsSent and ply.RRPSvarsSent > (CurTime() - 3) then return end
 	ply.RRPSvarsSent = CurTime()
 	ply:SendRRPSVars()
+end)
+
+hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len)
+	net.Start("RRPS_VarDisconnect")
+		net.WriteUInt(ply:UserID(), 16)
+	net.Broadcast()
 end)

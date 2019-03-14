@@ -132,6 +132,11 @@ timer.Simple(0, function()
 	RunConsoleCommand("_sendRRPSvars")
 end)
 
+net.Receive("RRPS_VarDisconnect", function(len)
+	local userID = net.ReadUInt(16)
+	RRPSvars[userID] = nil
+end)
+
 timer.Create("checkifitcame", 15, 0, function()
 	for _, v in ipairs(player.GetAll()) do
 		if v:ReturnPlayerVar("money") then continue end
