@@ -47,7 +47,7 @@ function CompoundInterest()
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
 	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
 		//print(body)
-		local money = v:databaseGetValue("debt")
+		local money = v:ReturnPlayerVar("debt")
 		//print(money)
 		local moneyAfter = money * math.pow(body,1)
 		//print(moneyAfter)

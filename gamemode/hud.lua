@@ -191,8 +191,8 @@ function GM:Think()
 	end
 end
 
-timer.Create("UpdateMoney", 1, 0, UpdateMoney)
-timer.Create("UpdateDebt", 1, 0, UpdateDebt)
+timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
+timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 //timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)

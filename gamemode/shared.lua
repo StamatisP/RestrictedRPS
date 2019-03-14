@@ -37,7 +37,7 @@ end)
 function WriteRRPSVar(name, value)
 	local RRPSvar = RRPSvars[name]
 	if not RRPSvar then
-		print("weird")
+		print("weird, RRPSvar is nil")
 	end
 
 	net.WriteUInt(RRPSvar.id, 8)

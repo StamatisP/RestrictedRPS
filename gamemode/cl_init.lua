@@ -65,23 +65,8 @@ local function inputManager()
 	end
 end
 
-local tab = {
-	[ "$pp_colour_addr" ] = 0.05,
-	[ "$pp_colour_addg" ] = 0,
-	[ "$pp_colour_addb" ] = 0,
-	[ "$pp_colour_brightness" ] = 0,
-	[ "$pp_colour_contrast" ] = 1.1,
-	[ "$pp_colour_colour" ] = 0.8,
-	[ "$pp_colour_mulr" ] = 0.06,
-	[ "$pp_colour_mulg" ] = 0,
-	[ "$pp_colour_mulb" ] = 0
-}
-
 hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
-/*hook.Add("RenderScreenspaceEffects", "testingcolor", function()
-	DrawColorModify(tab)
-end)*/
 
 //i should implement credits one day... thank you bass
 
@@ -104,6 +89,7 @@ CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you des
 CreateClientConVar("rps_selection", "Broken", false, true, "Your card selection.")
 
 function pmeta:ReturnPlayerVar(var)
+	if not var then ErrorNoHalt("you forgot to put a var to return") return end
 	local vars = RRPSvars[self:UserID()]
 	//this runs on the player themselves btw
 	return vars and vars[var] or nil
@@ -127,3 +113,31 @@ local function DoRetrieve()
 	RetrievePlayerVar(userID, var, value)
 end
 net.Receive("UpdatePlayerVar", DoRetrieve)
+
+local function InitializeRRPSvars(len)
+	local plyCount = net.ReadUInt(8)
+
+	for i = 1, plyCount, 1 do
+		local userID = net.ReadUInt(16)
+		local varCount = net.ReadUInt(10)
+
+		for j = 1, varCount, 1 do
+			local var, value = ReadRRPSVar()
+			RetrievePlayerVar(userID, var, value)
+		end
+	end
+end
+net.Receive("RRPS_InitializeVars", InitializeRRPSvars)
+timer.Simple(0, function()
+	RunConsoleCommand("_sendRRPSvars")
+end)
+
+timer.Create("checkifitcame", 15, 0, function()
+	for _, v in ipairs(player.GetAll()) do
+		if v:ReturnPlayerVar("money") then continue end
+
+		RunConsoleCommand("_sendRRPSvars")
+		return
+	end
+	timer.Remove("checkifitcame")
+end)

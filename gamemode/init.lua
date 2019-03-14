@@ -39,6 +39,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("ArePlayersReady")
 	util.AddNetworkString("AnnounceWinnerOfMatch")
 	util.AddNetworkString("UpdatePlayerVar")
+	util.AddNetworkString("RRPS_InitializeVars")
 end
 
 GM:AddNetworkStrings()
@@ -104,6 +105,7 @@ end
 
 function GM:PlayerInitialSpawn(ply) 
 	print("Player "..ply:Name().." has spawned.")
+	ply.RRPSvars = ply.RRPSvars or {}
 end
 
 function GM:ShowTeam(ply)
@@ -126,10 +128,10 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/dropmoney") then
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
-			local plyBalance = ply:ReturnPlayerMoney()
+			local plyBalance = ply:ReturnPlayerVar("money")
 
 			if (amount > 0 and amount <= plyBalance) then
-				ply:UpdatePlayerMoney(plyBalance - amount)
+				ply:UpdatePlayerVar("money", plyBalance - amount)
 
 				scripted_ents.Get("money_entity"):SpawnFunction(ply, ply:GetEyeTrace(), "money_entity"):SetValue(amount)
 			end
@@ -141,9 +143,9 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/givemoney") then
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
-			local plyBalance = ply:ReturnPlayerMoney()
+			local plyBalance = ply:ReturnPlayerVar("money")
 			if (amount > 0) then
-				ply:UpdatePlayerMoney(plyBalance + amount)
+				ply:UpdatePlayerVar("money", plyBalance + amount)
 				print("giving " .. ply:Nick() .. " money")
 			end
 
@@ -226,6 +228,7 @@ function pmeta:UpdatePlayerVar(var, value, target)
 
 	vars = vars or {}
 	vars[var] = value
+	if not value then ErrorNoHalt("warning! no value!") return end
 
 	net.Start("UpdatePlayerVar")
 		net.WriteUInt(self:UserID(), 16)
@@ -239,3 +242,33 @@ function pmeta:ReturnPlayerVar(var)
 	vars = vars or {}
 	return vars[var]
 end
+
+function pmeta:SendRRPSVars()
+	if self:EntIndex() == 0 then return end
+	
+	local plys = player.GetAll()
+
+	net.Start("RRPS_InitializeVars")
+		net.WriteUInt(#plys, 8)
+		for _, target in ipairs(plys) do
+			net.WriteUInt(target:UserID(), 16)
+
+			local RRPSvars = {}
+			for var, value in pairs(target.RRPSvars) do
+				if self ~= target then continue end
+				table.insert(RRPSvars, var)
+			end
+
+			local vars_cnt = #RRPSvars
+			net.WriteUInt(vars_cnt, 10)
+			for i = 1, vars_cnt, 1 do
+				WriteRRPSVar(RRPSvars[i], target.RRPSvars[RRPSvars[i]])
+			end
+		end
+	net.Send(self)
+end
+concommand.Add("_sendRRPSvars", function(ply)
+	if ply.RRPSvarsSent and ply.RRPSvarsSent > (CurTime() - 3) then return end
+	ply.RRPSvarsSent = CurTime()
+	ply:SendRRPSVars()
+end)

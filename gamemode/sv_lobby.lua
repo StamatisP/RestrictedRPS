@@ -15,11 +15,11 @@ end
 local function giveMoney()
 	for k, v in pairs(player.GetAll()) do
 		if v:GetInfoNum("rps_money", 1000000) >= 1000000 or v:GetInfoNum("rps_money", 1000000) <= 10000000 then
-			print(v:GetInfoNum("rps_money", 1000000))
+			//print(v:GetInfoNum("rps_money", 1000000))
 			v:UpdatePlayerVar("money", v:GetInfoNum("rps_money", 1000000))
 			//print(v:ReturnPlayerMoney())
 			v:UpdatePlayerVar("debt", v:GetInfoNum("rps_money", 1000000))
-			print(v:ReturnPlayerVar("debt"))
+			//print(v:ReturnPlayerVar("debt"))
 			//print(v:ReturnPlayerMoney())
 		else
 			print("you're a dirty cheater, aren't you?")
