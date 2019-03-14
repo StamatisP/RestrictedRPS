@@ -38,6 +38,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("PlayerTableCheckGUIEnable")
 	util.AddNetworkString("ArePlayersReady")
 	util.AddNetworkString("AnnounceWinnerOfMatch")
+	util.AddNetworkString("UpdatePlayerVar")
 end
 
 GM:AddNetworkStrings()
@@ -58,6 +59,7 @@ resource.AddFile("models/table/table.vvd")
 CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
 
 local developerMode = false
+local pmeta = FindMetaTable("Player")
 
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
@@ -124,10 +126,10 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/dropmoney") then
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
-			local plyBalance = ply:databaseGetValue("money")
+			local plyBalance = ply:ReturnPlayerMoney()
 
 			if (amount > 0 and amount <= plyBalance) then
-				ply:databaseSetValue("money", plyBalance - amount)
+				ply:UpdatePlayerMoney(plyBalance - amount)
 
 				scripted_ents.Get("money_entity"):SpawnFunction(ply, ply:GetEyeTrace(), "money_entity"):SetValue(amount)
 			end
@@ -139,9 +141,9 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/givemoney") then
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
-			local plyBalance = ply:databaseGetValue("money")
+			local plyBalance = ply:ReturnPlayerMoney()
 			if (amount > 0) then
-				ply:databaseSetValue("money", plyBalance + amount)
+				ply:UpdatePlayerMoney(plyBalance + amount)
 				print("giving " .. ply:Nick() .. " money")
 			end
 
@@ -217,19 +219,23 @@ net.Receive("KEY_USE", function(len, ply)
 	hook.Call("KEY_USE", GAMEMODE, ply)
 end)
 
-/*hook.Add("Think", "PlayerStopMove", function()
-	for _, v in pairs(player.GetAll()) do
-		//print(v:GetNWBool("TableView"))
-		if v:GetNWBool("TableView") then
-			v:SetAbsVelocity(Vector(0,0,0))
-		end
-	end
-end)*/
+function pmeta:UpdatePlayerVar(var, value, target)
+	target = target or player.GetAll()
 
--- Music controller here.
--- idea: have music randomly chosen, or maybe chosen based on how successful you are
+	local vars = self.RRPSvars
 
-/*timer.Simple(945, function() 
-	--plays 945 seconds in, 16 minutes 45 seconds. to fit in zawa song
-	ReadSound("music/ultrazawa.wav", true)
-end)*/ -- NO NO NO IF IT'S SERVERSIDE THEN IT'S A BITCH
+	vars = vars or {}
+	vars[var] = value
+
+	net.Start("UpdatePlayerVar")
+		net.WriteUInt(self:UserID(), 16)
+		WriteRRPSVar(var, value)
+	net.Send(target)
+end
+
+function pmeta:ReturnPlayerVar(var)
+	local vars = self.RRPSvars
+
+	vars = vars or {}
+	return vars[var]
+end

@@ -34,12 +34,6 @@ local function openLobby()
 	moneyEntry:SetMax(10000000)
 	moneyEntry:SetDecimals(0)
 	moneyEntry:SetDefaultValue(1000000)
-	/*if (type(ply:databaseSetValue)=="function") then
-		print("money set")
-		ply:databaseSetValue("money", moneyEntry:GetValue())
-	else
-		print("wtf why")
-	end*/
 	moneyEntry:SetConVar("rps_money")
 
 	// make this also dependant on scrw/scrh
@@ -109,14 +103,6 @@ local function openLobby()
 
 		net.Start("StartGame")
 		net.SendToServer()
-
-		//net.Start("moneyUpdate")
-		//	net.WriteInt(moneyEntry:GetValue(), 28)
-		//net.SendToServer()
-		//ply:databaseSetValue("money", moneyEntry:GetValue())
-		//self:SetNWInt("money", moneyEntry:GetValue())
-
-		//closeFrame()
 	end
 
 	--LocalPlayer():EmitSound("little_zawa")

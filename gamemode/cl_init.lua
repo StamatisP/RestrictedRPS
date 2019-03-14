@@ -14,6 +14,8 @@ local delay = 2
 local lastOccurrence = -delay
 RoundStarted = false
 TablePlayerIsUsing = nil
+local RRPSvars = {}
+local pmeta = FindMetaTable("Player")
 
 MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function() 
@@ -100,3 +102,28 @@ end)
 
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")
 CreateClientConVar("rps_selection", "Broken", false, true, "Your card selection.")
+
+function pmeta:ReturnPlayerVar(var)
+	local vars = RRPSvars[self:UserID()]
+	//this runs on the player themselves btw
+	return vars and vars[var] or nil
+end
+
+local function RetrievePlayerVar(userID, var, value)
+	local ply = Player(userID)
+	RRPSvars[userID] = RRPSvars[userID] or {}
+
+	RRPSvars[userID][var] = value
+
+	if IsValid(ply) then
+		ply.RRPSvars = RRPSvars[userID]
+	end
+end
+
+local function DoRetrieve()
+	local userID = net.ReadUInt(16)
+	local var, value = ReadRRPSVar()
+
+	RetrievePlayerVar(userID, var, value)
+end
+net.Receive("UpdatePlayerVar", DoRetrieve)

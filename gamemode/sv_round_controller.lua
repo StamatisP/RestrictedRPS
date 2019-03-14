@@ -20,6 +20,7 @@ function GM:BeginRound()
 	SetGlobalFloat("RoundTime", GetConVar("rps_roundtime"):GetFloat())
 	SetGlobalBool("IsRoundStarted", true)
 	for k, v in pairs(players) do
+		// no more nwvars, they exponentially scale data
 		v:SetNWInt("Luck", 50)
 		// luck will be used for determining what songs auto play
 	end
@@ -50,7 +51,7 @@ function CompoundInterest()
 		//print(money)
 		local moneyAfter = money * math.pow(body,1)
 		//print(moneyAfter)
-		v:databaseSetValue("debt", moneyAfter)
+		v:UpdatePlayerVar("debt", moneyAfter)
 		//print(v:databaseGetValue("money"))
 	end
 end

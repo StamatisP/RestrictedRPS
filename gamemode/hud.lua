@@ -165,14 +165,16 @@ function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
 end
 
 local function UpdateDebt()
-	if (databaseGetValue("debt") == nil) then ErrorNoHalt("debt shouldnt be nil") return end
-	local roundedDebt = math.Round(databaseGetValue("debt"), 2)
+	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if (LocalPlayer():ReturnPlayerVar("debt") == nil) then ErrorNoHalt("debt shouldnt be nil") return end
+	local roundedDebt = math.Round(LocalPlayer():ReturnPlayerVar("debt"), 2)
 	debtAfterFormat = formatMoney(roundedDebt)
 end
 
-local function UpdateMoney() 
-	if (databaseGetValue("money") == nil) then ErrorNoHalt("how in the world is money nil??") return end
-	local roundedMoney = math.Round(databaseGetValue("money"), 2)
+local function UpdateMoney()
+	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if (LocalPlayer():ReturnPlayerVar("money") == nil) then ErrorNoHalt("how in the world is money nil??") return end
+	local roundedMoney = math.Round(LocalPlayer():ReturnPlayerVar("money"), 2)
 	// somehow add a lerp?
 	moneyAfterFormat = formatMoney(roundedMoney)
 end
@@ -189,8 +191,8 @@ function GM:Think()
 	end
 end
 
-timer.Create("UpdateMoney", 2, 0, UpdateMoney)
-timer.Create("UpdateDebt", 2, 0, UpdateDebt)
+timer.Create("UpdateMoney", 1, 0, UpdateMoney)
+timer.Create("UpdateDebt", 1, 0, UpdateDebt)
 //timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)
