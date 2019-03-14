@@ -24,6 +24,31 @@ local CLIP
 local autoplaylistEnabled = true
 local vol = 0.05
 
+local function FadeInMusic(volumeTarget, time, clip)
+	local volincrement = volumeTarget / (time * 30)
+	clip:setVolume(0)
+	local newvol = 0
+	timer.Create("fadein", 0.01, 0, function()
+		if newvol > volumeTarget then timer.Destroy("fadein") end
+		newvol = newvol + volincrement
+		print(newvol)
+		clip:setVolume(newvol)
+	end)
+	if newvol > volumeTarget then timer.Destroy("fadein") end
+end
+
+local function FadeOutMusic(volumeTarget, time, clip)
+	local volincrement = volumeTarget / (time * 30)
+	local newvol = clip:getVolume()
+	timer.Create("fadeout", 0.01, 0, function()
+		if newvol < volumeTarget then timer.Destroy("fadeout") end
+		newvol = newvol - volincrement
+		print(newvol)
+		clip:setVolume(newvol)
+	end)
+	if newvol < volumeTarget then timer.Destroy("fadeout") end
+end
+
 local function PlayMusic(tab)
 	if IsValid(CLIP) then CLIP:stop() end
 	local link = tab.song
@@ -44,6 +69,11 @@ local function PlayMusic(tab)
 	end)
 	mediaclip:on("playing", function()
 		timer.Pause("AutoPlaylist")
+		FadeInMusic(vol, 5, mediaclip)
+	end)
+	mediaclip:on("error", function()
+		timer.UnPause("AutoPlaylist")
+		ErrorNoHalt(errorId, errorDesc)
 	end)
 end
 
@@ -94,6 +124,11 @@ local function GetSelectedSong()
 			end
 		end
 	end
+end
+
+local function normalize(min, max, val) 
+    local delta = max - min
+    return (val - min) / delta
 end
 
 local function JukeboxFrame()
@@ -219,7 +254,7 @@ local function AutoPlaylist()
 end
 
 
-timer.Create("AutoPlaylist", math.random(30, 60), 0, function()
+timer.Create("AutoPlaylist", math.random(10, 20), 0, function()
 	math.randomseed(os.time())
 	AutoPlaylist()
 end)

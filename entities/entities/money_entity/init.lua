@@ -40,10 +40,6 @@ function ENT:SpawnFunction(ply, tr, ClassName)
 end
 
 function ENT:Use(activator, caller)
-	//print(activator:ReturnPlayerVar("money") .. " before addition")
-	//print(value)
 	activator:UpdatePlayerVar("money", activator:ReturnPlayerVar("money") + self:GetValue())
-	//print(activator:ReturnPlayerVar("money") .. " after addition")
-
 	self:Remove()
 end

@@ -109,8 +109,16 @@ function GM:PlayerInitialSpawn(ply)
 	ply.RRPSvars = ply.RRPSvars or {}
 end
 
+function GM:ShowHelp(ply)
+	ply:ConCommand("inventory")
+end
+
 function GM:ShowTeam(ply)
 	ply:ConCommand("jukebox")
+end
+
+function GM:ShowSpare1(ply)
+	ply:ConCommand("uhhh")
 end
 
 function GM:PlayerAuthed(ply, steamID, uniqueID)

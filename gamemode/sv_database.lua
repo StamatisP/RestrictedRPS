@@ -133,11 +133,6 @@ function ply:databaseGetValue(name)
 	return d[name]
 end
 
-function GM:ShowHelp(ply)
-	print("show help")
-	ply:ConCommand("inventory")
-end
-
 function ply:inventorySave(i)
 	if not i then return end
 	self:databaseSetValue("inventory", i)

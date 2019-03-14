@@ -304,7 +304,7 @@ musicPlaylist[42] = {
 
 musicPlaylist[43] = {
 	song = "https://www.youtube.com/watch?v=YZDfOo5qEsg",
-	title = "Bassment[sic]",
+	title = "Bassment",
 	luck = 30,
 	autoplay = true
 }
