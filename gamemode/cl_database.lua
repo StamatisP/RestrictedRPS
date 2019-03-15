@@ -92,7 +92,7 @@ local function inventoryItemButton(iname, name, amount, description, model, pare
 	mp:SetCamPos(Vector(dist, dist, dist))
 	mp:SetLookAt(Vector(0, 0, 0))
 	mp:SetFOV(20)
-	print("inv item button")
+	//print("inv item button")
 
 	function mp:LayoutEntity(Entity)
 		self:RunAnimation()	

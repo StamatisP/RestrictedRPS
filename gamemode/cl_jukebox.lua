@@ -31,7 +31,7 @@ local function FadeInMusic(volumeTarget, time, clip)
 	timer.Create("fadein", 0.01, 0, function()
 		if newvol > volumeTarget then timer.Destroy("fadein") end
 		newvol = newvol + volincrement
-		print(newvol)
+		//print(newvol)
 		clip:setVolume(newvol)
 	end)
 	if newvol > volumeTarget then timer.Destroy("fadein") end
@@ -43,7 +43,7 @@ local function FadeOutMusic(volumeTarget, time, clip)
 	timer.Create("fadeout", 0.01, 0, function()
 		if newvol < volumeTarget then timer.Destroy("fadeout") end
 		newvol = newvol - volincrement
-		print(newvol)
+		//print(newvol)
 		clip:setVolume(newvol)
 	end)
 	if newvol < volumeTarget then timer.Destroy("fadeout") end
@@ -178,10 +178,11 @@ local function JukeboxFrame()
 		volume:SetPos(250, 460)
 		volume:SetWide(250)
 		volume:SetMin(0)
-		volume:SetMax(1.0)
-		volume:SetValue(0.05)
-		volume:SetDecimals(2)
+		volume:SetMax(100)
+		volume:SetValue(5)
+		volume:SetDecimals(1)
 		volume.OnValueChanged = function(_, val)
+			val = val / 100
 			vol = val
 			if not IsValid(mediaclip) then return end
 			mediaclip:setVolume(val)
@@ -240,6 +241,7 @@ local function JukeboxFrame()
 end
 
 local function AutoPlaylist()
+	if vol == 0 then return end
 	if not autoplaylistEnabled then print("ap not enabled") return end
 	if IsValid(CLIP) then print("music already playing") return end
 	if not GetGlobalBool("IsRoundStarted", false) then print("round not started") return end

@@ -62,6 +62,7 @@ CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_N
 
 local developerMode = false
 local pmeta = FindMetaTable("Player")
+local voiceDistance = 400 * 400
 
 ------ Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
 function file.PurgeDirectory(name)
@@ -86,6 +87,34 @@ end
 local startWeapons = {
 	"weapon_fists"
 }
+
+local function calcPlyCanHearPlayerVoice(listener)
+	if not IsValid(listener) then return end
+	listener.CanHear = listener.CanHear or {}
+	local shootPos = listener:GetShootPos()
+	for _, talker in ipairs(player.GetAll()) do
+		local talkerShootPos = talker:GetShootPos()
+		listener.CanHear[talker] = (shootPos:DistToSqr(talkerShootPos) < voiceDistance)
+	end
+end
+hook.Add("PlayerInitialSpawn","CanHearVoice", function(ply)
+	timer.Create(ply:UserID() .. "CanHearVoice", 0.5, 0, Curry(calcPlyCanHearPlayerVoice, 2)(ply)) // no idea what im doin but if darkrp did it it should be fine hopefully
+end)
+hook.Add("PlayerDisconnected", "CanHearVoice", function(ply)
+	if not ply.CanHear then return end
+	for _, v in ipairs(player.GetAll()) do
+		if not v.CanHear then continue end
+		v.CanHear[ply] = nil
+	end
+	timer.Remove(ply:UserID() .. "CanHearVoice")
+end)
+
+function GM:PlayerCanHearPlayersVoice(listener, talker)
+	if not talker:Alive() then return false end
+
+	local canHear = listener.CanHear and listener.CanHear[talker]
+	return canHear, true
+end
 
 //local pmeta = FindMetaTable("Player")
 
@@ -124,6 +153,10 @@ end
 function GM:PlayerAuthed(ply, steamID, uniqueID)
 	print("Player: ".. ply:Nick() .. ", has gotten authed.")
 	ply:databaseCheck()
+end
+
+function GM:CanPlayerSuicide( ply )
+	return ply:IsSuperAdmin()
 end
 
 function GM:PlayerDisconnected(ply)
@@ -217,9 +250,11 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	end
 end)
 
-function GM:CanPlayerSuicide( ply )
-	return ply:IsSuperAdmin()
-end
+hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len)
+	net.Start("RRPS_VarDisconnect")
+		net.WriteUInt(ply:UserID(), 16)
+	net.Broadcast()
+end)
 
 net.Receive("ZawaPlay", function(len, ply)
 	ReadSound("ambient/zawa1.wav", false)
@@ -282,8 +317,41 @@ concommand.Add("_sendRRPSvars", function(ply)
 	ply:SendRRPSVars()
 end)
 
-hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len)
-	net.Start("RRPS_VarDisconnect")
-		net.WriteUInt(ply:UserID(), 16)
-	net.Broadcast()
-end)
+ReverseArgs = function(...)
+
+   --reverse args by building a function to do it, similar to the unpack() example
+   local function reverse_h(acc, v, ...)
+      if select('#', ...) == 0 then
+         return v, acc()
+      else
+         return reverse_h(function () return v, acc() end, ...)
+      end
+   end
+
+   -- initial acc is the end of the list
+   return reverse_h(function () return end, ...)
+end
+
+Curry = function(func, num_args)
+    if not num_args then error("Missing argument #2: num_args") end
+    if not func then error("Function does not exist!", 2) end
+    -- helper
+    local function curry_h(argtrace, n)
+        if n == 0 then
+            -- reverse argument list and call function
+            return func(ReverseArgs(argtrace()))
+        else
+            -- "push" argument (by building a wrapper function) and decrement n
+            return function(x)
+                return curry_h(function() return x, argtrace() end, n - 1)
+            end
+        end
+   end
+
+   -- no sense currying for 1 arg or less
+   if num_args > 1 then
+      return curry_h(function() return end, num_args)
+   else
+      return func
+   end
+end
