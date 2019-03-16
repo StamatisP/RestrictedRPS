@@ -23,18 +23,24 @@ local jukeboxOpen = false
 local CLIP
 local autoplaylistEnabled = true
 local vol = 0.05
+local isFading = false
 
 local function FadeInMusic(volumeTarget, time, clip)
-	local volincrement = volumeTarget / (time * 30)
+	local volincrement = volumeTarget / (time * 25)
 	clip:setVolume(0)
 	local newvol = 0
 	timer.Create("fadein", 0.01, 0, function()
-		if newvol > volumeTarget then timer.Destroy("fadein") end
+		//if newvol > volumeTarget then return end
 		newvol = newvol + volincrement
 		//print(newvol)
 		clip:setVolume(newvol)
+		isFading = true
+		if newvol >= volumeTarget then 
+			timer.Destroy("fadein") 
+			print("fadein done") 
+			isFading = false
+		end
 	end)
-	if newvol > volumeTarget then timer.Destroy("fadein") end
 end
 
 local function FadeOutMusic(volumeTarget, time, clip)
@@ -66,6 +72,7 @@ local function PlayMusic(tab)
 	end
 	mediaclip:on("ended", function()
 		timer.UnPause("AutoPlaylist")
+		if IsValid(CLIP) then CLIP:stop() end
 	end)
 	mediaclip:on("playing", function()
 		timer.Pause("AutoPlaylist")
@@ -145,6 +152,7 @@ local function JukeboxFrame()
 		play:SetText("Play")
 		play.DoClick = function()
 			if not GetSelectedSong() then return end
+			if isFading then return end
 			PlayMusic(GetSelectedSong())
 			label:SetText(selectedSong)
 			label:SizeToContents()
@@ -167,6 +175,7 @@ local function JukeboxFrame()
 		shuffle:SetSize(50, 30)
 		shuffle:SetText("Shuffle")
 		shuffle.DoClick = function()
+			if isFading then return end
 			local randsong = GetRandomSong()
 			PlayMusic(randsong)
 			if not label then return end
@@ -245,6 +254,7 @@ local function AutoPlaylist()
 	if not autoplaylistEnabled then print("ap not enabled") return end
 	if IsValid(CLIP) then print("music already playing") return end
 	if not GetGlobalBool("IsRoundStarted", false) then print("round not started") return end
+	if isFading then return end
 
 	local randsong = GetRandomSong()
 

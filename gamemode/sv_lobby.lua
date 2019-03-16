@@ -4,7 +4,7 @@ print("sv_lobby start")
 
 local function enterLobby()
 
-	if isLobbyStarted == true then return end
+	if isLobbyStarted then return end
 	isLobbyStarted = true
 	
 	print("enter lobby")

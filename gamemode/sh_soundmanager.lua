@@ -43,7 +43,7 @@ end
 
 -- When we are ready, we play the sound:
 -- important to remember: CSoundPatch:FadeOut
-function FadeInMusic(song) 
+function FadeInMusicSndMng(song) 
 	if SERVER then 
 		print("server running fadein, no no")
 		return 
@@ -67,7 +67,7 @@ end
 
 net.Receive("FadeInMusic", function(len)
 	songString = net.ReadString()
-	FadeInMusic(songString)
+	FadeInMusicSndMng(songString)
 end)
 -- IDEA: A JUKEBOX LUA SCRIPT
 -- IT'S A CLIENTSIDE THING THAT RANDOMLY PICKS SONGS, OR YOU PICK THEM YOURSELF

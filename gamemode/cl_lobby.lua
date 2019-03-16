@@ -122,13 +122,13 @@ end)
 
 print("cl lobby load end")
 
-net.Receive("OpenLobby", timer.Simple(0.95, openLobby))
+net.Receive("OpenLobby", timer.Simple(0.98, openLobby))
 
 hook.Add("InitPostEntity", "stupid_music", function()
 	if MySelf:IsValid() then
 
 		timer.Simple(1.5, function() 
-			lobbysound = FadeInMusic("music/littlezawa_loop_by_bass.wav")	
+			lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 		end)
 	end
 end)

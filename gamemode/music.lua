@@ -281,8 +281,8 @@ musicPlaylist[39] = {
 	autoplay = true // reevaluate luck, this is a good song, it should play at any point tbh
 }
 
-musicPlaylist[40] = {
-	song = "https://www.youtube.com/watch?v=7G0ro9uAYqg",
+/*musicPlaylist[40] = {
+	song = "https://www.youtube.com/watch?v=7G0ro9uAYqg", // bugged
 	title = "Dice",
 	luck = 30,
 	autoplay = true
@@ -290,10 +290,10 @@ musicPlaylist[40] = {
 
 musicPlaylist[41] = {
 	song = "https://www.youtube.com/watch?v=R-o17U7fGFw",
-	title = "Black Sun",
+	title = "Black Sun", // bugged
 	luck = 30,
 	autoplay = true
-}
+}*/
 
 musicPlaylist[42] = {
 	song = "https://www.youtube.com/watch?v=3yoWcXOFb7I",
