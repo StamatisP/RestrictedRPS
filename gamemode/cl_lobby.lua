@@ -21,7 +21,7 @@ local function openLobby()
 	frame.Paint = function(s, w, h)
 
 		//draw.RoundedBox(0,0,0,w,h,Color(100,100,100,255))
-		draw.RoundedBox(0,0,0,w,h,Color(12, 78, 125,255))
+		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,200))
 
 	end
 	frame:MakePopup()
