@@ -92,6 +92,7 @@ local function openLobby()
 	moneyEntryText:SetSize(100, 50)
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
+	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
 
 	if (!IsValid(LocalPlayer()) || !LocalPlayer():IsAdmin()) then print("either localplayer isnt valid or you arent admin, "..tostring(LocalPlayer())) return end -- If not admin, dont execute code below in this function
 	print("dbutton create, " ..tostring(LocalPlayer()))
@@ -106,9 +107,6 @@ local function openLobby()
 	end
 
 	--LocalPlayer():EmitSound("little_zawa")
-	
-
-	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
 end
 
 net.Receive("CloseLobby", function(len, ply)
@@ -122,7 +120,7 @@ end)
 
 print("cl lobby load end")
 
-net.Receive("OpenLobby", timer.Simple(0.98, openLobby))
+net.Receive("OpenLobby", timer.Simple(2, openLobby))
 
 hook.Add("InitPostEntity", "stupid_music", function()
 	if MySelf:IsValid() then
