@@ -21,10 +21,26 @@ local function openLobby()
 	frame.Paint = function(s, w, h)
 
 		//draw.RoundedBox(0,0,0,w,h,Color(100,100,100,255))
-		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,200))
+		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,220))
 
 	end
 	frame:MakePopup()
+
+	local width = ScrW()
+	local height = ScrH()
+
+
+	local panelBg = vgui.Create("DPanel", frame)
+	panelBg:SetSize(frame:GetWide() / 2, frame:GetTall() / 4 + 170)
+	panelBg:SetPos(width / 3.885, (height / 1.536) - 120)
+	panelBg:SetBackgroundColor(Color(90, 90, 90, 220))
+
+	local logoImage = vgui.Create("DImage", frame)
+	local img = Material("logo.png", "alphatest nocull") // todo: make this an actual material in the future
+	logoImage:SetKeepAspect(true)
+	logoImage:SetMaterial(img)
+	logoImage:SetPos(width / 4, height / 6)
+	logoImage:SetSize(1024, 128)
 
 	local moneyEntry = vgui.Create("DNumSlider",frame)
 	moneyEntry:SetSize(600, 50)
@@ -37,9 +53,6 @@ local function openLobby()
 	moneyEntry:SetConVar("rps_money")
 
 	// make this also dependant on scrw/scrh
-	local width = ScrW()
-	local height = ScrH()
-
 	local PlayerScrollPanel = vgui.Create("DScrollPanel", frame)
 	PlayerScrollPanel:SetSize(frame:GetWide() / 2, frame:GetTall() / 4 + 50)
 	PlayerScrollPanel:SetPos(width / 3.885, height / 1.536)
@@ -51,7 +64,7 @@ local function openLobby()
 
 	local disconnectButton = vgui.Create("DButton", frame)
 	disconnectButton:SetSize(100, 50)
-	disconnectButton:SetPos(ScrW() / 1.1, ScrH() / 1.1)
+	disconnectButton:SetPos(width / 1.1, height / 1.1)
 	disconnectButton:SetText("Disconnect")
 	disconnectButton.DoClick = function()
 		LocalPlayer():ConCommand("disconnect")
@@ -67,7 +80,7 @@ local function openLobby()
 		//print("update")
 		PlayerList:Clear()
 
-		for k, v in pairs(player.GetAll()) do
+		for k, v in ipairs(player.GetAll()) do
 			local PlayerPanel = vgui.Create("DPanel", PlayerList)
 			PlayerPanel:SetSize(PlayerList:GetWide(), 50)
 			PlayerPanel:SetPos(0, 0)
@@ -94,19 +107,21 @@ local function openLobby()
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
 
-	if (!IsValid(LocalPlayer()) || !LocalPlayer():IsAdmin()) then print("either localplayer isnt valid or you arent admin, "..tostring(LocalPlayer())) return end -- If not admin, dont execute code below in this function
-	print("dbutton create, " ..tostring(LocalPlayer()))
-	local startButton = vgui.Create("DButton", frame)
-	startButton:SetSize(200,75)
-	startButton:SetPos(ScrW()/2 - 100, ScrH()/2 - (75/2))
-	startButton:SetText("Start Game")
-	startButton.DoClick = function() 
+	timer.Create("AdminButton", 1, 0, function()
+		if not IsValid(LocalPlayer()) then return end
+		if not LocalPlayer():IsAdmin() then timer.Destroy("AdminButton") return end
 
-		net.Start("StartGame")
-		net.SendToServer()
-	end
-
-	--LocalPlayer():EmitSound("little_zawa")
+		print("dbutton create, " ..tostring(LocalPlayer()))
+		local startButton = vgui.Create("DButton", frame)
+		startButton:SetSize(200,75)
+		startButton:SetPos(ScrW()/2 - 100, ScrH()/2 - (75/2))
+		startButton:SetText("Start Game")
+		startButton.DoClick = function() 
+			net.Start("StartGame")
+			net.SendToServer()
+		end
+		timer.Destroy("AdminButton")
+	end)
 end
 
 net.Receive("CloseLobby", function(len, ply)

@@ -18,7 +18,8 @@ surface.CreateFont( "SongTitle", {
 
 local medialib = include("medialib.lua")
 local availableSongs = {}
-local frame, play, mediaclip, pause, vol, service, title, label, selectedSong
+local frame, play, mediaclip, pause, vol, service, label, selectedSong
+local title = " "
 local jukeboxOpen = false
 local CLIP
 local autoplaylistEnabled = true
@@ -30,7 +31,6 @@ local function FadeInMusic(volumeTarget, time, clip)
 	clip:setVolume(0)
 	local newvol = 0
 	timer.Create("fadein", 0.01, 0, function()
-		//if newvol > volumeTarget then return end
 		newvol = newvol + volincrement
 		//print(newvol)
 		clip:setVolume(newvol)
@@ -63,13 +63,6 @@ local function PlayMusic(tab)
 	mediaclip = service:load(link)
 	CLIP = mediaclip
 	mediaclip:play()
-	if not mediaclip:isPlaying() then 
-		timer.Simple(0.1, function()
-			mediaclip:setVolume(vol)
-		end)
-	elseif mediaclip:isPlaying() then
-		mediaclip:setVolume(vol)
-	end
 	mediaclip:on("ended", function()
 		timer.UnPause("AutoPlaylist")
 		if IsValid(CLIP) then CLIP:stop() end
@@ -189,8 +182,10 @@ local function JukeboxFrame()
 		volume:SetMin(0)
 		volume:SetMax(100)
 		volume:SetValue(5)
-		volume:SetDecimals(1)
+		volume:SetDecimals(0)
 		volume.OnValueChanged = function(_, val)
+			if val > 100 then val = 100 end
+			if val < 0 then val = 0 end
 			val = val / 100
 			vol = val
 			if not IsValid(mediaclip) then return end
@@ -213,7 +208,7 @@ local function JukeboxFrame()
 		label = frame:Add("DLabel")
 		label:SetPos(200, 25)
 		label:SetFont("SongTitle")
-		label:SetText("No song currently playing.")
+		label:SetText(title)
 		label:SetContentAlignment(5)
 		label:SizeToContents()
 		label:SetTextColor(Color(255, 255, 255))
