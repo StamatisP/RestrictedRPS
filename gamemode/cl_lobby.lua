@@ -21,7 +21,7 @@ local function openLobby()
 	frame.Paint = function(s, w, h)
 
 		//draw.RoundedBox(0,0,0,w,h,Color(100,100,100,255))
-		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,220))
+		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,230))
 
 	end
 	frame:MakePopup()
@@ -33,7 +33,7 @@ local function openLobby()
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(frame:GetWide() / 2, frame:GetTall() / 4 + 170)
 	panelBg:SetPos(width / 3.885, (height / 1.536) - 120)
-	panelBg:SetBackgroundColor(Color(90, 90, 90, 220))
+	panelBg:SetBackgroundColor(Color(70, 70, 70, 230))
 
 	local logoImage = vgui.Create("DImage", frame)
 	local img = Material("logo.png", "alphatest nocull") // todo: make this an actual material in the future

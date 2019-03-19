@@ -22,6 +22,8 @@ include("sv_tablecam.lua")
 include("sounds.lua")
 include("sh_soundmanager.lua")
 include("sv_soundmanager.lua")
+include("sv_sql.lua")
+//include("mysqlite.lua")
 
 function GM:AddNetworkStrings()
 	util.AddNetworkString("OpenLobby")
@@ -257,6 +259,11 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if (playerMsg[2] == "luck") then ply:ChatPrint(ply:GetNWInt("Luck", 69)) end
 		return ""
 	end
+	if (playerMsg[1] == "/endround") then
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		gmod.GetGamemode():EndRound()
+		ply:ChatPrint("round ended!")
+	end
 end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
@@ -375,3 +382,5 @@ Curry = function(func, num_args)
       return func
    end
 end
+
+//MySQLite.initialize()

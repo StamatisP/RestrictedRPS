@@ -45,7 +45,7 @@ function CompoundInterest()
 	//print("ok in function")
 	//PrintTable(players)
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
-	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
+	for k, v in ipairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
 		//print(body)
 		local money = v:ReturnPlayerVar("debt")
 		//print(money)
@@ -57,10 +57,16 @@ function CompoundInterest()
 end
 
 function GM:EndRound()
-	-- body
+	// do SQL stuff here to save to a database, use darkrp as reference
 	self.round_status = 0
 	self:UpdateClientRoundStatus()
 	timer.Destroy("CompoundInterestTime")
+	for k, ply in ipairs(player.GetAll()) do
+		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("money"), "money")
+		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("debt"), "debt")
+		print(ply:ReturnPlayerVar("money"))
+		print(ply:ReturnPlayerVar("debt"))
+	end
 end
 
 function GM:GetRoundStatus()
