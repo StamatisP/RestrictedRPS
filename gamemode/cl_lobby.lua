@@ -29,10 +29,29 @@ local function openLobby()
 	local width = ScrW()
 	local height = ScrH()
 
+	local tutPanel = vgui.Create("DPanel", frame)
+	tutPanel:SetSize(width / 4.5, height / 5.37) //1.2 / 426.6, 201
+	tutPanel:SetPos(width / 96, height / 54) // 20, 11.5
+	tutPanel:SetBackgroundColor(Color(70, 70, 70, 230))
+
+	local tutText = vgui.Create("RichText", tutPanel)
+	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\nGood luck.\n")
+	tutText:Dock(FILL)
+	tutText:SetVerticalScrollbarEnabled(false)
+	tutText:SetSize(width / 4.5, height / 5.37)
+	function tutText:PerformLayout()
+		self:SetFontInternal("ChatFont")
+		self:SetFGColor(255,255,255,255)
+	end
+
+	local leaderboardPanel = vgui.Create("DPanel",frame)
+	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
+	leaderboardPanel:SetPos(width / 96, height / 4)
+	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 230))
 
 	local panelBg = vgui.Create("DPanel", frame)
-	panelBg:SetSize(frame:GetWide() / 2, frame:GetTall() / 4 + 170)
-	panelBg:SetPos(width / 3.885, (height / 1.536) - 120)
+	panelBg:SetSize(width / 2, height / 2.45)
+	panelBg:SetPos(width / 3.885, height / 1.85)
 	panelBg:SetBackgroundColor(Color(70, 70, 70, 230))
 
 	local logoImage = vgui.Create("DImage", frame)

@@ -65,6 +65,11 @@ local function inputManager()
 	end
 end
 
+function GetPlayerVarFromServer()
+	//net.Start("RequestPlayerVar")
+		//net.WriteString(P) // think of how i want to return the player money in the hud and such
+end
+
 hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
 

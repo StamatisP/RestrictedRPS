@@ -64,9 +64,12 @@ function GM:EndRound()
 	for k, ply in ipairs(player.GetAll()) do
 		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("money"), "money")
 		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("debt"), "debt")
-		print(ply:ReturnPlayerVar("money"))
-		print(ply:ReturnPlayerVar("debt"))
+		//print(ply:ReturnPlayerVar("money"))
+		//print(ply:ReturnPlayerVar("debt"))
 	end
+	timer.Simple(15, function()
+		RunConsoleCommand("reload")
+	end)
 end
 
 function GM:GetRoundStatus()

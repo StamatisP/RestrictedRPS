@@ -20,6 +20,9 @@ local function InitSql()
 end
 
 function UpdatePlayerVarSQL(ply, amount, var)
+	if not isnumber(amount) or amount < 0 or amount >= 1 / 0 then return end
+	if not var then ErrorNoHalt("Forgot to specify var!") return end
+	
 	local query = ("UPDATE rrps_player_info SET "..var.." = '"..amount.."' WHERE unique_id = '"..ply:SteamID().."'")
 	//print(query)
 	sql.Query(query)

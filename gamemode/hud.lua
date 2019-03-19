@@ -189,7 +189,7 @@ timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 local function CardChoiceGUI(enabled)
 	if enabled then
 		local choice = nil
-		local confirmColor = Color(71, 158, 215, 255)
+		local confirmColor = Color(185, 22, 22, 255)
 		local defaultColor = Color(225, 228, 227, 255)
 		local frame = vgui.Create("DFrame")
 		frame:SetSize(300, 250)
