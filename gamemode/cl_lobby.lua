@@ -99,7 +99,7 @@ local function openLobby()
 		//print("update")
 		PlayerList:Clear()
 
-		for k, v in ipairs(player.GetAll()) do
+		for k, v in pairs(player.GetAll()) do
 			local PlayerPanel = vgui.Create("DPanel", PlayerList)
 			PlayerPanel:SetSize(PlayerList:GetWide(), 50)
 			PlayerPanel:SetPos(0, 0)

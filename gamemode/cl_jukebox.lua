@@ -25,9 +25,10 @@ local CLIP
 local autoplaylistEnabled = true
 local vol = 0.05
 local isFading = false
+local roundended = false
 
 local function FadeInMusic(volumeTarget, time, clip)
-	local volincrement = volumeTarget / (time * 25)
+	local volincrement = volumeTarget / (time * 30)
 	clip:setVolume(0)
 	local newvol = 0
 	timer.Create("fadein", 0.01, 0, function()
@@ -47,12 +48,12 @@ local function FadeOutMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
 	local newvol = clip:getVolume()
 	timer.Create("fadeout", 0.01, 0, function()
-		if newvol < volumeTarget then timer.Destroy("fadeout") end
+		//if newvol < volumeTarget then timer.Destroy("fadeout") end
 		newvol = newvol - volincrement
 		//print(newvol)
 		clip:setVolume(newvol)
 	end)
-	if newvol < volumeTarget then timer.Destroy("fadeout") end
+	if newvol <= 0 then timer.Destroy("fadeout") end
 end
 
 local function PlayMusic(tab)
@@ -120,6 +121,18 @@ local function GetSelectedSong()
 		local i = musicPlaylist[k]
 		if i then
 			if i.title == selectedSong then
+				//PrintTable(i)
+				return i
+			end
+		end
+	end
+end
+
+local function GetSpecificSong(tit)
+	for k, v in pairs(musicPlaylist) do
+		local i = musicPlaylist[k]
+		if i then
+			if i.title == tit then
 				return i
 			end
 		end
@@ -250,6 +263,7 @@ local function AutoPlaylist()
 	if IsValid(CLIP) then print("music already playing") return end
 	if not GetGlobalBool("IsRoundStarted", false) then print("round not started") return end
 	if isFading then return end
+	if roundended then return end
 
 	local randsong = GetRandomSong()
 
@@ -266,3 +280,10 @@ timer.Create("AutoPlaylist", math.random(10, 20), 0, function()
 	AutoPlaylist()
 end)
 concommand.Add("jukebox", JukeboxFrame)
+
+hook.Add("RoundEnded","JukeboxRoundEnded",function()
+	roundended = true
+	//FadeOutMusic(vol, 5, CLIP)
+
+	PlayMusic(GetSpecificSong("Memories"))
+end)

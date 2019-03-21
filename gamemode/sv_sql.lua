@@ -34,11 +34,24 @@ function UpdatePlayerVarSQL(ply, amount, var)
 	end
 end
 
+local function GetValueFromResult(tbl, key)
+	for k, v in pairs(tbl[1]) do
+		if (k == key) then return v end
+		ErrorNoHalt("key "..key.." not found in table", PrintTable(tbl))
+		print(v)
+	end
+end
+
 function ReturnPlayerVarSQL(ply, var)
+	if not ply then ErrorNoHalt("ply is not defined!") return end
+	if not var then ErrorNoHalt("var is not defined!") return end
+
 	local query = ("SELECT "..var.." FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
 	local result = sql.Query(query)
 	if (result) then
-		print("Player "..var.." received, is "..result)
+		print("Player "..var.." received, is "..GetValueFromResult(result, var))
+		return GetValueFromResult(result, var)
+		//PrintTable(result)
 	else
 		ErrorNoHalt("Player "..var.." failed to get! ")
 		print(sql.LastError(result))

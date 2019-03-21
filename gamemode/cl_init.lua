@@ -138,7 +138,7 @@ net.Receive("RRPS_VarDisconnect", function(len)
 end)
 
 timer.Create("checkifitcame", 15, 0, function()
-	for _, v in ipairs(player.GetAll()) do
+	for _, v in pairs(player.GetAll()) do
 		if v:ReturnPlayerVar("money") then continue end
 
 		RunConsoleCommand("_sendRRPSvars")

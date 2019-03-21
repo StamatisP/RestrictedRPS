@@ -45,7 +45,7 @@ function CompoundInterest()
 	//print("ok in function")
 	//PrintTable(players)
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
-	for k, v in ipairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
+	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
 		//print(body)
 		local money = v:ReturnPlayerVar("debt")
 		//print(money)
@@ -62,15 +62,17 @@ function GM:EndRound()
 	self:UpdateClientRoundStatus()
 	timer.Destroy("CompoundInterestTime")
 	sql.Begin()
-	for k, ply in ipairs(player.GetAll()) do
-		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("money") + ReturnPlayerVarSQL(v, "money"), "money")
-		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("debt") + ReturnPlayerVarSQL(v, "debt"), "debt")
+	for k, v in pairs(player.GetAll()) do
+		if not v then ErrorNoHalt("what???") return end
+		UpdatePlayerVarSQL(v, v:ReturnPlayerVar("money") + ReturnPlayerVarSQL(v, "money"), "money")
+		UpdatePlayerVarSQL(v, v:ReturnPlayerVar("debt") + ReturnPlayerVarSQL(v, "debt"), "debt")
 		//print(ply:ReturnPlayerVar("money"))
 		//print(ply:ReturnPlayerVar("debt"))
 	end
 	sql.Commit()
-	timer.Simple(15, function()
-		RunConsoleCommand("reload")
+	timer.Simple(25, function()
+		print("reloading map!")
+		RunConsoleCommand("changelevel", game.GetMap())
 	end)
 end
 
