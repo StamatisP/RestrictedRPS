@@ -47,7 +47,7 @@ local function openLobby()
 	local leaderboardPanel = vgui.Create("DPanel",frame)
 	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
 	leaderboardPanel:SetPos(width / 96, height / 4)
-	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 230))
+	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 230)) // todo: implement leaderboard...
 
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(width / 2, height / 2.45)
@@ -163,4 +163,12 @@ hook.Add("InitPostEntity", "stupid_music", function()
 			lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 		end)
 	end
+end)
+
+net.Receive("SendLeaderboardInfo", function()
+	local data = net.ReadData(60)
+	local json = util.Decompress(data)
+	print(json)
+	local leaderboard = util.JSONToTable(json)
+	print(leaderboard)
 end)

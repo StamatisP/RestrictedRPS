@@ -43,6 +43,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("UpdatePlayerVar")
 	util.AddNetworkString("RRPS_InitializeVars")
 	util.AddNetworkString("RRPS_VarDisconnect")
+	util.AddNetworkString("SendLeaderboardInfo")
 end
 
 local playermodels = {

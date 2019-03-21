@@ -61,12 +61,14 @@ function GM:EndRound()
 	self.round_status = 0
 	self:UpdateClientRoundStatus()
 	timer.Destroy("CompoundInterestTime")
+	sql.Begin()
 	for k, ply in ipairs(player.GetAll()) do
-		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("money"), "money")
-		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("debt"), "debt")
+		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("money") + ReturnPlayerVarSQL(v, "money"), "money")
+		UpdatePlayerVarSQL(ply, ply:ReturnPlayerVar("debt") + ReturnPlayerVarSQL(v, "debt"), "debt")
 		//print(ply:ReturnPlayerVar("money"))
 		//print(ply:ReturnPlayerVar("debt"))
 	end
+	sql.Commit()
 	timer.Simple(15, function()
 		RunConsoleCommand("reload")
 	end)

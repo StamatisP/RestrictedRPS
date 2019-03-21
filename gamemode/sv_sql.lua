@@ -8,8 +8,8 @@ local function TableExist()
  			if (sql.TableExists("rrps_player_info")) then
  				print("Table created.")
  			else
- 				print("Something messed up. \n")
- 				print(sql.LastError(result) .. "\n")
+ 				ErrorNoHalt("Something messed up. ")
+ 				print(sql.LastError(result))
  			end
  		end
  	end
@@ -30,7 +30,7 @@ function UpdatePlayerVarSQL(ply, amount, var)
 	if (result) then
 		print("Player "..var.." has been updated successfully. ", PrintTable(result))
 	else
-		print("Player "..var.." NOT successful, ", sql.LastError(result))
+		ErrorNoHalt("Player "..var.." NOT successful, ", sql.LastError(result))
 	end
 end
 
@@ -40,8 +40,28 @@ function ReturnPlayerVarSQL(ply, var)
 	if (result) then
 		print("Player "..var.." received, is "..result)
 	else
-		print("Player "..var.." failed to get! ")
+		ErrorNoHalt("Player "..var.." failed to get! ")
 		print(sql.LastError(result))
+	end
+end
+
+function ReturnLeaderboard(ply)
+	local query = ("SELECT * FROM rrps_player_info") // to create this, i need a new var in the table for the player name
+	local result = sql.Query(query)
+	if (result) then
+		print("Leaderboard returned.")
+		local json = util.TableToJSON(result)
+		//PrintTable(result)
+		//print(json)
+		local data = util.Compress(json)
+		if not data then ErrorNoHalt("data is nil!") return end
+		print(data)
+		net.Start("SendLeaderboardInfo")
+			net.WriteData(data, 60)
+		net.Send(ply)
+		//return result
+	else
+		ErrorNoHalt("Leaderboard return error!")
 	end
 end
 
@@ -51,7 +71,7 @@ local function CreateNewPlayer(steamID, ply)
 	if (result) then
 		print("Player entry in database created!")
 	else
-		print("Error in CreateNewPlayer, " .. sql.LastError(result))
+		ErrorNoHalt("Error in CreateNewPlayer, " .. sql.LastError(result))
 	end
 end
 

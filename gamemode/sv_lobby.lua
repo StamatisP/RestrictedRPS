@@ -1,15 +1,15 @@
-local pmeta = FindMetaTable("Player")
 local isLobbyStarted = false
 print("sv_lobby start")
 
-local function enterLobby()
+local function enterLobby(ply)
 
 	if isLobbyStarted then return end
 	isLobbyStarted = true
-	
+
 	print("enter lobby")
 	net.Start("OpenLobby")
 	net.Broadcast()
+	//ReturnLeaderboard(ply)
 end
 
 local function giveMoney()
