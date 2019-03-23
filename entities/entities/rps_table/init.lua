@@ -78,7 +78,7 @@ ENT.player2Ready = nil
 
 // https://i.imgur.com/weQFbLT.png
 net.Receive("ArePlayersReady", function(len, ply)
-	if !ply:GetNWBool("TableView") then return end
+	if not ply:GetNWBool("TableView") then return end
 	local ent = net.ReadEntity()
 	if ent == nil then
 		ErrorNoHalt("Entity is nil! Player " .. ply .. " brought this up!")
@@ -216,6 +216,10 @@ function ENT:Use(activator, caller)
 
 	if (table.Count(self.players) >= 2) then 
 		print("full table :(")
+		return
+	end
+	if (table.Count(self.playersTable) >= 2) then
+		print("table is full :(")
 		return
 	end
 

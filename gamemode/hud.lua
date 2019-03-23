@@ -195,7 +195,7 @@ local function CardChoiceGUI(enabled)
 		frame:SetSize(300, 250)
 		frame:Center()
 		frame:SetVisible(true)
-		frame:ShowCloseButton(true)
+		frame:ShowCloseButton(false)
 		frame:SetDraggable(true)
 		frame:MakePopup()
 

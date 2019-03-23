@@ -21,10 +21,11 @@ local function openLobby()
 	frame.Paint = function(s, w, h)
 
 		//draw.RoundedBox(0,0,0,w,h,Color(100,100,100,255))
-		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,230))
+		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,210))
 
 	end
 	frame:MakePopup()
+	frame:SetKeyboardInputEnabled(false)
 
 	local width = ScrW()
 	local height = ScrH()
@@ -32,7 +33,7 @@ local function openLobby()
 	local tutPanel = vgui.Create("DPanel", frame)
 	tutPanel:SetSize(width / 4.5, height / 5.37) //1.2 / 426.6, 201
 	tutPanel:SetPos(width / 96, height / 54) // 20, 11.5
-	tutPanel:SetBackgroundColor(Color(70, 70, 70, 230))
+	tutPanel:SetBackgroundColor(Color(70, 70, 70, 200))
 
 	local tutText = vgui.Create("RichText", tutPanel)
 	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\nGood luck.\n")
@@ -47,7 +48,7 @@ local function openLobby()
 	local leaderboardPanel = vgui.Create("DPanel",frame)
 	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
 	leaderboardPanel:SetPos(width / 96, height / 4)
-	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 230)) // todo: implement leaderboard...
+	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...
 
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(width / 2, height / 2.45)

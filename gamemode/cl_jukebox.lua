@@ -21,11 +21,17 @@ local availableSongs = {}
 local frame, play, mediaclip, pause, vol, service, label, selectedSong
 local title = " "
 local jukeboxOpen = false
-local CLIP
+local CLIP = nil
 local autoplaylistEnabled = true
-local vol = 0.05
+local vol = 0.04
 local isFading = false
 local roundended = false
+
+local oldPrint = print
+local function print(s)
+	if s == nil then s = "s is nil" end
+	oldPrint("cl_jukebox.lua: " .. s)
+end
 
 local function FadeInMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
@@ -57,7 +63,9 @@ local function FadeOutMusic(volumeTarget, time, clip)
 end
 
 local function PlayMusic(tab)
+	//print("before clip")
 	if IsValid(CLIP) then CLIP:stop() end
+	//print("after clip")
 	local link = tab.song
 	title = tab.title
 	service = medialib.load("media").guessService(link)
@@ -244,7 +252,7 @@ local function JukeboxFrame()
 		songList:SortByColumn(1, false)
 		songList.OnRowSelected = function(list, index, panel)
 			selectedSong = panel:GetColumnText(1)
-			print(selectedSong)
+			//print(selectedSong)
 		end
 
 		frame:MakePopup()
@@ -258,15 +266,15 @@ local function JukeboxFrame()
 end
 
 local function AutoPlaylist()
-	if vol == 0 then return end
+	if vol == 0 then print("volume is 0, not doing ap") return end
 	if not autoplaylistEnabled then print("ap not enabled") return end
 	if IsValid(CLIP) then print("music already playing") return end
-	if not GetGlobalBool("IsRoundStarted", false) then print("round not started") return end
-	if isFading then return end
-	if roundended then return end
+	if isFading then print("song already fading") return end
+	if roundended then print("round has ended") return end
 
 	local randsong = GetRandomSong()
 
+	print("ap time")
 	PlayMusic(randsong)
 	if not label then return end
 	label:SetText(randsong.title)
@@ -274,11 +282,15 @@ local function AutoPlaylist()
 	label:SetContentAlignment(5)
 end
 
-
-timer.Create("AutoPlaylist", math.random(10, 20), 0, function()
-	math.randomseed(os.time())
-	AutoPlaylist()
+hook.Add("RoundStarted","JukeboxEnable",function()
+	timer.Create("AutoPlaylist", math.random(10, 20), 0, function()
+		CLIP = nil
+		print("ap getting new song...")
+		math.randomseed(os.time())
+		AutoPlaylist()
+	end)
 end)
+
 concommand.Add("jukebox", JukeboxFrame)
 
 hook.Add("RoundEnded","JukeboxRoundEnded",function()

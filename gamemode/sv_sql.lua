@@ -1,9 +1,15 @@
+local oldPrint = print
+local function print(s)
+	if s == nil then s = "s is nil" end
+	oldPrint("sv_sql.lua: " .. s)
+end
+
 local function TableExist()
  	if (sql.TableExists("rrps_player_info")) then
  		print("Table exists.")
  	else
  		if not (sql.TableExists("rrps_player_info")) then
- 			local query = "CREATE TABLE rrps_player_info ( unique_id varchar(255), money INTEGER, debt INTEGER )"
+ 			local query = "CREATE TABLE rrps_player_info ( unique_id varchar(255), money DECIMAL(20, 2), debt DECIMAL(20, 2) )"
  			local result = sql.Query(query)
  			if (sql.TableExists("rrps_player_info")) then
  				print("Table created.")
@@ -23,7 +29,8 @@ function UpdatePlayerVarSQL(ply, amount, var)
 	if not isnumber(amount) or amount < 0 or amount >= 1 / 0 then return end
 	if not var then ErrorNoHalt("Forgot to specify var!") return end
 
-	local query = ("UPDATE rrps_player_info SET "..var.." = '"..amount.."' WHERE unique_id = '"..ply:SteamID().."'")
+	local roundedamount = math.Round(amount, 2)
+	local query = ("UPDATE rrps_player_info SET "..var.." = '"..roundedamount.."' WHERE unique_id = '"..ply:SteamID().."'")
 	//print(query)
 	sql.Query(query)
 	local result = sql.Query("SELECT unique_id, "..var.." FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
@@ -79,7 +86,7 @@ function ReturnLeaderboard(ply)
 end
 
 local function CreateNewPlayer(steamID, ply)
-	sql.Query("INSERT INTO rrps_player_info ('unique_id', 'money', 'debt') VALUES ('"..steamID.."', '69', '420')")
+	sql.Query("INSERT INTO rrps_player_info ('unique_id', 'money', 'debt') VALUES ('"..steamID.."', '0', '0')")
 	local result = sql.Query("SELECT unique_id, money, debt FROM rrps_player_info WHERE unique_id = '"..steamID.."'")
 	if (result) then
 		print("Player entry in database created!")

@@ -64,10 +64,29 @@ function GM:EndRound()
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
 		if not v then ErrorNoHalt("what???") return end
-		UpdatePlayerVarSQL(v, v:ReturnPlayerVar("money") + ReturnPlayerVarSQL(v, "money"), "money")
-		UpdatePlayerVarSQL(v, v:ReturnPlayerVar("debt") + ReturnPlayerVarSQL(v, "debt"), "debt")
-		//print(ply:ReturnPlayerVar("money"))
-		//print(ply:ReturnPlayerVar("debt"))
+
+		local playerMoney = v:ReturnPlayerVar("money")
+		local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
+		local playerDebt = v:ReturnPlayerVar("debt")
+		local playerDebtSQL = ReturnPlayerVarSQL(v, "debt")
+
+		if (playerMoney > 0) then
+			local newdebt = playerMoney - playerDebt
+			if newdebt > 0 then 
+				UpdatePlayerVarSQL(v, newdebt + playerMoneySQL, "money") 
+				//UpdatePlayerVarSQL(v, playerDebt - newdebt, "debt")
+				UpdatePlayerVarSQL(v, playerDebtSQL - newdebt, "debt")
+			end
+			if newdebt < 0 then 
+				UpdatePlayerVarSQL(v, 0, "money")
+				UpdatePlayerVarSQL(v, (math.abs(newdebt) + playerDebtSQL), "debt")  
+			end
+			if newdebt == 0 then 
+				//UpdatePlayerVarSQL(v, 0, "money")
+				//UpdatePlayerVarSQL(v, 0, "debt") no need to update any vars, if newdebt is 0, that means they can pay off their debt.
+			end
+		end
+
 	end
 	sql.Commit()
 	timer.Simple(25, function()

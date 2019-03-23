@@ -11,7 +11,8 @@ net.Receive("UpdateRoundStatus",function(len)
 
 	round_status = net.ReadInt(4);
 	if round_status == 1 then 
-		RoundStarted = true 
+		RoundStarted = true
+		hook.Run("RoundStarted")
 		return 
 	end
 	if round_status == 0 then 
@@ -43,6 +44,7 @@ local function EndRoundLobby()
 
 	end
 	frame:MakePopup()
+	frame:SetKeyboardInputEnabled(false)
 
 	local text = vgui.Create("DLabel", frame)
 	text:SetText("You win or something idk")

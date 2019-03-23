@@ -7,6 +7,7 @@ function ENT:Draw()
 	local ang = self:GetAngles()
 
 	local value = self:GetValue()
+	value = math.Round(value, 2)
 
 	//surface.SetFont("HudHintTextSmall")
 	surface.SetFont("ChatFont")

@@ -1,5 +1,5 @@
 function ENT:SetupDataTables()
-	self:NetworkVar("Int", 0, "Value")
+	self:NetworkVar("Float", 0, "Value")
 end
 
 ENT.Type = "anim"

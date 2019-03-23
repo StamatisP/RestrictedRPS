@@ -78,6 +78,15 @@ resource.AddFile("models/table/table.mdl")
 resource.AddFile("models/table/table.phy")
 resource.AddFile("models/table/table.sw.vtx")
 resource.AddFile("models/table/table.vvd")
+resource.AddFile("materials/models/table/table_texture.vtf")
+resource.AddFile("materials/models/table/table_texture.vmt")
+resource.AddFile("models/gamecard/gamecard.dx80.vtx")
+resource.AddFile("models/gamecard/gamecard.dx90.vtx")
+resource.AddFile("models/gamecard/gamecard.mdl")
+resource.AddFile("models/gamecard/gamecard.phy")
+resource.AddFile("models/gamecard/gamecard.sw.vtx")
+resource.AddFile("models/gamecard/gamecard.vvd")
+resource.AddFile("materials/logo.png")
 
 CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
 
@@ -195,10 +204,11 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 			local amount = tonumber(playerMsg[2])
 			local plyBalance = ply:ReturnPlayerVar("money")
 
-			if (amount > 0 and amount <= plyBalance) then
-				ply:UpdatePlayerVar("money", plyBalance - amount)
+			local roundedamount = math.Round(amount, 2)
+			if (roundedamount > 0 and roundedamount <= plyBalance) then
+				ply:UpdatePlayerVar("money", plyBalance - roundedamount)
 
-				scripted_ents.Get("money_entity"):SpawnFunction(ply, ply:GetEyeTrace(), "money_entity"):SetValue(amount)
+				scripted_ents.Get("money_entity"):SpawnFunction(ply, ply:GetEyeTrace(), "money_entity"):SetValue(roundedamount)
 			end
 
 			return ""
@@ -209,8 +219,10 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if (tonumber(playerMsg[2])) then
 			local amount = tonumber(playerMsg[2])
 			local plyBalance = ply:ReturnPlayerVar("money")
-			if (amount > 0) then
-				ply:UpdatePlayerVar("money", plyBalance + amount)
+			local roundedamount = math.Round(amount, 2)
+
+			if (roundedamount > 0) then
+				ply:UpdatePlayerVar("money", plyBalance + roundedamount)
 				print("giving " .. ply:Nick() .. " money")
 			end
 
@@ -231,9 +243,10 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 			scissorscardAmount = scissorscardAmount + v:inventoryGetItemAmount("scissorscards")
 		end
 		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
+		return ""
 	end
 
-	if (playerMsg[1] == "/developer") then
+	if (playerMsg[1] == "/dev") then
 		if not ply:IsSuperAdmin() then return "" end
 		if (tonumber(playerMsg[2])) then
 			if (playerMsg[2] == "0") then developerMode = false end
@@ -264,6 +277,13 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if not ply:IsSuperAdmin() or not developerMode then return "" end
 		gmod.GetGamemode():EndRound()
 		ply:ChatPrint("round ended!")
+		return ""
+	end
+	if (playerMsg[1] == "/spawnmoney") then
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		if not tonumber(playerMsg[2]) then return "" end
+		scripted_ents.Get("money_entity"):SpawnFunction(ply, ply:GetEyeTrace(), "money_entity"):SetValue(tonumber(playerMsg[2]))
+		return ""
 	end
 end)
 
@@ -278,11 +298,17 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	end
 end)
 
-hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len)
+/*hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len, ply)
 	net.Start("RRPS_VarDisconnect")
 		net.WriteUInt(ply:UserID(), 16)
 	net.Broadcast()
-end)
+end)*/
+
+function GM:PlayerDisconnected(ply)
+	net.Start("RRPS_VarDisconnect")
+		net.WriteUInt(ply:UserID(), 16)
+	net.Broadcast()
+end
 
 net.Receive("ZawaPlay", function(len, ply)
 	ReadSound("ambient/zawa1.wav", false)
