@@ -22,8 +22,8 @@ local frame, play, mediaclip, pause, vol, service, label, selectedSong
 local title = " "
 local jukeboxOpen = false
 local CLIP = nil
-local autoplaylistEnabled = true
-local vol = 0.04
+local autoplaylistEnabled = GetConVar("rps_autoplayenabled"):GetBool() or false
+local vol = GetConVar("rps_jukeboxvolume"):GetFloat() or 0.05
 local isFading = false
 local roundended = false
 
@@ -34,7 +34,7 @@ local function print(s)
 end
 
 local function FadeInMusic(volumeTarget, time, clip)
-	local volincrement = volumeTarget / (time * 30)
+	local volincrement = volumeTarget / (time * 25)
 	clip:setVolume(0)
 	local newvol = 0
 	timer.Create("fadein", 0.01, 0, function()
@@ -202,26 +202,29 @@ local function JukeboxFrame()
 		volume:SetWide(250)
 		volume:SetMin(0)
 		volume:SetMax(100)
-		volume:SetValue(5)
+		volume:SetValue(GetConVar("rps_jukeboxvolume"):GetFloat() * 100)
 		volume:SetDecimals(0)
 		volume.OnValueChanged = function(_, val)
 			if val > 100 then val = 100 end
 			if val < 0 then val = 0 end
-			val = val / 100
-			vol = val
+			local vald = val / 100
+			vol = vald
+			GetConVar("rps_jukeboxvolume"):SetFloat(vol)
 			if not IsValid(mediaclip) then return end
-			mediaclip:setVolume(val)
+			mediaclip:setVolume(vol)
 		end
 
 		local playlistCheck = vgui.Create("DCheckBoxLabel", frame)
 		playlistCheck:SetPos(150, 470)
-		playlistCheck:SetValue(1)
+		playlistCheck:SetValue(GetConVar("rps_autoplayenabled"):GetBool())
 		playlistCheck:SetText("Auto Playlist")
 
 		function playlistCheck:OnChange(val)
 			if (val) then
+				GetConVar("rps_autoplayenabled"):SetBool(true)
 				autoplaylistEnabled = true
 			else
+				GetConVar("rps_autoplayenabled"):SetBool(false)
 				autoplaylistEnabled = false
 			end
 		end
@@ -274,7 +277,7 @@ local function AutoPlaylist()
 
 	local randsong = GetRandomSong()
 
-	print("ap time")
+	//print("ap time")
 	PlayMusic(randsong)
 	if not label then return end
 	label:SetText(randsong.title)
