@@ -45,10 +45,10 @@ local function openLobby()
 		self:SetFGColor(255,255,255,255)
 	end
 
-	local leaderboardPanel = vgui.Create("DPanel",frame)
+	/*local leaderboardPanel = vgui.Create("DPanel",frame)
 	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
 	leaderboardPanel:SetPos(width / 96, height / 4)
-	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...
+	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...*/
 
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(width / 2, height / 2.45)

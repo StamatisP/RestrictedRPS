@@ -92,20 +92,9 @@ local function AssembleAvailableSongs()
 	local plyluck = LocalPlayer():GetNWInt("Luck", 50)
 
 	for k, v in pairs(musicPlaylist) do
-		//print(k)
-		//local i = getMusic(k)
 		local i = musicPlaylist[k]
-		//PrintTable(i)
 		if i then
-			//print(k .. " k")
-			//print(v .. " v") so v is a table value
-			//print(i.luck)
-			// if i.luck (50) >= 30 and 50 <= 70
 			if (i.luck >= (plyluck - luckThreshold)) and (i.luck <= (plyluck + luckThreshold)) and i.autoplay then
-				// if luck of music isn't greater than or equal to player luck minus 10
-				// say if song is 40 luck... player has 50 luck. 40 < 50 < 60
-				// songluck <= 50 <= songluck
-				//print(i.luck .. " >= " .. plyluck - luckThreshold)
 				table.insert(availableSongs, i)
 			else
 				//print("song " .. i.title .. " has been excluded, with autoplay " .. tostring(i.autoplay) .. " and luck " .. i.luck)
@@ -264,7 +253,6 @@ local function JukeboxFrame()
 
 		frame:ToggleVisible()
 		//PrintTable(availableSongs)
-
 	end
 end
 

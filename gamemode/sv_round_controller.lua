@@ -6,7 +6,7 @@ function GM:BeginRound()
 	gamemode.Call("RoundStarted")
 	//PrintTable(players)
 	local convar = GetConVar("rps_interestrepeat")
-	print(convar:GetFloat() .. ": interest repeat rate")
+	//print(convar:GetFloat() .. ": interest repeat rate")
 	self.round_status = 1
 	self:UpdateClientRoundStatus()
 	SetGlobalFloat("interestrepeat", GetConVar("rps_interestrepeat"):GetFloat())
