@@ -31,12 +31,12 @@ local function openLobby()
 	local height = ScrH()
 
 	local tutPanel = vgui.Create("DPanel", frame)
-	tutPanel:SetSize(width / 4.5, height / 5.37) //1.2 / 426.6, 201
+	tutPanel:SetSize(width / 4.5, height / 8) //1.2 / 426.6, 201
 	tutPanel:SetPos(width / 96, height / 54) // 20, 11.5
 	tutPanel:SetBackgroundColor(Color(70, 70, 70, 200))
 
 	local tutText = vgui.Create("RichText", tutPanel)
-	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\nGood luck.\n")
+	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\n")
 	tutText:Dock(FILL)
 	tutText:SetVerticalScrollbarEnabled(false)
 	tutText:SetSize(width / 4.5, height / 5.37)
@@ -155,8 +155,8 @@ end)
 
 print("cl lobby load end")
 
-net.Receive("OpenLobby", timer.Simple(2, openLobby))
-
+//net.Receive("OpenLobby", timer.Simple(2, openLobby))
+openLobby()
 hook.Add("InitPostEntity", "stupid_music", function()
 	if MySelf:IsValid() then
 

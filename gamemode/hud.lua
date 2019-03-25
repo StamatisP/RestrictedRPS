@@ -1,49 +1,14 @@
-//include("database/cl_database.lua")
-
-surface.CreateFont("NormalText", {
-	font = "Arial",
-	size = 40,
-	weight = 500,
-	blursize = 0,
-	scanlines = 0,
-	antialias = true,
-	underline = false,
-	italic = false,
-	strikeout = false,
-	symbol = false,
-	rotary = false,
-	shadow = false,
-	additive = false,
-	outline = false,
-})
-surface.CreateFont("CardText", {
-	font = "Arial",
-	size = 35,
-	weight = 500,
-	blursize = 0,
-	scanlines = 0,
-	antialias = true,
-	underline = false,
-	italic = false,
-	strikeout = false,
-	symbol = false,
-	rotary = false,
-	shadow = false,
-	additive = false,
-	outline = false,
-})
-
 local hide = {
 	["CHudHealth"] = true,
 	["CHudBattery"] = true
 }
 
-local ply = LocalPlayer()
 local cardChoice = false;
 local moneyAfterFormat = 0
 local debtAfterFormat = 0
 local compoundTimeLeft = 0
 local compoundTimeRate = GetGlobalFloat("interestrepeat", 0)
+local pmeta = FindMetaTable("Player")
 
 hook.Add("HUDShouldDraw","hideHud",function(name)
 	if (hide[name]) then return false end
@@ -83,9 +48,8 @@ local function normalize(min, max, val)
     return (val - min) / delta
 end
 
-hook.Add("HUDPaint","HudPaint_DrawMoney",function()
+local function DrawInfo()
 
-	if !hook.Run("ClDatabaseFinish") then return end
 	if not GetGlobalBool("IsRoundStarted", false) then return end
 	//print("fuck")
 	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
@@ -108,7 +72,7 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	local txt
 	// in the future, getting items from the database in hudpaint might fuck up performance. 
 	// have it update on a delay, call a hook when it is updated manually (via inventory pickups/drops/table rounds)
-	if (inventoryHasItem("rockcards")) then
+	/*if (inventoryHasItem("rockcards")) then
 		rockcards = inventoryGetItem("rockcards")
 	else
 		rockcards = "0"
@@ -127,7 +91,12 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 		stars = inventoryGetItem("stars")
 	else
 		stars = "0"
-	end
+	end*/
+
+	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
+	papercards = LocalPlayer():ReturnPlayerVar("papercards")
+	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
+	stars = LocalPlayer():ReturnPlayerVar("stars")
 
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
@@ -144,7 +113,7 @@ hook.Add("HUDPaint","HudPaint_DrawMoney",function()
 	draw.SimpleText(txt, "NormalText", ScrW() * 0.885, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(compoundTxt, "NormalText", ScrW() * 0.885, ScrH() * 0.055, compoundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText("Stars: " ..stars, "CardText", ScrW() * 0.93, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-end)
+end
 
 function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
 	local hsvStart = ColorToHSV(finishcolor)
@@ -288,3 +257,62 @@ net.Receive("PlayerTableCheckGUIEnable", function(len, ply)
 	print("playertablecheckguienable has been received")
 	CardChoiceGUI(true)
 end)
+
+/*hook.Add( "HUDPaint", "PaintName", function()  
+    for k, ent in ipairs(player.GetAll()) do  
+        if ent != LocalPlayer() then
+               local dist = LocalPlayer():GetPos():Distance(ent:GetPos())  
+               local BoneIndx = ent:LookupBone("ValveBiped.Bip01_Head1")  
+               local pos = ent:GetBonePosition( BoneIndx )  
+               pos.z = pos.z + 10 + (dist * 0.0325) --Makes it move up the further away you are..  
+               local ScrnPos = pos:ToScreen()  
+               draw.SimpleText( ent:Nick() .. "\n" .. inventoryGetItem("stars"), "ScoreboardDefault", ScrnPos.x, ScrnPos.y, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) 
+        end 
+    end  
+end)  */
+// hoo yeah its darkrp referencing time
+
+local function safeText(text)
+    return string.match(text, "^#([a-zA-Z_]+)$") and text .. " " or text
+end
+
+pmeta.drawPlayerInfo = pmeta.drawPlayerInfo or function(self)
+	local pos = self:EyePos()
+
+	pos.z = pos.z + 10
+	pos = pos:ToScreen()
+
+	draw.SimpleText(safeText(self:Nick()), "ScoreboardDefault", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
+	draw.SimpleText(safeText(self:Nick()), "ScoreboardDefault", pos.x, pos.y, Color(255, 255, 255, 255), 1)
+
+	draw.SimpleText(self:ReturnPlayerVar("stars"), "ScoreboardDefault", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
+	draw.SimpleText(self:ReturnPlayerVar("stars"), "ScoreboardDefault", pos.x, pos.y + 20, Color(255, 191, 0, 255), 1)
+end
+
+local function DrawEntityDisplay()
+    local shootPos = localplayer:GetShootPos()
+    local aimVec = localplayer:GetAimVector()
+
+    for _, ply in pairs(players or player.GetAll()) do
+        if not IsValid(ply) or ply == localplayer or not ply:Alive() or ply:GetNoDraw() or ply:IsDormant() then continue end
+        local hisPos = ply:GetShootPos()
+
+        if hisPos:DistToSqr(shootPos) < 80000 then
+            local pos = hisPos - shootPos
+            local unitPos = pos:GetNormalized()
+            if unitPos:Dot(aimVec) > 0.95 then
+                local trace = util.QuickTrace(shootPos, pos, localplayer)
+                if trace.Hit and trace.Entity ~= ply then break end
+                ply:drawPlayerInfo()
+            end
+        end
+    end
+end
+
+function GM:HUDPaint()
+	localplayer = localplayer and IsValid(localplayer) and localplayer or LocalPlayer()
+    if not IsValid(localplayer) then return end
+
+    DrawInfo()
+    DrawEntityDisplay()
+end

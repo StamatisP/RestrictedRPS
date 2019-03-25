@@ -94,26 +94,6 @@ local developerMode = false
 local pmeta = FindMetaTable("Player")
 local voiceDistance = 400 * 400
 
------- Deletes a directory, this function is called recursively!--- do NOT use a trailing slash with this function.---
-function file.PurgeDirectory(name)
-	local files, directories = file.Find(name .. "/*", "DATA");
-
-	-- Delete files 
-	for a, f in pairs(files) do
-		file.Delete(name .. "/" .. f);
-	end-- Recurse directories
-	for b, d in pairs(directories) do
-		file.PurgeDirectory(name .. "/" .. d);
-	end
-	-- Delete directory folder, please note that if a single file in this directory failed to delete then-- this call will fail.  file.Delete can fail if it's open with something else, file.Open'd in another-- addon for example
-    file.Delete(name)
-end
-
-if file.Exists("server/rrps/players","DATA") then
-	file.PurgeDirectory("server/rrps/players")
-	print("purging rps directory")
-end
-
 local startWeapons = {
 	"weapon_fists"
 }
@@ -184,7 +164,7 @@ end
 
 function GM:PlayerAuthed(ply, steamID, uniqueID)
 	print("Player: ".. ply:Nick() .. ", has gotten authed.")
-	ply:databaseCheck()
+	//ply:databaseCheck()
 end
 
 function GM:CanPlayerSuicide( ply )

@@ -65,7 +65,7 @@ function ReturnPlayerVarSQL(ply, var)
 	end
 end
 
-function ReturnLeaderboard(ply)
+/*function ReturnLeaderboard(ply)
 	local query = ("SELECT * FROM rrps_player_info") // to create this, i need a new var in the table for the player name
 	local result = sql.Query(query)
 	if (result) then
@@ -83,7 +83,7 @@ function ReturnLeaderboard(ply)
 	else
 		ErrorNoHalt("Leaderboard return error!")
 	end
-end
+end*/
 
 local function CreateNewPlayer(steamID, ply)
 	sql.Query("INSERT INTO rrps_player_info ('unique_id', 'money', 'debt') VALUES ('"..steamID.."', '0', '0')")

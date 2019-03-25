@@ -1,4 +1,4 @@
-function musicInit()
+/*function musicInit()
 	print("musicinit started")
 	timer.Simple(945, function()
 		net.Start("FadeInMusic")
@@ -8,4 +8,4 @@ function musicInit()
 	end)
 end
 
-hook.Add("RoundStarted", "MusicInitialize", musicInit)
+hook.Add("RoundStarted", "MusicInitialize", musicInit)*/

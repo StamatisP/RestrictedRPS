@@ -1,55 +1,6 @@
 local database = {}
 print("client database load")
 
-local function databaseReceive(tab)
-	database = tab
-end
-
-net.Receive("database",function(len)
-	local tab = net.ReadTable()
-	databaseReceive(tab)
-end)
-
-function databaseTable()
-	return database
-end
-
-function databaseGetValue(name)
-	local d = databaseTable()
-	return d[name]
-end
-
-function inventoryTable()
-	return databaseGetValue("inventory") or {}
-end
-
-function inventoryGetItem(name)
-	local inv = databaseGetValue("inventory")
-	local item = table.ToString(inv[name])
-	local itemAmount = string.match(item, "%d+")
-	return itemAmount
-end
-
-function inventoryHasItem(name, amount)
-	if not amount then amount = 1 end
-	
-	local i = inventoryTable()
-
-	if i then
-		if i[name] then
-			if i[name].amount >= amount then
-				return true
-			else
-				return false
-			end
-		else
-			return false
-		end
-	else
-		return false
-	end
-end
-
 local SKINS = {}
 SKINS.COLORS = {
 	lightgrey = Color(131, 131, 131, 180),
@@ -172,15 +123,18 @@ function inventoryMenu()
 		draw.RoundedBox(4, 0, 0, self:GetWide(), self:GetTall(), Color(60, 60, 60))
 	end
 
-	local inventory = inventoryTable()
+	//local inventory = inventoryTable()
 
 	local function ItemButtons()
 		//print("itembuttons started")
-		for k, v in pairs(inventory) do
+		//PrintTable(LocalPlayer().RRPSvars)
+		for k, v in pairs(LocalPlayer().RRPSvars) do
 			//print("for loop started")
 			//print(k)
+			if k == debt or k == money then return end
+
 			local i = getItems(k)
-			if i then
+			if i and v > 0 then
 				//print("i isn't empty")
 				local buttons = {}
 
@@ -194,10 +148,11 @@ function inventoryMenu()
 					f:Close()
 				end)
 
-				local b = inventoryItemButton(k, i.name .. "(" .. v.amount .. ")", v.amount, i.description, i.model, items, i.buttonDist, buttons)
+				local b = inventoryItemButton(k, i.name .. "(" .. v .. ")", v, i.description, i.model, items, i.buttonDist, buttons)
 				items:AddItem(b)
 			else
-				ErrorNoHalt("ok what is happen... cl database error")
+				//print(i)
+				//ErrorNoHalt("ok what is happen... cl database error")
 			end
 		end
 	end
@@ -212,5 +167,3 @@ function databaseFinish()
 end
 
 concommand.Add("inventory", inventoryMenu)
-hook.Add("ClDatabaseFinish", "ClDatabaseFinish", databaseFinish)
-hook.Run("ClDatabaseFinish")

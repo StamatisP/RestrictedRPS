@@ -1,9 +1,3 @@
-surface.CreateFont("RoundLobbyFont",{
-	font = "Arial",
-	size = 25,
-	weight = 500,
-	antialias = true
-})
 local round_status = 0
 -- todo: replace round_status to a bool
 

@@ -68,5 +68,31 @@ function ReadRRPSVar()
 	return RRPSvar.name, val
 end
 
+function fp(tbl)
+    local func = tbl[1]
+
+    return function(...)
+        local fnArgs = {}
+        local arg = {...}
+        local tblN = table.maxn(tbl)
+
+        for i = 2, tblN do fnArgs[i - 1] = tbl[i] end
+        for i = 1, table.maxn(arg) do fnArgs[tblN + i - 1] = arg[i] end
+
+        return func(unpack(fnArgs, 1, table.maxn(fnArgs)))
+    end
+end
+
+Flip = function(f)
+    if not f then error("not a function") end
+    return function(b, a, ...)
+        return f(a, b, ...)
+    end
+end
+
 RegisterRRPSVar("money", net.WriteDouble, net.ReadDouble)
 RegisterRRPSVar("debt", net.WriteDouble, net.ReadDouble)
+RegisterRRPSVar("rockcards", fp{Flip(net.WriteInt), 8}, fp{net.ReadInt, 8})
+RegisterRRPSVar("papercards", fp{Flip(net.WriteInt), 8}, fp{net.ReadInt, 8})
+RegisterRRPSVar("scissorscards", fp{Flip(net.WriteInt), 8}, fp{net.ReadInt, 8})
+RegisterRRPSVar("stars", fp{Flip(net.WriteInt), 8}, fp{net.ReadInt, 8})

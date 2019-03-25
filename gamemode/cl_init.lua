@@ -16,11 +16,74 @@ RoundStarted = false
 TablePlayerIsUsing = nil
 local RRPSvars = {}
 local pmeta = FindMetaTable("Player")
+local _OLDSCRW
 
 MySelf = MySelf or NULL
 hook.Add("InitPostEntity", "GetLocal", function() 
 	MySelf = LocalPlayer()
 end)
+
+function CreateGameFonts()
+	surface.CreateFont( "SongTitle", {
+		font = "Arial", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name
+		extended = false,
+		size = ScrW() / 76.8,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	})
+
+	surface.CreateFont("RoundLobbyFont",{
+		font = "Arial",
+		size = ScrW() / 76.8,
+		weight = 500,
+		antialias = true
+	})
+
+	surface.CreateFont("NormalText", {
+		font = "Arial",
+		size = ScrW() / 48,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	})
+
+	surface.CreateFont("CardText", {
+		font = "Arial",
+		size = ScrW() / 54.85,
+		weight = 500,
+		blursize = 0,
+		scanlines = 0,
+		antialias = true,
+		underline = false,
+		italic = false,
+		strikeout = false,
+		symbol = false,
+		rotary = false,
+		shadow = false,
+		additive = false,
+		outline = false,
+	})
+
+end
 
 local function keyUse()
 	if hook.Run("StartChat") then print("startchat true") return end
@@ -92,6 +155,7 @@ function pmeta:ReturnPlayerVar(var)
 	if not var then ErrorNoHalt("you forgot to put a var to return") return end
 	local vars = RRPSvars[self:UserID()]
 	//this runs on the player themselves btw
+	//print(vars[var])
 	return vars and vars[var] or nil
 end
 
@@ -145,4 +209,17 @@ timer.Create("checkifitcame", 15, 0, function()
 		return
 	end
 	timer.Remove("checkifitcame")
+end)
+
+CreateGameFonts()
+hook.Add("PostRender", "RedrawFonts", function()
+	if _OLDSCRW then
+		if ScrW() ~= _OLDSCRW then
+			CreateGameFonts()
+			print("Recreating fonts due to screen resolution change.")
+			_OLDSCRW = ScrW()
+		end
+	else
+		_OLDSCRW = ScrW()
+	end
 end)

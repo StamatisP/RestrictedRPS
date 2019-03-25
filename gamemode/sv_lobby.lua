@@ -7,8 +7,6 @@ local function enterLobby(ply)
 	isLobbyStarted = true
 
 	print("enter lobby")
-	net.Start("OpenLobby")
-	net.Broadcast()
 	//ReturnLeaderboard(ply)
 end
 
@@ -44,7 +42,7 @@ end)
 	closeFrame()
 end)*/
 
-hook.Add("PlayerSpawn","OpenPlayerLobby",enterLobby)
+//hook.Add("PlayerSpawn","OpenPlayerLobby",enterLobby)
 // so basically, i have to check if the lobby is started, and if it isn't, send openLobby
 
 //hook.Add("PlayerSpawn", "OpenLobby", enterLobby)
