@@ -237,13 +237,13 @@ local function CardChoiceGUI(enabled)
 			dButtonReady:SetEnabled(true)
 		end
 
-		if (!inventoryHasItem("rockcards")) then
+		if not (LocalPlayer():ReturnPlayerVar("rockcards") >= 1) then
 			dButtonRock:SetEnabled(false)
 		end
-		if (!inventoryHasItem("papercards")) then
+		if not (LocalPlayer():ReturnPlayerVar("papercards") >= 1) then
 			dButtonPaper:SetEnabled(false)
 		end
-		if (!inventoryHasItem("scissorscards")) then
+		if not (LocalPlayer():ReturnPlayerVar("scissorscards") >= 1) then
 			dButtonScissors:SetEnabled(false)
 		end
 		

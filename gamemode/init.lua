@@ -265,7 +265,7 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	if not (IsValid(ent)) then return end
 
 	if (ent:GetName() == "rps_table") then
-		if not ply:inventoryHasItem("stars", 1) then 
+		if not (ply:ReturnPlayerVar("stars") >= 1) then 
 			print(ply:GetName() .. " has no stars") 
 			return false
 		end

@@ -123,15 +123,16 @@ function ENT:OpenPhase()
 	//cards are revealed, winner is decided
 	local player1Choice = self.player1:GetInfo("rps_selection")
 	local player2Choice = self.player2:GetInfo("rps_selection")
+	print(self:GetPlayer1():ReturnPlayerVar("papercards"))
 
 	if player1Choice == "Rock" then
-		if (not self:GetPlayer1():ReturnPlayerVar("rockcards") > 1) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
+		if not (self:GetPlayer1():ReturnPlayerVar("rockcards") >= 1) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
 		self:GetPlayer1():UpdatePlayerVar("rockcards", self:GetPlayer1():ReturnPlayerVar("rockcards") - 1)
 	elseif player1Choice == "Paper" then 
-		if (not self:GetPlayer1():ReturnPlayerVar("papercards") > 1) then ErrorNoHalt("Player does not have required paper cards!!! exploit?") end
+		if not (self:GetPlayer1():ReturnPlayerVar("papercards") >= 1) then ErrorNoHalt("Player does not have required paper cards!!! exploit?") end
 		self:GetPlayer1():UpdatePlayerVar("papercards", self:GetPlayer1():ReturnPlayerVar("papercards") - 1)
 	elseif player1Choice == "Scissors" then
-		if (not self:GetPlayer1():ReturnPlayerVar("scissorscards") > 1) then ErrorNoHalt("Player does not have required scissors cards!!! exploit?") end	 
+		if not (self:GetPlayer1():ReturnPlayerVar("scissorscards") >= 1) then ErrorNoHalt("Player does not have required scissors cards!!! exploit?") end	 
 		self:GetPlayer1():UpdatePlayerVar("scissorscards", self:GetPlayer1():ReturnPlayerVar("scissorscards") - 1)
 	else 
 		ErrorNoHalt("player1choice is not rock, paper, or scissors... " .. player1Choice)
@@ -219,6 +220,7 @@ end
 function ENT:Use(activator, caller)
 
 	//if !activator:inventoryHasItem("stars", 1) then print(activator:GetName() .. " has no stars") return end
+	if activator:ReturnPlayerVar("stars") < 1 then return end
 
 	if (table.Count(self.players) >= 2) then 
 		print("full table :(")
@@ -278,7 +280,7 @@ end
 net.Receive("RemovePlayer", function(len, ply)
 	local ent = net.ReadEntity()
 	table.RemoveByValue(ent.players, ply:GetName())
-	table.RemoveByValue(ent.playersTable, ply:GetName()) // experiment
+	table.RemoveByValue(ent.playersTable, ply) // experiment
 	print("is this even running")
 
 	if IsValid(ent.player1) or IsValid(ent.player2) then
