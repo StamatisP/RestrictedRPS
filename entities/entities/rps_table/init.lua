@@ -4,7 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-
+	self.m_bInitialized = true
 	self:SetModel("models/table/table.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_NONE)
@@ -20,6 +20,12 @@ function ENT:Initialize()
 		phys:Wake()
 	end
 end	
+
+function ENT:Think()
+	if (not self.m_bInitialized) then
+		self:Initialize()
+	end
+end
 
 ENT.playersTable = {}
 ENT.players = {}

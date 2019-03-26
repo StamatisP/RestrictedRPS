@@ -66,33 +66,23 @@ local playermodels = {
 
 GM:AddNetworkStrings()
 
-resource.AddFile("materials/models/gamecard/GameCard_Rock.vmt")
+/*resource.AddFile("materials/models/gamecard/GameCard_Rock.vmt")
 resource.AddFile("materials/models/gamecard/GameCard_Paper.vmt")
 resource.AddFile("materials/models/gamecard/GameCard_Scissors.vmt")
 resource.AddFile("sound/music/littlezawa_loop_by_bass.wav")
-resource.AddFile("sound/ambient/zawa1.wav")
-resource.AddFile("sound/ambient/zawa2.wav")
-resource.AddFile("models/table/table.dx80.vtx")
-resource.AddFile("models/table/table.dx90.vtx")
+//resource.AddFile("sound/ambient/zawa1.wav")
+//resource.AddFile("sound/ambient/zawa2.wav")
 resource.AddFile("models/table/table.mdl")
-resource.AddFile("models/table/table.phy")
-resource.AddFile("models/table/table.sw.vtx")
-resource.AddFile("models/table/table.vvd")
-resource.AddFile("materials/models/table/table_texture.vtf")
 resource.AddFile("materials/models/table/table_texture.vmt")
-resource.AddFile("models/gamecard/gamecard.dx80.vtx")
-resource.AddFile("models/gamecard/gamecard.dx90.vtx")
 resource.AddFile("models/gamecard/gamecard.mdl")
-resource.AddFile("models/gamecard/gamecard.phy")
-resource.AddFile("models/gamecard/gamecard.sw.vtx")
-resource.AddFile("models/gamecard/gamecard.vvd")
-resource.AddFile("materials/logo.png")
+resource.AddFile("materials/logo.png")*/
+resource.AddWorkshop("1694325066")
 
 CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
 
 local developerMode = false
 local pmeta = FindMetaTable("Player")
-local voiceDistance = 400 * 400
+local voiceDistance = 350 * 350
 
 local startWeapons = {
 	"weapon_fists"
@@ -139,6 +129,9 @@ function GM:PlayerSpawn(ply)
 	ply:SetModel(playermodels[math.random(#playermodels)])
 	ply:SetPlayerColor(Vector(math.Rand(0, 0.5), math.Rand(0, 0.5), math.Rand(0, 0.5)))
 	ply:SetupHands()
+	ply:SetWalkSpeed(150)
+	ply:SetRunSpeed(300)
+	ply:SetCrouchedWalkSpeed(0.5)
 end
 
 function GM:PlayerConnect(name, ip) 
@@ -151,6 +144,7 @@ function GM:PlayerInitialSpawn(ply)
 end
 
 function GM:ShowHelp(ply)
+	if not GetGlobalBool("IsRoundStarted") then return end
 	ply:ConCommand("inventory")
 end
 
@@ -314,6 +308,15 @@ function pmeta:UpdatePlayerVar(var, value, target)
 	net.Send(target)
 end
 
+function pmeta:SetSelfRRPSVar(var, value)
+    local vars = self.privateRRPSVars
+
+    vars = vars or {}
+    vars[var] = true
+
+    self:UpdatePlayerVar(var, value, self)
+end
+
 function pmeta:ReturnPlayerVar(var)
 	local vars = self.RRPSvars
 
@@ -333,7 +336,7 @@ function pmeta:SendRRPSVars()
 
 			local RRPSvars = {}
 			for var, value in pairs(target.RRPSvars) do
-				if self ~= target then continue end
+				if self ~= target and (target.privateRRPSVars or {})[var] then continue end
 				table.insert(RRPSvars, var)
 			end
 

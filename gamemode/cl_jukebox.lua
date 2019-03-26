@@ -256,7 +256,7 @@ local function AutoPlaylist()
 end
 
 hook.Add("RoundStarted","JukeboxEnable",function()
-	timer.Create("AutoPlaylist", math.random(10, 20), 0, function()
+	timer.Create("AutoPlaylist", math.random(20, 40), 0, function()
 		CLIP = nil
 		print("ap getting new song...")
 		math.randomseed(os.time())

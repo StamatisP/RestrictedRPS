@@ -22,9 +22,9 @@ function GM:BeginRound()
 	print("beginning round!")
 	for k, v in pairs(players) do
 		// no more nwvars, they exponentially scale data
-		v:UpdatePlayerVar("rockcards", 4)
-		v:UpdatePlayerVar("papercards", 4)
-		v:UpdatePlayerVar("scissorscards", 4)
+		v:SetSelfRRPSVar("rockcards", 4)
+		v:SetSelfRRPSVar("papercards", 4)
+		v:SetSelfRRPSVar("scissorscards", 4)
 		v:UpdatePlayerVar("stars", 3)
 		v:SetNWInt("Luck", 50)
 		// luck will be used for determining what songs auto play
