@@ -34,20 +34,52 @@ local function EndRoundLobby()
 	frame.Paint = function(s, w, h)
 
 		//draw.RoundedBox(0,0,0,w,h,Color(100,100,100,255))
-		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,255))
+		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,40))
 
 	end
 	frame:MakePopup()
 	frame:SetKeyboardInputEnabled(false)
+	frame:SetMouseInputEnabled(false)
 
-	local text = vgui.Create("DLabel", frame)
-	text:SetText("You win or something idk")
-	text:SetFont("RoundLobbyFont")
-	text:SetSize(width / 2, height / 2)
-	text:Center()
-	text:SetContentAlignment(5)
-	//text:SetPos(width / 2, height / 2)
+	local roundText = vgui.Create("DLabel", frame)
+	roundText:SetText("Round over!")
+	roundText:SetColor(Color(255, 0, 0, 255))
+	roundText:SetPos(width / 2.2, height / 100)
+	roundText:SetSize(width / 1.5, height / 1.5)
+	roundText:SetFont("NormalText")
 
+	local formattedmoney = formatMoney(math.Round(LocalPlayer():ReturnPlayerVar("money"), 2))
+
+	local moneyText = vgui.Create("DLabel", frame)
+	moneyText:SetText(string.format("Your final money:\n%s", formattedmoney)) // so messy....
+	moneyText:SetFont("RoundLobbyFont")
+	moneyText:SetSize(width / 2, height / 2)
+	//moneyText:SetContentAlignment(5)
+	moneyText:SetPos(width / 4, height / 4)
+	moneyText:SetColor(Color(0, 255, 0, 255))
+
+	local formattedDebt = formatMoney(math.Round(LocalPlayer():ReturnPlayerVar("debt"), 2))
+
+	local debtText = vgui.Create("DLabel", frame)
+	debtText:SetText(string.format("Your final debt:\n%s", formattedDebt))
+	debtText:SetFont("RoundLobbyFont")
+	debtText:SetSize(width / 2, height / 2)
+	debtText:SetPos(width / 1.5, height / 4)
+	debtText:SetColor(Color(255, 0, 0, 255))
+
+	local finalTotal = LocalPlayer():ReturnPlayerVar("money") - LocalPlayer():ReturnPlayerVar("debt")
+	local formattedTotal = formatMoney(math.Round(finalTotal, 2))
+
+	local totalText = vgui.Create("DLabel", frame)
+	totalText:SetText(string.format("Final total:\n%s", formattedTotal))
+	totalText:SetFont("RoundLobbyFont")
+	totalText:SetSize(width / 2, height / 2)
+	totalText:SetPos(width / 2.1, height / 3)
+	if finalTotal < 0 then 
+		totalText:SetColor(Color(255, 0, 0, 255))
+	else
+		totalText:SetColor(Color(0, 255, 0, 255))
+	end
 end
 
 hook.Add("RoundEnded","Round End", EndRoundLobby)

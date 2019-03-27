@@ -132,6 +132,7 @@ function GM:PlayerSpawn(ply)
 	ply:SetWalkSpeed(150)
 	ply:SetRunSpeed(300)
 	ply:SetCrouchedWalkSpeed(0.5)
+	ply:SetAvoidPlayers(true)
 end
 
 function GM:PlayerConnect(name, ip) 
