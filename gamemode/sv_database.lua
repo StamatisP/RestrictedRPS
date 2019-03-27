@@ -20,7 +20,7 @@ end
 net.Receive("InventoryDrop",function(len, ply)
 	local name = net.ReadString()
 	if ply:ReturnPlayerVar(name) >= 1 then
-		ply:UpdatePlayerVar(name, ply:ReturnPlayerVar(name) - 1)
+		ply:TakeAwayFromPlayerVar(name, 1)
 		CreateItem(ply, name, itemSpawnPos(ply))
 	end
 end)

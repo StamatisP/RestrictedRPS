@@ -127,20 +127,20 @@ function ENT:OpenPhase()
 
 	if player1Choice == "Rock" then
 		if not (self:GetPlayer1():ReturnPlayerVar("rockcards") >= 1) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
-		self:GetPlayer1():UpdatePlayerVar("rockcards", self:GetPlayer1():ReturnPlayerVar("rockcards") - 1)
+		self:GetPlayer1():TakeAwayFromPlayerVar("rockcards", 1)
 	elseif player1Choice == "Paper" then 
 		if not (self:GetPlayer1():ReturnPlayerVar("papercards") >= 1) then ErrorNoHalt("Player does not have required paper cards!!! exploit?") end
-		self:GetPlayer1():UpdatePlayerVar("papercards", self:GetPlayer1():ReturnPlayerVar("papercards") - 1)
+		self:GetPlayer1():TakeAwayFromPlayerVar("papercards", 1)
 	elseif player1Choice == "Scissors" then
 		if not (self:GetPlayer1():ReturnPlayerVar("scissorscards") >= 1) then ErrorNoHalt("Player does not have required scissors cards!!! exploit?") end	 
-		self:GetPlayer1():UpdatePlayerVar("scissorscards", self:GetPlayer1():ReturnPlayerVar("scissorscards") - 1)
+		self:GetPlayer1():TakeAwayFromPlayerVar("scissorscards", 1)
 	else 
 		ErrorNoHalt("player1choice is not rock, paper, or scissors... " .. player1Choice)
 	end
 	//wheres my fucking switch statement, lua
-	if player2Choice == "Rock" then self:GetPlayer2():UpdatePlayerVar("rockcards", self:GetPlayer1():ReturnPlayerVar("rockcards") - 1)
-	elseif player2Choice == "Paper" then self:GetPlayer2():UpdatePlayerVar("papercards", self:GetPlayer1():ReturnPlayerVar("papercards") - 1)
-	elseif player2Choice == "Scissors" then self:GetPlayer2():UpdatePlayerVar("scissorscards", self:GetPlayer1():ReturnPlayerVar("scissorscards") - 1)
+	if player2Choice == "Rock" then self:GetPlayer2():TakeAwayFromPlayerVar("rockcards", 1)
+	elseif player2Choice == "Paper" then self:GetPlayer2():TakeAwayFromPlayerVar("papercards", 1)
+	elseif player2Choice == "Scissors" then self:GetPlayer2():TakeAwayFromPlayerVar("scissorscards", 1)
 	else print("player2choice is not rock, paper, or scissors... " .. player2Choice)
 	end
 	
@@ -161,8 +161,8 @@ function ENT:OpenPhase()
 			// for v in pairs(data[player1choice]) do
 			// if v == player2choice then return true. at the end, return false
 			// player 1 wins
-			self.player2:UpdatePlayerVar("stars", self.player2:ReturnPlayerVar("stars") - 1)
-			self.player1:UpdatePlayerVar("stars", self.player1:ReturnPlayerVar("stars") + 1)
+			self.player2:TakeAwayFromPlayerVar("stars", 1)
+			self.player1:TakeAwayFromPlayerVar("stars", -1)
 			net.Start("AnnounceWinnerOfMatch")
 				net.WriteString(self.player1:GetName())
 				net.WriteString(self.player2:GetName())
@@ -177,8 +177,8 @@ function ENT:OpenPhase()
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
 
 			// player 2 wins
-			self.player1:UpdatePlayerVar("stars", self.player1:ReturnPlayerVar("stars") - 1)
-			self.player2:UpdatePlayerVar("stars", self.player2:ReturnPlayerVar("stars") + 1)
+			self.player1:TakeAwayFromPlayerVar("stars", 1)
+			self.player2:TakeAwayFromPlayerVar("stars", -1)
 			net.Start("AnnounceWinnerOfMatch")
 				net.WriteString(self.player2:GetName())
 				net.WriteString(self.player1:GetName())

@@ -309,6 +309,13 @@ function pmeta:UpdatePlayerVar(var, value, target)
 	net.Send(target)
 end
 
+function pmeta:TakeAwayFromPlayerVar(var, value, target)
+	target = target or player.GetAll()
+
+	local val = self:ReturnPlayerVar(var) - value
+	self:UpdatePlayerVar(var, val, target)
+end
+
 function pmeta:SetSelfRRPSVar(var, value)
     local vars = self.privateRRPSVars
 

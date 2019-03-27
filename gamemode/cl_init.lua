@@ -142,7 +142,7 @@ net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 
 	if player1 != LocalPlayer():GetName() and player2 != LocalPlayer():GetName() then return end
 	if !isTie then 
-		chat.AddText(player1 .. " has beaten " .. player2 .. ", with " .. player1Choice .. " vs " .. player2Choice .. ".")
+		chat.AddText(Color(0, 255, 0, 255), player1, Color(255, 255, 255, 255), " has beaten ", Color(255, 0, 0, 255), player2, Color(255, 255, 255, 255), ", with ", Color(0, 255, 0, 255), player1Choice, Color(255, 255, 255, 255), " vs ", Color(255, 0, 0, 255),  player2Choice .. ".")
 	elseif isTie then
 		chat.AddText("This match ended in a tie! The match was " .. player1Choice .. " vs " .. player2Choice .. ".")
 	end
