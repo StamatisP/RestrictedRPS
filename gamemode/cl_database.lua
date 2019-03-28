@@ -130,12 +130,12 @@ function inventoryMenu()
 		//PrintTable(LocalPlayer().RRPSvars)
 		for k, v in pairs(LocalPlayer().RRPSvars) do
 			//print("for loop started")
-			//print(k)
 			if k == debt or k == money then return end
 
 			local i = getItems(k)
 			if i and v > 0 then
 				//print("i isn't empty")
+				//PrintTable(i)
 				local buttons = {}
 
 				/*buttons["use"] = (function()

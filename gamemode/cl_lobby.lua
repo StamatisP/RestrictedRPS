@@ -31,12 +31,12 @@ local function openLobby()
 	local height = ScrH()
 
 	local tutPanel = vgui.Create("DPanel", frame)
-	tutPanel:SetSize(width / 4.5, height / 8) //1.2 / 426.6, 201
+	tutPanel:SetSize(width / 4.5, height / 5) //1.2 / 426.6, 201
 	tutPanel:SetPos(width / 96, height / 54) // 20, 11.5
 	tutPanel:SetBackgroundColor(Color(70, 70, 70, 200))
 
 	local tutText = vgui.Create("RichText", tutPanel)
-	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\nPress F1 to open your Inventory.\nPress F2 to open the Jukebox.\n")
+	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\nPress F1 to open your Inventory.\nPress F2 to open the Jukebox.\nType /cards in chat to check how many cards remain.\nType /dropmoney (number) to drop money.\nType /givemoney (number) to give money directly.")
 	tutText:Dock(FILL)
 	tutText:SetVerticalScrollbarEnabled(false)
 	tutText:SetSize(width / 4.5, height / 5)

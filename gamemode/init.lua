@@ -212,10 +212,9 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		for k, v in pairs(player.GetAll()) do
 			//if (v:databaseGetValue("rockcards") == nil) then ErrorNoHalt("what is goin on") return end
 			//print(v:inventoryGetItemAmount("rockcards"))
-			rockcardAmount = rockcardAmount + v:inventoryGetItemAmount("rockcards")
-			//print(rockcardAmount)
-			papercardAmount = papercardAmount + v:inventoryGetItemAmount("papercards")
-			scissorscardAmount = scissorscardAmount + v:inventoryGetItemAmount("scissorscards")
+			rockcardAmount = rockcardAmount + v:ReturnPlayerVar("rockcards")
+			papercardAmount = papercardAmount + v:ReturnPlayerVar("papercards")
+			scissorscardAmount = scissorscardAmount + v:ReturnPlayerVar("scissorscards")
 		end
 		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
 		return ""

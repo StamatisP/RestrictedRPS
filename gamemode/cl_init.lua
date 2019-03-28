@@ -113,7 +113,7 @@ local function keyUse()
 	end
 end
 
-local function inputManager()
+/*local function inputManager()
 	if input.IsKeyDown(KEY_Z) then
 		//print(LocalPlayer():GetNWBool("TableView"))
 		local timeElapsed = CurTime() - lastOccurrence
@@ -126,7 +126,7 @@ local function inputManager()
 			net.SendToServer()
 		end
 	end
-end
+end*/
 
 hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
