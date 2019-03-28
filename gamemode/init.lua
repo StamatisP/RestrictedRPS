@@ -82,7 +82,7 @@ CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_N
 
 local developerMode = false
 local pmeta = FindMetaTable("Player")
-local voiceDistance = 350 * 350
+local voiceDistance = 400 * 400
 
 local startWeapons = {
 	"weapon_fists"
@@ -90,6 +90,7 @@ local startWeapons = {
 
 local function calcPlyCanHearPlayerVoice(listener)
 	if not IsValid(listener) then return end
+	//debugoverlay.Sphere(listener:GetPos(), 350, 1, Color(255, 255, 255, 255), false)
 	listener.CanHear = listener.CanHear or {}
 	local shootPos = listener:GetShootPos()
 	for _, talker in ipairs(player.GetAll()) do
@@ -134,6 +135,20 @@ function GM:PlayerSpawn(ply)
 	ply:SetCrouchedWalkSpeed(0.5)
 	ply:SetAvoidPlayers(true)
 end
+
+local defeatedSpawns = ents.FindByClass("defeated_spawn")
+PrintTable(defeatedSpawns)
+timer.Create("PlayerStarsPunishment", 5, 0, function()
+	for k, ply in pairs(player.GetAll()) do
+		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
+			local newpos = table.Random(defeatedSpawns)
+			//print(newpos)
+			ply:SetPos(newpos:GetPos())
+			ply:SetNWInt("Luck", 0)
+			ply:SetNWBool("Defeated", true)
+		end
+	end
+end)
 
 function GM:PlayerConnect(name, ip) 
 	print("Player "..name.." has connected with IP ("..ip..")")
@@ -257,6 +272,11 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if not ply:IsSuperAdmin() or not developerMode then return "" end
 		if not tonumber(playerMsg[2]) then return "" end
 		scripted_ents.Get("money_entity"):SpawnFunction(ply, ply:GetEyeTrace(), "money_entity"):SetValue(tonumber(playerMsg[2]))
+		return ""
+	end
+	if (playerMsg[1] == "/takestars") then
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		ply:TakeAwayFromPlayerVar("stars", 3)
 		return ""
 	end
 end)

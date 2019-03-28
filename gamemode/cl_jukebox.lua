@@ -89,7 +89,7 @@ local function GetRandomSong()
 	local musicTable = {}
 	// this is for autoplaylist only, not a shuffle
 	AssembleAvailableSongs()
-	musicTable = table.Random(availableSongs)
+	musicTable = table.Random(availableSongs) // in future use math.random, check table.random wiki
 	//print(musicTable.title)
 	return musicTable
 end
