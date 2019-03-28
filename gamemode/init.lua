@@ -44,6 +44,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("RRPS_InitializeVars")
 	util.AddNetworkString("RRPS_VarDisconnect")
 	util.AddNetworkString("SendLeaderboardInfo")
+	util.AddNetworkString("PlayerReady")
 end
 
 local playermodels = {
@@ -136,8 +137,10 @@ function GM:PlayerSpawn(ply)
 	ply:SetAvoidPlayers(true)
 end
 
-local defeatedSpawns = ents.FindByClass("defeated_spawn")
-PrintTable(defeatedSpawns)
+local defeatedSpawns
+timer.Simple(10, function()
+	defeatedSpawns = ents.FindByClass("defeated_spawn")
+end)
 timer.Create("PlayerStarsPunishment", 5, 0, function()
 	for k, ply in pairs(player.GetAll()) do
 		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
@@ -311,6 +314,11 @@ end)
 
 net.Receive("KEY_USE", function(len, ply)
 	hook.Call("KEY_USE", GAMEMODE, ply)
+end)
+
+net.Receive("PlayerReady", function(len, ply)
+	local bool = net.ReadBool()
+	ply:SetNWBool("rps_ready", bool)
 end)
 
 function pmeta:UpdatePlayerVar(var, value, target)

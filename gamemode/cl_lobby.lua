@@ -105,8 +105,12 @@ local function openLobby()
 			PlayerPanel:SetSize(PlayerList:GetWide(), 50)
 			PlayerPanel:SetPos(0, 0)
 			PlayerPanel.Paint = function()
-				draw.RoundedBox(0,0,0,PlayerPanel:GetWide(),PlayerPanel:GetTall(),Color(50, 50, 50, 255))
-				draw.RoundedBox(0,0,49,PlayerPanel:GetWide(),1,Color(255, 255, 255, 255))
+				if v:GetNWBool("rps_ready", false) then
+					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 100, 50, 255))
+				else
+					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 50, 50, 255))
+				end
+				draw.RoundedBox(0, 0, 49, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
 
 				// put a check here if they even have a name
 				draw.SimpleText(v:GetName(), "DermaDefault", 50, 15, Color(255, 255, 255))
@@ -117,15 +121,16 @@ local function openLobby()
 			playerAvatar:SetSize(32, 32)
 			playerAvatar:SetPos(4, (PlayerPanel:GetTall() / 2) - 16)
 			playerAvatar:SetPlayer(v, 32)
+
+
 		end
 	end
 	
-
 	local moneyEntryText = moneyEntry:GetTextArea()
 	moneyEntryText:SetSize(100, 50)
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
-	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
+	timer.Create("ScoreboardUpdate", 2, 0, scoreboardUpdate)
 
 	timer.Create("AdminButton", 1, 0, function()
 		if not IsValid(LocalPlayer()) then return end
@@ -133,14 +138,34 @@ local function openLobby()
 
 		print("dbutton create, " ..tostring(LocalPlayer()))
 		local startButton = vgui.Create("DButton", frame)
-		startButton:SetSize(200,75)
-		startButton:SetPos(ScrW()/2 - 100, ScrH()/2 - (75/2))
+		startButton:SetSize(ScrW() / 9.6, ScrH() / 14.4)
+		startButton:SetPos(ScrW() / 2.232, ScrH() / 2.149)
 		startButton:SetText("Start Game")
 		startButton.DoClick = function() 
 			net.Start("StartGame")
 			net.SendToServer()
 		end
 		timer.Destroy("AdminButton")
+	end)
+	timer.Create("ReadyButton", 1, 0, function()
+		if not IsValid(LocalPlayer()) then return end
+		if LocalPlayer():IsAdmin() then timer.Destroy("ReadyButton") return end
+
+		local readyButton = vgui.Create("DButton", frame)
+		readyButton:SetSize(ScrW() / 9.6, ScrH() / 14.4)
+		readyButton:SetPos(ScrW() / 2.232, ScrH() / 2.149)
+		readyButton:SetText("Ready Up")
+		readyButton.DoClick = function()
+			if LocalPlayer():GetNWBool("rps_ready", false) then 
+				net.Start("PlayerReady")
+					net.WriteBool(false)
+				net.SendToServer()
+			else
+				net.Start("PlayerReady")
+					net.WriteBool(true)
+				net.SendToServer()
+			end
+		end
 	end)
 end
 
