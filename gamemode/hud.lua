@@ -166,6 +166,7 @@ local function CardChoiceGUI(enabled)
 		frame:SetVisible(true)
 		frame:ShowCloseButton(false)
 		frame:SetDraggable(true)
+		frame:SetTitle("Check")
 		frame:MakePopup()
 
 		local dButtonReady = vgui.Create("DButton", frame)
@@ -197,6 +198,7 @@ local function CardChoiceGUI(enabled)
 			end
 		end
 		dButtonRock.DoClick = function()
+			frame:SetTitle("Set")
 			RunConsoleCommand("rps_selection", "Rock")
 			choice = "Rock"
 			dButtonReady:SetEnabled(true)
@@ -214,6 +216,7 @@ local function CardChoiceGUI(enabled)
 			end
 		end
 		dButtonPaper.DoClick = function()
+			frame:SetTitle("Set")
 			RunConsoleCommand("rps_selection", "Paper")
 			choice = "Paper"
 			dButtonReady:SetEnabled(true)
@@ -232,6 +235,7 @@ local function CardChoiceGUI(enabled)
 			end
 		end
 		dButtonScissors.DoClick = function()
+			frame:SetTitle("Set")
 			RunConsoleCommand("rps_selection", "Scissors")
 			choice = "Scissors"
 			dButtonReady:SetEnabled(true)

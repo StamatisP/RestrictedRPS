@@ -12,6 +12,7 @@ AddCSLuaFile("cl_options.lua")
 AddCSLuaFile("cl_jukebox.lua")
 AddCSLuaFile("medialib.lua")
 AddCSLuaFile("music.lua")
+AddCSLuaFile("cl_credits.lua")
 
 include("sv_database.lua")
 include("items.lua")
@@ -173,6 +174,10 @@ end
 
 function GM:ShowSpare1(ply)
 	ply:ConCommand("uhhh")
+end
+
+function GM:ShowSpare2(ply)
+	ply:ConCommand("rps_credits")
 end
 
 function GM:PlayerAuthed(ply, steamID, uniqueID)
