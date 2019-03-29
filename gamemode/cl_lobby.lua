@@ -31,7 +31,7 @@ local function openLobby()
 	local height = ScrH()
 
 	local tutPanel = vgui.Create("DPanel", frame)
-	tutPanel:SetSize(width / 4.5, height / 5) //1.2 / 426.6, 201
+	tutPanel:SetSize(width / 4.2, height / 5) //1.2 / 426.6, 201
 	tutPanel:SetPos(width / 96, height / 54) // 20, 11.5
 	tutPanel:SetBackgroundColor(Color(70, 70, 70, 200))
 

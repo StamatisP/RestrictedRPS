@@ -14,12 +14,15 @@ local function CreditsMenu()
 		text:Dock(FILL)
 		text:SetVerticalScrollbarEnabled(false)
 		text:SetSize(frame:GetWide(), frame:GetTall())
+		text:SetPos(frame:GetWide() / 2, frame:GetTall() / 2)
 		text:AppendText("Creator: Mineturtle\n")
 		text:AppendText("Help with sound: Bassclefff\n")
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")
 			self:SetFGColor(255,255,255,255)
 		end
+
+		creditsOpen = true
 	else
 		frame:ToggleVisible()
 	end

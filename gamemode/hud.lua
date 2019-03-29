@@ -9,6 +9,10 @@ local debtAfterFormat = 0
 local compoundTimeLeft = 0
 local compoundTimeRate = GetGlobalFloat("interestrepeat", 0)
 local pmeta = FindMetaTable("Player")
+local rockcards = 0
+local papercards = 0
+local scissorscards = 0
+local stars = 0
 
 hook.Add("HUDShouldDraw","hideHud",function(name)
 	if (hide[name]) then return false end
@@ -63,40 +67,9 @@ local function DrawInfo()
 
 	local roundColor
 	local compoundColor
-	local rockcards 
-	local papercards 
-	local scissorscards 
-	local stars 
 	local timeLeft = math.max(0, GetGlobalFloat("endroundtime", 0) - CurTime())
 	local compoundTxt
 	local txt
-	// in the future, getting items from the database in hudpaint might fuck up performance. 
-	// have it update on a delay, call a hook when it is updated manually (via inventory pickups/drops/table rounds)
-	/*if (inventoryHasItem("rockcards")) then
-		rockcards = inventoryGetItem("rockcards")
-	else
-		rockcards = "0"
-	end
-	if (inventoryHasItem("papercards")) then
-		papercards = inventoryGetItem("papercards")
-	else
-		papercards = "0"
-	end
-	if (inventoryHasItem("scissorscards")) then
-		scissorscards = inventoryGetItem("scissorscards")
-	else
-		scissorscards = "0"
-	end
-	if (inventoryHasItem("stars")) then
-		stars = inventoryGetItem("stars")
-	else
-		stars = "0"
-	end*/
-
-	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
-	papercards = LocalPlayer():ReturnPlayerVar("papercards")
-	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
-	stars = LocalPlayer():ReturnPlayerVar("stars")
 
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
@@ -130,6 +103,16 @@ local function UpdateDebt()
 	debtAfterFormat = formatMoney(roundedDebt)
 end
 
+local function UpdateCards()
+	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if (LocalPlayer():ReturnPlayerVar("rockcards") == nil) then ErrorNoHalt("cards shouldnt be nil") return end
+
+	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
+	papercards = LocalPlayer():ReturnPlayerVar("papercards")
+	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
+	stars = LocalPlayer():ReturnPlayerVar("stars")
+end
+
 local function UpdateMoney()
 	if not GetGlobalBool("IsRoundStarted", false) then return end
 	if (LocalPlayer():ReturnPlayerVar("money") == nil) then ErrorNoHalt("how in the world is money nil??") return end
@@ -153,6 +136,7 @@ end
 
 timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
 timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
+timer.Create("UpdateCards", 0.5, 0, UpdateCards)
 //timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)
