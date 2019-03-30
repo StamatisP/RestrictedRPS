@@ -1,8 +1,3 @@
-local hide = {
-	["CHudHealth"] = true,
-	["CHudBattery"] = true
-}
-
 local cardChoice = false;
 local moneyAfterFormat = 0
 local debtAfterFormat = 0
@@ -14,9 +9,15 @@ local papercards = 0
 local scissorscards = 0
 local stars = 0
 
-hook.Add("HUDShouldDraw","hideHud",function(name)
-	if (hide[name]) then return false end
-end)
+function GM:HUDShouldDraw(name)
+	if name == "CHudBattery" or
+		name == "CHudHealth" or 
+		name == "CHudSuitPower" then
+			return false
+	else
+		return true
+	end
+end
 
 print("hud paint")
 
@@ -74,6 +75,11 @@ local function DrawInfo()
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
 
+	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
+	papercards = LocalPlayer():ReturnPlayerVar("papercards")
+	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
+	stars = LocalPlayer():ReturnPlayerVar("stars")
+
 	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("rps_roundtime"), timeLeft)
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 
@@ -103,14 +109,22 @@ local function UpdateDebt()
 	debtAfterFormat = formatMoney(roundedDebt)
 end
 
-local function UpdateCards()
-	if not GetGlobalBool("IsRoundStarted", false) then return end
-	if (LocalPlayer():ReturnPlayerVar("rockcards") == nil) then ErrorNoHalt("cards shouldnt be nil") return end
-
+local function CardRoutine()
 	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
 	papercards = LocalPlayer():ReturnPlayerVar("papercards")
 	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
 	stars = LocalPlayer():ReturnPlayerVar("stars")
+	coroutine.yield()
+end
+
+local function UpdateCards()
+	if not GetGlobalBool("IsRoundStarted", false) then return end
+
+	local co
+	if not co or not coroutine.resume(co) then
+		co = coroutine.create(CardRoutine)
+		coroutine.resume(co)
+	end
 end
 
 local function UpdateMoney()
@@ -136,7 +150,6 @@ end
 
 timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
 timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
-timer.Create("UpdateCards", 0.5, 0, UpdateCards)
 //timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)
