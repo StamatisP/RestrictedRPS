@@ -78,6 +78,11 @@ local function DrawInfo()
 	papercards = LocalPlayer():ReturnPlayerVar("papercards")
 	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
 	stars = LocalPlayer():ReturnPlayerVar("stars")
+	if not rockcards or not papercards or not scissorscards then
+		rockcards = 0
+		papercards = 0
+		scissorscards = 0
+	end
 
 	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("rps_roundtime"), timeLeft)
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)

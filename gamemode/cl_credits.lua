@@ -9,17 +9,46 @@ local function CreditsMenu()
 		frame:SetTitle("Credits")
 		frame:MakePopup()
 		frame:Center()
+		frame:SetKeyboardInputEnabled(false)
 
 		local text = vgui.Create("RichText", frame)
 		text:Dock(FILL)
-		text:SetVerticalScrollbarEnabled(false)
+		text:SetVerticalScrollbarEnabled(true)
 		text:SetSize(frame:GetWide(), frame:GetTall())
 		text:SetPos(frame:GetWide() / 2, frame:GetTall() / 2)
-		text:AppendText("Creator: Mineturtle\n")
-		text:AppendText("Help with sound: Bassclefff\n")
+
+		text:InsertColorChange(255, 255, 255, 255)
+		text:InsertClickableTextStart("OpenKaiji")
+		text:AppendText("Inspired by: Kaiji Ultimate Survivor (Watch it!!!) \n")
+		text:InsertClickableTextEnd()
+
+		text:AppendText("Music: Hideki Taniuchi \n")
+		text:AppendText(" \n")
+
+		text:InsertClickableTextStart("OpenTurtle")
+		text:AppendText("Gamemode code: Mineturtle \n")
+		text:InsertClickableTextEnd()
+
+		text:InsertClickableTextStart("OpenBass")
+		text:AppendText("Help with sound: Bassclefff \n")
+		text:InsertClickableTextEnd()
+
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")
 			self:SetFGColor(255,255,255,255)
+			self:SetBGColor( Color( 32, 32, 46 ) )
+		end
+
+		function text:ActionSignal(signalName, signalValue)
+			if (signalName == "TextClicked") then
+				if (signalValue == "OpenKaiji") then
+					gui.OpenURL("https://en.wikipedia.org/wiki/Kaiji_(manga)")
+				elseif (signalValue == "OpenTurtle") then
+					gui.OpenURL("https://twitter.com/Stamosxd")
+				elseif (signalValue == "OpenBass") then
+					gui.OpenURL("https://twitter.com/bassclef_map3")
+				end
+			end
 		end
 
 		creditsOpen = true

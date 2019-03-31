@@ -10,6 +10,7 @@ include("sh_soundmanager.lua")
 include("cl_jukebox.lua")
 include("music.lua")
 include("cl_credits.lua")
+include("cl_buyout.lua")
 
 local delay = 2
 local lastOccurrence = -delay

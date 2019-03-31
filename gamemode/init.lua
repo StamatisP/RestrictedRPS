@@ -13,6 +13,7 @@ AddCSLuaFile("cl_jukebox.lua")
 AddCSLuaFile("medialib.lua")
 AddCSLuaFile("music.lua")
 AddCSLuaFile("cl_credits.lua")
+AddCSLuaFile("cl_buyout.lua")
 
 include("sv_database.lua")
 include("items.lua")
@@ -150,10 +151,11 @@ timer.Create("PlayerStarsPunishment", 5, 0, function()
 	for k, ply in pairs(player.GetAll()) do
 		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
 			local newpos = table.Random(defeatedSpawns)
-			//print(newpos)
-			ply:SetPos(newpos:GetPos())
-			ply:SetNWInt("Luck", 0)
-			ply:SetNWBool("Defeated", true)
+			timer.Simple(10, function()
+				ply:SetPos(newpos:GetPos())
+				ply:SetNWInt("Luck", 0)
+				ply:SetNWBool("Defeated", true)
+			end)
 		end
 	end
 end)
@@ -177,7 +179,8 @@ function GM:ShowTeam(ply)
 end
 
 function GM:ShowSpare1(ply)
-	ply:ConCommand("uhhh")
+	if not GetGlobalBool("IsRoundStarted", false) then return end
+	ply:ConCommand("rps_buyout")
 end
 
 function GM:ShowSpare2(ply)
@@ -328,6 +331,17 @@ end)
 net.Receive("PlayerReady", function(len, ply)
 	local bool = net.ReadBool()
 	ply:SetNWBool("rps_ready", bool)
+end)
+
+net.Receive("BuyoutPlayer", function(len, ply)
+	local person = net.ReadEntity()
+	if not person then return end
+
+	if ply:ReturnPlayerVar("stars") < 3 then return end
+
+	ply:TakeAwayFromPlayerVar("stars", 3)
+	person:TakeAwayFromPlayerVar("stars", -3)
+	person:SetNWBool("Defeated", false)
 end)
 
 function pmeta:UpdatePlayerVar(var, value, target)
