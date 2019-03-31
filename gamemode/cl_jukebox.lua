@@ -230,6 +230,7 @@ local function JukeboxFrame()
 		end
 
 		frame:MakePopup()
+		frame:SetKeyboardInputEnabled(false)
 		jukeboxOpen = true
 	elseif jukeboxOpen then
 

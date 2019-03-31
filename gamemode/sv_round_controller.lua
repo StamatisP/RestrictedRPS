@@ -77,15 +77,21 @@ function GM:EndRound()
 
 		if (playerMoney > 0) then
 			local newdebt = playerMoney - playerDebt
+			if v:GetNWBool("Defeated", false) then newdebt = newdebt + 2000000 end
+
 			if newdebt > 0 then 
+
 				UpdatePlayerVarSQL(v, newdebt + playerMoneySQL, "money") 
 				//UpdatePlayerVarSQL(v, playerDebt - newdebt, "debt")
 				UpdatePlayerVarSQL(v, playerDebtSQL - newdebt, "debt")
 			end
+
 			if newdebt < 0 then 
+
 				UpdatePlayerVarSQL(v, 0, "money")
 				UpdatePlayerVarSQL(v, (math.abs(newdebt) + playerDebtSQL), "debt")  
 			end
+
 			if newdebt == 0 then 
 				//UpdatePlayerVarSQL(v, 0, "money")
 				//UpdatePlayerVarSQL(v, 0, "debt") no need to update any vars, if newdebt is 0, that means they can pay off their debt.

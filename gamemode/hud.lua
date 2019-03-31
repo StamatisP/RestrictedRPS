@@ -57,13 +57,13 @@ local function DrawInfo()
 
 	if not GetGlobalBool("IsRoundStarted", false) then return end
 	//print("fuck")
-	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
-	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
-	draw.RoundedBox(5, ScrW() * 0.85, ScrH() * 0.005, width / 8, height / 10, Color(50, 50, 50, 220)) // time left
-	draw.RoundedBox(5, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
-	draw.RoundedBox(5, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
-	draw.RoundedBox(5, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // scissors 
-	draw.RoundedBox(5, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // stars
+	draw.RoundedBox(8, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
+	draw.RoundedBox(8, ScrW() * 0.01, ScrH() * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
+	draw.RoundedBox(8, ScrW() * 0.85, ScrH() * 0.005, width / 8, height / 10, Color(50, 50, 50, 220)) // time left
+	draw.RoundedBox(8, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
+	draw.RoundedBox(8, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
+	draw.RoundedBox(8, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // scissors 
+	draw.RoundedBox(8, ScrW() * 0.88, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // stars
 
 	local roundColor
 	local compoundColor

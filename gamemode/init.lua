@@ -138,6 +138,10 @@ function GM:PlayerSpawn(ply)
 	ply:SetAvoidPlayers(true)
 end
 
+function GM:GetFallDamage(ply, speed)
+	return 0
+end
+
 local defeatedSpawns
 timer.Simple(10, function()
 	defeatedSpawns = ents.FindByClass("defeated_spawn")
