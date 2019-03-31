@@ -60,7 +60,6 @@ local function DrawInfo()
 	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
 	draw.RoundedBox(5, ScrW() * 0.01, ScrH() * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
 	draw.RoundedBox(5, ScrW() * 0.85, ScrH() * 0.005, width / 8, height / 10, Color(50, 50, 50, 220)) // time left
-	//draw.RoundedBox(5, ScrW() * 0.85, ScrH() * 0.015, width / 8, height / 15.36, Color(50, 50, 50, 220)) // compound time left
 	draw.RoundedBox(5, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
 	draw.RoundedBox(5, ScrW() * 0.48, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
 	draw.RoundedBox(5, ScrW() * 0.68, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // scissors 
@@ -84,14 +83,14 @@ local function DrawInfo()
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
-	draw.SimpleText("Rock: " ..rockcards, "CardText", ScrW() * 0.33, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Paper: " ..papercards, "CardText", ScrW() * 0.53, ScrH() * 0.935, Color(114, 189, 208, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
-	draw.SimpleText("Scissors: " ..scissorscards, "CardText", ScrW() * 0.73, ScrH() * 0.935, Color(161, 193, 36, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Rock: " .. rockcards, "CardText", ScrW() * 0.33, ScrH() * 0.935, Color(255, 162, 228, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Paper: " .. papercards, "CardText", ScrW() * 0.53, ScrH() * 0.935, Color(114, 189, 208, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Scissors: " .. scissorscards, "CardText", ScrW() * 0.73, ScrH() * 0.935, Color(161, 193, 36, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 	draw.SimpleText(moneyAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.935, Color(48, 221, 55, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(debtAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.015, Color(255, 80, 80, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(txt, "NormalText", ScrW() * 0.885, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
 	draw.SimpleText(compoundTxt, "NormalText", ScrW() * 0.885, ScrH() * 0.055, compoundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP)
-	draw.SimpleText("Stars: " ..stars, "CardText", ScrW() * 0.93, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
+	draw.SimpleText("Stars: " .. stars, "CardText", ScrW() * 0.93, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP)
 end
 
 function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
@@ -248,7 +247,7 @@ local function CardChoiceGUI(enabled)
 			dButtonScissors:SetEnabled(false)
 		end
 		
-	elseif !enabled then
+	elseif not enabled then
 		//close all frames
 	end
 end
@@ -274,7 +273,7 @@ end)  */
 // hoo yeah its darkrp referencing time
 
 local function safeText(text)
-    return string.match(text, "^#([a-zA-Z_]+)$") and text .. " " or text
+	return string.match(text, "^#([a-zA-Z_]+)$") and text .. " " or text
 end
 
 pmeta.drawPlayerInfo = pmeta.drawPlayerInfo or function(self)
