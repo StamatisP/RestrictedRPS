@@ -93,82 +93,78 @@ end
 
 
 function inventoryMenu()
-	if not invOpen then 
-		local w = 506
-		local h = 512
+	local w = 506
+	local h = 512
 
-		f = vgui.Create("DFrame")
-		f:SetSize(w, h)
-		f:SetPos( (ScrW() / 2) - (w / 2), (ScrH() / 2) - (h / 2) )
-		f:SetTitle("Inventory")
-		f:SetDraggable(true)
-		f:ShowCloseButton(true)
-		f:SetDeleteOnClose(false)
-		f:MakePopup()
-		f.Paint = function()
-			SKINS:DrawFrame(f:GetWide(), f:GetTall())
-		end
-		f:SetKeyboardInputEnabled(false)
+	f = vgui.Create("DFrame")
+	f:SetSize(w, h)
+	f:SetPos( (ScrW() / 2) - (w / 2), (ScrH() / 2) - (h / 2) )
+	f:SetTitle("Inventory")
+	f:SetDraggable(true)
+	f:ShowCloseButton(true)
+	f:SetDeleteOnClose(false)
+	f:MakePopup()
+	f.Paint = function()
+		SKINS:DrawFrame(f:GetWide(), f:GetTall())
+	end
+	f:SetKeyboardInputEnabled(false)
 	
-		local ps = vgui.Create("DPropertySheet", f)
-		ps:SetPos(8, 28)
-		ps:SetSize(w - 16,h - 36)
+	local ps = vgui.Create("DPropertySheet", f)
+	ps:SetPos(8, 28)
+	ps:SetSize(w - 16,h - 36)
 
-		local padding = 4
+	local padding = 4
 
-		local items = vgui.Create("DPanelList", ps)
-		items:SetPos(padding, padding)
-		items:SetSize(w - 32 - padding * 2, h - 48 - padding * 2)
-		items:EnableVerticalScrollbar(true)
-		items:EnableHorizontal(true)
-		items:SetPadding(padding)
-		items:SetSpacing(padding)
+	local items = vgui.Create("DPanelList", ps)
+	items:SetPos(padding, padding)
+	items:SetSize(w - 32 - padding * 2, h - 48 - padding * 2)
+	items:EnableVerticalScrollbar(true)
+	items:EnableHorizontal(true)
+	items:SetPadding(padding)
+	items:SetSpacing(padding)
 
-		function items:Paint()
-			draw.RoundedBox(4, 0, 0, self:GetWide(), self:GetTall(), Color(60, 60, 60))
-		end
+	function items:Paint()
+		draw.RoundedBox(4, 0, 0, self:GetWide(), self:GetTall(), Color(60, 60, 60))
+	end
 
-		//local inventory = inventoryTable()
+	//local inventory = inventoryTable()
 
-		local function ItemButtons()
-			//print("itembuttons started")
-			//PrintTable(LocalPlayer().RRPSvars)
-			for k, v in pairs(LocalPlayer().RRPSvars) do
-				//print("for loop started")
-				if k == debt or k == money then return end
+	local function ItemButtons()
+		//print("itembuttons started")
+		//PrintTable(LocalPlayer().RRPSvars)
+		for k, v in pairs(LocalPlayer().RRPSvars) do
+			//print("for loop started")
+			if k == debt or k == money then return end
 
-				local i = getItems(k)
-				if i and v > 0 then
-					//print("i isn't empty")
-					//PrintTable(i)
-					local buttons = {}
+			local i = getItems(k)
+			if i and v > 0 then
+				//print("i isn't empty")
+				//PrintTable(i)
+				local buttons = {}
 
-					/*buttons["use"] = (function()
-						//add use function here
-						f:Close()
-					end)*/
+				/*buttons["use"] = (function()
+					//add use function here
+					f:Close()
+				end)*/
 
-					buttons["Drop"] = (function()
-						inventoryDrop(k)
-						f:Close()
-					end)
+				buttons["Drop"] = (function()
+					inventoryDrop(k)
+					f:Close()
+				end)
 
-					local b = inventoryItemButton(k, i.name .. "(" .. v .. ")", v, i.description, i.model, items, i.buttonDist, buttons)
-					items:AddItem(b)
-				else
-					//print(i)
-					//ErrorNoHalt("ok what is happen... cl database error")
-				end
+				local b = inventoryItemButton(k, i.name .. "(" .. v .. ")", v, i.description, i.model, items, i.buttonDist, buttons)
+				items:AddItem(b)
+			else
+				//print(i)
+				//ErrorNoHalt("ok what is happen... cl database error")
 			end
 		end
-
-		ItemButtons()
-
-		ps:AddSheet("Items", items,"icon16/box.png", false, false, "Your items are here...")
-		invOpen = true
-	else
-		f:ToggleVisible()
 	end
+
+	ItemButtons()
+
+	ps:AddSheet("Items", items,"icon16/box.png", false, false, "Your items are here...")
+	invOpen = true
 end
 function databaseFinish()
 	//print("cl database has finished running")
