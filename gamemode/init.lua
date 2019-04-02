@@ -152,6 +152,7 @@ timer.Create("PlayerStarsPunishment", 5, 0, function()
 		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
 			local newpos = table.Random(defeatedSpawns)
 			timer.Simple(10, function()
+				if ply:GetNWBool("Defeated", false) then return end
 				ply:SetPos(newpos:GetPos())
 				ply:SetNWInt("Luck", 0)
 				ply:SetNWBool("Defeated", true)

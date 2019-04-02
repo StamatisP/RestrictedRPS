@@ -130,7 +130,7 @@ local function openLobby()
 	moneyEntryText:SetSize(100, 50)
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
-	timer.Create("ScoreboardUpdate", 2, 0, scoreboardUpdate)
+	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
 
 	timer.Create("AdminButton", 1, 0, function()
 		if not IsValid(LocalPlayer()) then return end
@@ -175,6 +175,9 @@ net.Receive("CloseLobby", function(len, ply)
 	if !(lobbysound == nil) then
 		lobbysound:FadeOut(2)
 	end
+	timer.Destroy("ScoreboardUpdate")
+	timer.Destroy("ReadyButton")
+	timer.Destroy("AdminButton")
 	closeFrame()
 end)
 

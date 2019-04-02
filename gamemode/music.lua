@@ -197,12 +197,12 @@ musicPlaylist[27] = {
 	autoplay = true
 }
 
-musicPlaylist[28] = {
+/*musicPlaylist[28] = {
 	song = "https://www.youtube.com/watch?v=su63vn7sSrs",
 	title = "Defeat",
 	luck = 0,
-	autoplay = false //its defeat musicPlaylist, like regret. ramps up really hard in the middle
-}
+	autoplay = false //its defeat musicPlaylist, like regret. ramps up really hard in the middle. also broken
+}*/
 
 musicPlaylist[29] = {
 	song = "https://www.youtube.com/watch?v=Cb5-uoNqKcs",

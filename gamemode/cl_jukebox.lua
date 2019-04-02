@@ -8,6 +8,7 @@ local autoplaylistEnabled = GetConVar("rps_autoplayenabled"):GetBool() or false
 local vol = GetConVar("rps_jukeboxvolume"):GetFloat() or 0.05
 local isFading = false
 local roundended = false
+local isBuffering = false
 
 local oldPrint = print
 local function print(s)
@@ -19,9 +20,10 @@ local function FadeInMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 25)
 	clip:setVolume(0)
 	local newvol = 0
-	timer.Create("fadein", 0.01, 0, function()
+	timer.Create("fadein", 0.02, 0, function()
 		newvol = newvol + volincrement
 		//print(newvol)
+		if not clip then return end
 		clip:setVolume(newvol)
 		isFading = true
 		if newvol >= volumeTarget then 
@@ -42,30 +44,6 @@ local function FadeOutMusic(volumeTarget, time, clip)
 		clip:setVolume(newvol)
 	end)
 	if newvol <= 0 then timer.Destroy("fadeout") end
-end
-
-local function PlayMusic(tab)
-	//print("before clip")
-	if IsValid(CLIP) then CLIP:stop() end
-	//print("after clip")
-	local link = tab.song
-	title = tab.title
-	service = medialib.load("media").guessService(link)
-	mediaclip = service:load(link)
-	CLIP = mediaclip
-	mediaclip:play()
-	mediaclip:on("ended", function()
-		timer.UnPause("AutoPlaylist")
-		if IsValid(CLIP) then CLIP:stop() end
-	end)
-	mediaclip:on("playing", function()
-		timer.Pause("AutoPlaylist")
-		FadeInMusic(vol, 5, mediaclip)
-	end)
-	mediaclip:on("error", function()
-		timer.UnPause("AutoPlaylist")
-		ErrorNoHalt(errorId, errorDesc)
-	end)
 end
 
 local function AssembleAvailableSongs()
@@ -91,7 +69,48 @@ local function GetRandomSong()
 	AssembleAvailableSongs()
 	musicTable = table.Random(availableSongs) // in future use math.random, check table.random wiki
 	//print(musicTable.title)
+	if not label then return musicTable end
+	label:SetText(musicTable.title)
+	label:SizeToContents()
 	return musicTable
+end
+
+local function PlayMusic(tab)
+	//print("before clip")
+	if IsValid(CLIP) then CLIP:stop() end
+	//print("after clip")
+	local link = tab.song
+	title = tab.title
+	service = medialib.load("media").guessService(link)
+	mediaclip = service:load(link)
+	CLIP = mediaclip
+	mediaclip:play()
+	mediaclip:on("ended", function(stopped)
+		timer.UnPause("AutoPlaylist")
+		if stopped then timer.Destroy("fadein") end
+		isFading = false
+		isBuffering = false
+		if IsValid(CLIP) then CLIP:stop() end
+	end)
+	mediaclip:on("playing", function()
+		timer.Pause("AutoPlaylist")
+		FadeInMusic(vol, 5, mediaclip)
+		isBuffering = false
+		timer.Destroy("BufferingError")
+	end)
+	mediaclip:on("buffering", function()
+		timer.Create("BufferingError", 5, 1, function()
+			PlayMusic(GetRandomSong())
+		end)
+		isBuffering = true
+	end)
+	mediaclip:on("error", function(errorId, errorDesc)
+		timer.UnPause("AutoPlaylist")
+		ErrorNoHalt(errorId, errorDesc, " mediaclip error! is ignorable")
+	end)
+	mediaclip:on("paused", function()
+		//if IsValid(CLIP) then CLIP:stop() end
+	end)
 end
 
 local function GetSelectedSong()
@@ -138,6 +157,7 @@ local function JukeboxFrame()
 		play.DoClick = function()
 			if not GetSelectedSong() then return end
 			if isFading then return end
+			if isBuffering then return end
 			PlayMusic(GetSelectedSong())
 			label:SetText(selectedSong)
 			label:SizeToContents()
@@ -149,7 +169,8 @@ local function JukeboxFrame()
 		stop:SetSize(30, 30)
 		stop:SetText("Stop")
 		stop.DoClick = function()
-			if not IsValid(CLIP) then return end
+			if not IsValid(CLIP) then print("clip dont exist") return end
+			if isFading then return end
 			CLIP:stop()
 			label:SetText("Stopped.")
 			label:SizeToContents() // make this a function
@@ -163,9 +184,6 @@ local function JukeboxFrame()
 			if isFading then return end
 			local randsong = GetRandomSong()
 			PlayMusic(randsong)
-			if not label then return end
-			label:SetText(randsong.title)
-			label:SizeToContents()
 		end
 
 		volume = frame:Add("Slider")

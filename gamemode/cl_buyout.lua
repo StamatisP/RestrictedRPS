@@ -27,6 +27,7 @@ local function BuyOutMenu()
 			//print("update")
 			PlayerList:Clear()
 
+			//PrintTable(player.GetAll())
 			for k, v in pairs(player.GetAll()) do
 				//print("fuuuuck")
 				local isDefeated = v:GetNWBool("Defeated", false)
@@ -51,20 +52,22 @@ local function BuyOutMenu()
 				playerAvatar:SetPos(4, (PlayerPanel:GetTall() / 2) - 16)
 				playerAvatar:SetPlayer(v, 32)
 
-				if not (isDefeated) then return end
-				local buyoutButton = vgui.Create("DButton", PlayerPanel)
-				buyoutButton:SetSize(40, 30)
-				buyoutButton:SetPos(420, 10)
-				buyoutButton:SetText("Buyout")
-				buyoutButton.DoClick = function()
-					if LocalPlayer():ReturnPlayerVar("stars") < 3 then
-						chat.AddText("You cannot buyout a player without at least 3 stars!")
-						return
+				if not (isDefeated) then 
+					// do nothing
+				else
+					local buyoutButton = vgui.Create("DButton", PlayerPanel)
+					buyoutButton:SetSize(40, 30)
+					buyoutButton:SetPos(420, 10)
+					buyoutButton:SetText("Buyout")
+					buyoutButton.DoClick = function()
+						if LocalPlayer():ReturnPlayerVar("stars") > 3 then
+							net.Start("BuyoutPlayer")
+								net.WriteEntity(v)
+							net.SendToServer()
+						else
+							chat.AddText("You cannot buyout a player without at least 3 stars!")
+						end				
 					end
-					
-					net.Start("BuyoutPlayer")
-						net.WriteEntity(v)
-					net.SendToServer()
 				end
 			end
 		end
