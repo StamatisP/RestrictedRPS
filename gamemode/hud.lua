@@ -8,6 +8,7 @@ local rockcards = 0
 local papercards = 0
 local scissorscards = 0
 local stars = 0
+local _roundstart = false
 
 function GM:HUDShouldDraw(name)
 	if name == "CHudBattery" or
@@ -55,7 +56,7 @@ end
 
 local function DrawInfo()
 
-	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if not _roundstart then return end
 	//print("fuck")
 	draw.RoundedBox(8, ScrW() * 0.01, ScrH() * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
 	draw.RoundedBox(8, ScrW() * 0.01, ScrH() * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
@@ -107,7 +108,7 @@ function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
 end
 
 local function UpdateDebt()
-	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if not _roundstart then return end
 	if (LocalPlayer():ReturnPlayerVar("debt") == nil) then ErrorNoHalt("debt shouldnt be nil") return end
 	local roundedDebt = math.Round(LocalPlayer():ReturnPlayerVar("debt"), 2)
 	debtAfterFormat = formatMoney(roundedDebt)
@@ -122,7 +123,7 @@ local function CardRoutine()
 end
 
 local function UpdateCards()
-	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if not _roundstart then return end
 
 	local co
 	if not co or not coroutine.resume(co) then
@@ -132,7 +133,7 @@ local function UpdateCards()
 end
 
 local function UpdateMoney()
-	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if not _roundstart then return end
 	if (LocalPlayer():ReturnPlayerVar("money") == nil) then ErrorNoHalt("how in the world is money nil??") return end
 	local roundedMoney = math.Round(LocalPlayer():ReturnPlayerVar("money"), 2)
 	// somehow add a lerp?
@@ -282,6 +283,7 @@ local function safeText(text)
 end
 
 pmeta.drawPlayerInfo = pmeta.drawPlayerInfo or function(self)
+	if not _roundstart then return end
 	local pos = self:EyePos()
 
 	pos.z = pos.z + 10
@@ -313,6 +315,10 @@ local function DrawEntityDisplay()
         end
     end
 end
+
+hook.Add("RoundStarted", "roundstarthud", function()
+	_roundstart = true
+end)
 
 function GM:HUDPaint()
 	localplayer = localplayer and IsValid(localplayer) and localplayer or LocalPlayer()

@@ -3,7 +3,7 @@ local ply = FindMetaTable("Player")
 
 function GM:BeginRound()
 	if GetGlobalBool("IsRoundStarted", false) then return end
-	gamemode.Call("RoundStarted")
+	hook.Run("RoundStarted")
 	//PrintTable(players)
 	local convar = GetConVar("rps_interestrepeat")
 	//print(convar:GetFloat() .. ": interest repeat rate")
@@ -65,6 +65,7 @@ function GM:EndRound()
 	// do SQL stuff here to save to a database, use darkrp as reference
 	self.round_status = 0
 	self:UpdateClientRoundStatus()
+	hook.Run("RoundEnded")
 	timer.Destroy("CompoundInterestTime")
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do

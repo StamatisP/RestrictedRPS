@@ -8,6 +8,7 @@ GM.endroundtime = 66
 local maxId = 0
 local RRPSvars = {}
 local RRPSvarById = {}
+local _roundstart = false
 
 DeriveGamemode("base")
 
@@ -35,12 +36,16 @@ hook.Add("StartCommand", "NullControl", function(ply, cmd)
 	end
 	// why not work??
 	// oh hey it works
-	if not GetGlobalBool("IsRoundStarted") then 
+	if not _roundstart then 
 		cmd:ClearMovement();
         cmd:RemoveKey( IN_ATTACK ); --See: https://wiki.garrysmod.com/page/Enums/IN
         cmd:RemoveKey( IN_JUMP );
         cmd:RemoveKey( IN_DUCK );
 	end
+end)
+
+hook.Add("RoundStarted", "commandround", function()
+	_roundstart = true
 end)
 
 function WriteRRPSVar(name, value)
