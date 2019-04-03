@@ -197,6 +197,11 @@ local function JukeboxFrame()
 			if val > 100 then val = 100 end
 			if val < 0 then val = 0 end
 			local vald = val / 100
+			if isFading then 
+				timer.Destroy("fadein")
+				isFading = false
+			end
+
 			vol = vald
 			GetConVar("rps_jukeboxvolume"):SetFloat(vol)
 			if not IsValid(mediaclip) then return end
