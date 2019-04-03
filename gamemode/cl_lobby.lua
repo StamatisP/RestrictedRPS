@@ -3,12 +3,13 @@ print("cl_lobby load")
 local lobbyOpened = false
 local playerList = nil
 local lobbysound = nil
+local _roundstart = false
 // YO DUDE PUT A MUSIC PLAYER HERE
 
 local function openLobby() 
 
 	if lobbyOpened then return end // this is to prevent the lobby opening on players joining in after it opened
-	if GetGlobalBool("IsRoundStarted", false) then return end
+	if _roundstart then return end
 	lobbyOpened = true
 	print("openlobby call")
 	local frame = vgui.Create("DFrame")
@@ -192,6 +193,10 @@ hook.Add("InitPostEntity", "stupid_music", function()
 			lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 		end)
 	end
+end)
+
+hook.Add("RoundStarted","LobbyStart", function()
+	_roundstart = true
 end)
 
 net.Receive("SendLeaderboardInfo", function()
