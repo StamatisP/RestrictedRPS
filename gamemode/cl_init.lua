@@ -39,7 +39,7 @@ function CreateGameFonts()
 		strikeout = false,
 		symbol = false,
 		rotary = false,
-		shadow = false,
+		shadow = true,
 		additive = false,
 		outline = false,
 	})
@@ -63,14 +63,14 @@ function CreateGameFonts()
 		strikeout = false,
 		symbol = false,
 		rotary = false,
-		shadow = false,
+		shadow = true,
 		additive = false,
 		outline = false,
 	})
 
 	surface.CreateFont("CardText", {
 		font = "Arial",
-		size = ScrW() / 54.85,
+		size = ScrW() / 38.4,
 		weight = 500,
 		blursize = 0,
 		scanlines = 0,
@@ -80,7 +80,7 @@ function CreateGameFonts()
 		strikeout = false,
 		symbol = false,
 		rotary = false,
-		shadow = false,
+		shadow = true,
 		additive = false,
 		outline = false,
 	})
