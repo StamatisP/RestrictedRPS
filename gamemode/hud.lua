@@ -63,7 +63,7 @@ local function DrawInfo()
 	draw.RoundedBox(8, width * 0.01, height * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
 	draw.RoundedBox(8, width * 0.85, height * 0.005, width / 8, height / 10, Color(50, 50, 50, 220)) // time left
 	//draw.RoundedBox(8, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
-	surface.SetDrawColor(255, 255, 255, 200)
+	surface.SetDrawColor(255, 255, 255, 240)
 	surface.SetMaterial(rockmat)
 	surface.DrawTexturedRect(width * 0.28, height * 0.86, width / 6, height / 6)
 	//draw.RoundedBox(8, width * 0.48, height * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
@@ -97,9 +97,9 @@ local function DrawInfo()
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
-	draw.SimpleTextOutlined(rockcards, "CardText", ScrW() * 0.39, ScrH() * 0.928, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(papercards, "CardText", ScrW() * 0.59, ScrH() * 0.928, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(scissorscards, "CardText", ScrW() * 0.79, ScrH() * 0.928, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(rockcards, "CardText", ScrW() * 0.395, ScrH() * 0.929, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(papercards, "CardText", ScrW() * 0.595, ScrH() * 0.929, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(scissorscards, "CardText", ScrW() * 0.795, ScrH() * 0.929, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
 	draw.SimpleTextOutlined(moneyAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.935, Color(48, 221, 55, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 	draw.SimpleTextOutlined(debtAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.015, Color(255, 80, 80, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 	draw.SimpleTextOutlined(txt, "NormalText", ScrW() * 0.885, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
