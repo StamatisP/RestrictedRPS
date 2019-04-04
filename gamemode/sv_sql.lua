@@ -56,7 +56,7 @@ function ReturnPlayerVarSQL(ply, var)
 	local query = ("SELECT "..var.." FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
 	local result = sql.Query(query)
 	if (result) then
-		print("Player "..ply.." "..var.." received, is "..GetValueFromResult(result, var))
+		print("Player "..ply:Nick().." "..var.." received, is "..GetValueFromResult(result, var))
 		return GetValueFromResult(result, var)
 		//PrintTable(result)
 	else

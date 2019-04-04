@@ -2,7 +2,7 @@ local cardChoice = false;
 local moneyAfterFormat = 0
 local debtAfterFormat = 0
 local compoundTimeLeft = 0
-local compoundTimeRate = GetGlobalFloat("interestrepeat", 0)
+local compoundTimeRate = nil
 local pmeta = FindMetaTable("Player")
 local rockcards = 0
 local papercards = 0
@@ -61,9 +61,11 @@ local function DrawInfo()
 	//print("fuck")
 	draw.RoundedBox(8, width * 0.01, height * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
 	draw.RoundedBox(8, width * 0.01, height * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
-	draw.RoundedBox(8, width * 0.85, height * 0.005, width / 8, height / 10, Color(50, 50, 50, 220)) // time left
+	//draw.RoundedBox(8, width * 0.88, height * 0.005, width / 9.066, height / 10, Color(50, 50, 50, 220)) // time left
+	surface.SetDrawColor(255, 255, 255, 210)
+	surface.SetMaterial(timemat)
+	surface.DrawTexturedRect(width * 0.88, height * 0.005, width / 9.066, height / 10)
 	//draw.RoundedBox(8, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
-	surface.SetDrawColor(255, 255, 255, 240)
 	surface.SetMaterial(rockmat)
 	surface.DrawTexturedRect(width * 0.28, height * 0.86, width / 6, height / 6)
 	//draw.RoundedBox(8, width * 0.48, height * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
@@ -97,14 +99,14 @@ local function DrawInfo()
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
-	draw.SimpleTextOutlined(rockcards, "CardText", ScrW() * 0.395, ScrH() * 0.929, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(papercards, "CardText", ScrW() * 0.595, ScrH() * 0.929, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(scissorscards, "CardText", ScrW() * 0.795, ScrH() * 0.929, Color(114, 6, 6, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 4, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(moneyAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.935, Color(48, 221, 55, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(debtAfterFormat, "NormalText", ScrW() * 0.02, ScrH() * 0.015, Color(255, 80, 80, 255), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(txt, "NormalText", ScrW() * 0.885, ScrH() * 0.015, roundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(compoundTxt, "NormalText", ScrW() * 0.885, ScrH() * 0.055, compoundColor, TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", ScrW() * 0.93, ScrH() * 0.935, Color(255, 191, 0, 255), TEXT_ALIGN_CENTER, TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(rockcards, 			"CardText", 	ScrW() * 0.397, 	ScrH() * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(papercards, 		"CardText", 	ScrW() * 0.597, 	ScrH() * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(scissorscards, 		"CardText", 	ScrW() * 0.797, 	ScrH() * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(moneyAfterFormat, 	"NormalText", 	ScrW() * 0.02, 		ScrH() * 0.935, 	Color(48, 221, 55, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(debtAfterFormat, 	"NormalText", 	ScrW() * 0.02, 		ScrH() * 0.015, 	Color(255, 80, 80, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(txt, 				"NormalText", 	ScrW() * 0.92, 		ScrH() * 0.015, 	roundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(compoundTxt,		"NormalText", 	ScrW() * 0.92, 		ScrH() * 0.055, 	compoundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	ScrW() * 0.93, 		ScrH() * 0.935, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 end
 
 function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
@@ -153,10 +155,10 @@ local function UpdateCompoundTime()
 end
 
 function GM:Think()
-	if not GetGlobalBool("IsRoundStarted", false) then return end
-	compoundTimeLeft = compoundTimeLeft - RealFrameTime()
+	if not _roundstart then return end
+	compoundTimeLeft = compoundTimeRate - CurTime()
 	if compoundTimeLeft <= 0 then 
-		compoundTimeLeft = compoundTimeLeft + GetGlobalFloat("interestrepeat", 2)
+		compoundTimeLeft = CurTime() + compoundTimeRate
 		//compoundTimeLeft = compoundTimeLeft + CurTime()
 	end
 end
@@ -328,6 +330,8 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	rockmat = Material("hud_rock.png")
 	papermat = Material("hud_paper.png")
 	scissorsmat = Material("hud_scissors.png")
+	timemat = Material("time_bg.png")
+	compoundTimeRate = GetGlobalInt("interestrepeat", 75) + CurTime()
 	_roundstart = true
 end)
 
