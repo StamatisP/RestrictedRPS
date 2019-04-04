@@ -34,6 +34,8 @@ local function CreditsMenu()
 		text:InsertClickableTextEnd()
 
 		text:AppendText("Fonts: DS Marker Felt by Typographer Mediengestaltung \n")
+		text:AppendText("Card Letter Design: Tambur \n")
+		text:AppendText("UI Design: GenerousGuy")
 
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")
