@@ -69,7 +69,7 @@ function CreateGameFonts()
 	})
 
 	surface.CreateFont("CardText", {
-		font = "Arial",
+		font = "DS Marker Felt",
 		size = ScrW() / 38.4,
 		weight = 500,
 		blursize = 0,
@@ -80,7 +80,7 @@ function CreateGameFonts()
 		strikeout = false,
 		symbol = false,
 		rotary = false,
-		shadow = true,
+		shadow = false,
 		additive = false,
 		outline = false,
 	})

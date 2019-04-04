@@ -79,6 +79,7 @@ resource.AddFile("models/table/table.mdl")
 resource.AddFile("materials/models/table/table_texture.vmt")
 resource.AddFile("models/gamecard/gamecard.mdl")
 resource.AddFile("materials/logo.png")*/
+resource.AddFile("DSMarkerFelt.ttf")
 resource.AddWorkshop("1694325066")
 
 CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")

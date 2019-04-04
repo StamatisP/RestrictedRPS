@@ -33,6 +33,8 @@ local function CreditsMenu()
 		text:AppendText("Help with sound: Bassclefff \n")
 		text:InsertClickableTextEnd()
 
+		text:AppendText("Fonts: DS Marker Felt by Typographer Mediengestaltung \n")
+
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")
 			self:SetFGColor(255,255,255,255)
