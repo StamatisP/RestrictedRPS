@@ -23,7 +23,7 @@ local function CreditsMenu()
 		text:InsertClickableTextEnd()
 
 		text:AppendText("Music: Hideki Taniuchi \n")
-		text:AppendText(" \n")
+		//text:AppendText("test \n")
 
 		text:InsertClickableTextStart("OpenTurtle")
 		text:AppendText("Gamemode code: Mineturtle \n")
@@ -35,7 +35,9 @@ local function CreditsMenu()
 
 		text:AppendText("Fonts: DS Marker Felt by Typographer Mediengestaltung \n")
 		text:AppendText("Card Letter Design: Tambur \n")
-		text:AppendText("UI Design: GenerousGuy")
+		text:AppendText("UI Design: GenerousGuy\n")
+		text:AppendText("Empty hands SWEP: Tatrabbit\n")
+
 
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")

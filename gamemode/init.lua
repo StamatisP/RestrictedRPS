@@ -131,22 +131,21 @@ end*/
 
 function GM:PlayerSpawn(ply)
 	if GetGlobalBool("IsRoundStarted", false) then
+		if ply:Team() == 2 then
+			ply:SetupHands()
+			ply:SetWalkSpeed(180)
+			ply:SetRunSpeed(350)
+			ply:SetCrouchedWalkSpeed(0.4)
+			ply:SetAvoidPlayers(true)
+			ply:Give("weapon_fists")
+			ply:Give("weapon_empty_hands")
+			return 
+		end
 		GAMEMODE:PlayerSpawnAsSpectator(ply)
 		ply:SetTeam(TEAM_SPECTATOR)
 		ply:Spectate(OBS_MODE_ROAMING)
 		ply:Freeze(false)
 		return false
-	end
-
-	if ply:Team() == 2 then 
-		ply:SetupHands()
-		ply:SetWalkSpeed(180)
-		ply:SetRunSpeed(350)
-		ply:SetCrouchedWalkSpeed(0.4)
-		ply:SetAvoidPlayers(true)
-		ply:Give("weapon_fists")
-		ply:Give("weapon_empty_hands")
-		return 
 	else
 		math.randomseed(os.time())
 		ply:SetModel(playermodels[math.random(#playermodels)])
@@ -267,6 +266,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		for k, v in pairs(player.GetAll()) do
 			//if (v:databaseGetValue("rockcards") == nil) then ErrorNoHalt("what is goin on") return end
 			//print(v:inventoryGetItemAmount("rockcards"))
+			if v:Team() == 2 then return end
 			rockcardAmount = rockcardAmount + v:ReturnPlayerVar("rockcards")
 			papercardAmount = papercardAmount + v:ReturnPlayerVar("papercards")
 			scissorscardAmount = scissorscardAmount + v:ReturnPlayerVar("scissorscards")
