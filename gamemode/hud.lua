@@ -124,24 +124,6 @@ local function UpdateDebt()
 	debtAfterFormat = formatMoney(roundedDebt)
 end
 
-local function CardRoutine()
-	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
-	papercards = LocalPlayer():ReturnPlayerVar("papercards")
-	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
-	stars = LocalPlayer():ReturnPlayerVar("stars")
-	coroutine.yield()
-end
-
-local function UpdateCards()
-	if not _roundstart then return end
-
-	local co
-	if not co or not coroutine.resume(co) then
-		co = coroutine.create(CardRoutine)
-		coroutine.resume(co)
-	end
-end
-
 local function UpdateMoney()
 	if not _roundstart then return end
 	if (LocalPlayer():ReturnPlayerVar("money") == nil) then ErrorNoHalt("how in the world is money nil??") return end
