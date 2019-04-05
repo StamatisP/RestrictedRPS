@@ -132,12 +132,13 @@ end*/
 function GM:PlayerSpawn(ply)
 	math.randomseed(os.time())
 	ply:SetModel(playermodels[math.random(#playermodels)])
-	ply:SetPlayerColor(Vector(math.Rand(0, 0.5), math.Rand(0, 0.5), math.Rand(0, 0.5)))
+	ply:SetPlayerColor(Vector(math.Rand(0.1, 0.9), math.Rand(0.1, 0.9), math.Rand(0.1, 0.9)))
 	ply:SetupHands()
 	ply:SetWalkSpeed(150)
-	ply:SetRunSpeed(300)
-	ply:SetCrouchedWalkSpeed(0.5)
+	ply:SetRunSpeed(320)
+	ply:SetCrouchedWalkSpeed(0.4)
 	ply:SetAvoidPlayers(true)
+	ply:SetTeam(1)
 end
 
 function GM:GetFallDamage(ply, speed)
@@ -296,12 +297,19 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		ply:TakeAwayFromPlayerVar("stars", 3)
 		return ""
 	end
+	if (playerMsg[1] == "/blacksuit") then
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		ply:SetTeam(2)
+		ply:SetPlayerColor(Vector(0, 0, 0))
+		return ""
+	end
 end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	if not (IsValid(ent)) then return end
 
 	if (ent:GetName() == "rps_table") then
+		ply:SetNWEntity("TableUsing", ent)
 		if not (ply:ReturnPlayerVar("stars") >= 1) then 
 			print(ply:GetName() .. " has no stars") 
 			return false

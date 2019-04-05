@@ -15,7 +15,7 @@ include("cl_buyout.lua")
 local delay = 2
 local lastOccurrence = -delay
 RoundStarted = false
-TablePlayerIsUsing = nil
+//TablePlayerIsUsing = LocalPlayer():GetNWEntity("TableUsing", NULL) or nil
 local RRPSvars = {}
 local pmeta = FindMetaTable("Player")
 local _OLDSCRW
@@ -91,7 +91,7 @@ local function keyUse()
 	if hook.Run("StartChat") then print("startchat true") return end
 	if gui.IsConsoleVisible() then return end
 	if input.IsKeyDown(KEY_E) then 
-		local eyetrace = LocalPlayer():GetEyeTrace()
+		/*local eyetrace = LocalPlayer():GetEyeTrace()
 		// check if eyetrace hit sky or world
 		if eyetrace.HitSky == false then
 			if eyetrace.HitWorld == false then
@@ -99,7 +99,7 @@ local function keyUse()
 					TablePlayerIsUsing = eyetrace.Entity
 				end	
 			end
-		end
+		end*/
 		//print(TablePlayerIsUsing)
 		local timeElapsed = CurTime() - lastOccurrence
 		if timeElapsed < delay then 

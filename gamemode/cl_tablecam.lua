@@ -50,7 +50,7 @@ hook.Add("KEY_USE", "ExitTable", function()
 			net.WriteBool(false)
 		net.SendToServer()
 		net.Start("RemovePlayer")
-			net.WriteEntity(TablePlayerIsUsing)
+			net.WriteEntity(LocalPlayer():GetNWEntity("TableUsing", NULL))
 		net.SendToServer()
 		print("tableview is false, setting nwbool tableview to false")
 		// in the future, i should offload the key_use thing to another script or something

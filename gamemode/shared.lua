@@ -17,6 +17,16 @@ function GM:Initialize()
 	self.BaseClass.Initialize(self)
 end
 
+function GM:CreateTeams()
+	team.SetUp(1, "Players", Color(150, 100, 100, 255), false)
+	team.SetUp(2, "Blacksuits", Color(20, 20, 20, 255), false)
+	team.SetUp(TEAM_SPECTATOR, "Spectators", Color(200, 200, 0, 255), true)
+
+	team.SetSpawnPoint(1, "info_player_deathmatch")
+	team.SetSpawnPoint(2, "info_player_deathmatch")
+	team.SetSpawnPoint(3, "info_player_deathmatch")
+end	
+
 function GM:GetRoundTime()
 	return GetConVarNumber("rps_roundtime")
 end

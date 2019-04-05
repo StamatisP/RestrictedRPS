@@ -171,7 +171,7 @@ local function CardChoiceGUI(enabled)
 		dButtonReady.DoClick = function()
 			frame:Close()
 			// i need to write the entity that the player is looking at...
-			local ent = TablePlayerIsUsing
+			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
 			net.Start("ArePlayersReady")
 			net.WriteEntity(ent)
 			net.WriteString(LocalPlayer():GetName())

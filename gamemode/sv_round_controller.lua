@@ -70,6 +70,7 @@ function GM:EndRound()
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
 		if not v then ErrorNoHalt("what???") return end
+		if v:Team() == 2 then return end
 
 		local playerMoney = v:ReturnPlayerVar("money")
 		local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
