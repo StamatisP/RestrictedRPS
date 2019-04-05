@@ -51,6 +51,7 @@ function CompoundInterest()
 	//PrintTable(players)
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
 	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
+		if v:Team() == 2 or v:Team() == TEAM_SPECTATOR then return end
 		//print(body)
 		local money = v:ReturnPlayerVar("debt")
 		//print(money)
@@ -70,7 +71,7 @@ function GM:EndRound()
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
 		if not v then ErrorNoHalt("what???") return end
-		if v:Team() == 2 then return end
+		if v:Team() == 2 or v:Team() == TEAM_SPECTATOR then return end
 
 		local playerMoney = v:ReturnPlayerVar("money")
 		local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
@@ -80,6 +81,9 @@ function GM:EndRound()
 		if (playerMoney > 0) then
 			local newdebt = playerMoney - playerDebt
 			if v:GetNWBool("Defeated", false) then newdebt = newdebt + 2000000 end
+			if v:ReturnPlayerVar("rockcards") == 0 and v:ReturnPlayerVar("scissorscards") == 0 and v:ReturnPlayerVar("papercards") == 0 then // cause fuck optimization
+				newdebt = newdebt - (v:ReturnPlayerVar("stars") * 3000000)
+			end
 
 			if newdebt > 0 then 
 

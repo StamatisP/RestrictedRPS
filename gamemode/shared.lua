@@ -58,6 +58,11 @@ hook.Add("RoundStarted", "commandround", function()
 	_roundstart = true
 end)
 
+timer.Create("CheckRoundStarted", 5, 0, function()
+	if _roundstart then timer.Destroy("CheckRoundStarted") return end
+	_roundstart = GetGlobalBool("IsRoundStarted", false)
+end)
+
 function WriteRRPSVar(name, value)
 	local RRPSvar = RRPSvars[name]
 	if not RRPSvar then

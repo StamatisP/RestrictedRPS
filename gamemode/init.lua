@@ -130,16 +130,42 @@ end
 end*/
 
 function GM:PlayerSpawn(ply)
-	if ply:Team() == 2 then return end
-	math.randomseed(os.time())
-	ply:SetModel(playermodels[math.random(#playermodels)])
-	ply:SetPlayerColor(Vector(math.Rand(0.1, 0.9), math.Rand(0.1, 0.9), math.Rand(0.1, 0.9)))
-	ply:SetupHands()
-	ply:SetWalkSpeed(150)
-	ply:SetRunSpeed(320)
-	ply:SetCrouchedWalkSpeed(0.4)
-	ply:SetAvoidPlayers(true)
-	ply:SetTeam(1)
+	if GetGlobalBool("IsRoundStarted", false) then
+		GAMEMODE:PlayerSpawnAsSpectator(ply)
+		ply:SetTeam(TEAM_SPECTATOR)
+		ply:Spectate(OBS_MODE_ROAMING)
+		ply:Freeze(false)
+		return false
+	end
+
+	if ply:Team() == 2 then 
+		ply:SetupHands()
+		ply:SetWalkSpeed(180)
+		ply:SetRunSpeed(350)
+		ply:SetCrouchedWalkSpeed(0.4)
+		ply:SetAvoidPlayers(true)
+		ply:Give("weapon_fists")
+		ply:Give("weapon_empty_hands")
+		return 
+	else
+		math.randomseed(os.time())
+		ply:SetModel(playermodels[math.random(#playermodels)])
+		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
+		ply:SetupHands()
+		ply:SetWalkSpeed(150)
+		ply:SetRunSpeed(320)
+		ply:SetCrouchedWalkSpeed(0.4)
+		ply:SetAvoidPlayers(true)
+		ply:SetTeam(1)
+	end
+end
+
+function GM:PlayerInitialSpawn(ply) 
+	print("Player "..ply:Name().." has spawned.")
+	ply.RRPSvars = ply.RRPSvars or {}
+	if GetGlobalBool("IsRoundStarted", false) then
+		ply:SetTeam(TEAM_SPECTATOR)
+	end
 end
 
 function GM:GetFallDamage(ply, speed)
@@ -166,11 +192,6 @@ end)
 
 function GM:PlayerConnect(name, ip) 
 	print("Player "..name.." has connected with IP ("..ip..")")
-end
-
-function GM:PlayerInitialSpawn(ply) 
-	print("Player "..ply:Name().." has spawned.")
-	ply.RRPSvars = ply.RRPSvars or {}
 end
 
 function GM:ShowHelp(ply)
@@ -309,6 +330,7 @@ end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	if not (IsValid(ent)) then return end
+	if ply:Team() == TEAM_SPECTATOR then return false end
 
 	if (ent:GetClass() == "rps_table") then
 		ply:SetNWEntity("TableUsing", ent)

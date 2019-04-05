@@ -10,6 +10,7 @@ local function openLobby()
 
 	if lobbyOpened then return end // this is to prevent the lobby opening on players joining in after it opened
 	if _roundstart then return end
+	if LocalPlayer():Team() == TEAM_SPECTATOR then return end
 	lobbyOpened = true
 	print("openlobby call")
 	local frame = vgui.Create("DFrame")
@@ -132,6 +133,9 @@ local function openLobby()
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
+	timer.Simple(1.5, function() 
+		lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
+	end)
 
 	timer.Create("AdminButton", 1, 0, function()
 		if not IsValid(LocalPlayer()) then return end
@@ -185,13 +189,10 @@ end)
 print("cl lobby load end")
 
 //net.Receive("OpenLobby", timer.Simple(2, openLobby))
-openLobby()
+
 hook.Add("InitPostEntity", "stupid_music", function()
 	if MySelf:IsValid() then
-
-		timer.Simple(1.5, function() 
-			lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
-		end)
+		openLobby()
 	end
 end)
 
