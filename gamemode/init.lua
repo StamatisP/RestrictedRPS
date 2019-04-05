@@ -130,6 +130,7 @@ end
 end*/
 
 function GM:PlayerSpawn(ply)
+	if ply:Team() == 2 then return end
 	math.randomseed(os.time())
 	ply:SetModel(playermodels[math.random(#playermodels)])
 	ply:SetPlayerColor(Vector(math.Rand(0.1, 0.9), math.Rand(0.1, 0.9), math.Rand(0.1, 0.9)))
@@ -301,6 +302,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if not ply:IsSuperAdmin() or not developerMode then return "" end
 		ply:SetTeam(2)
 		ply:SetPlayerColor(Vector(0, 0, 0))
+		ply:Spawn()
 		return ""
 	end
 end)
@@ -308,7 +310,7 @@ end)
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	if not (IsValid(ent)) then return end
 
-	if (ent:GetName() == "rps_table") then
+	if (ent:GetClass() == "rps_table") then
 		ply:SetNWEntity("TableUsing", ent)
 		if not (ply:ReturnPlayerVar("stars") >= 1) then 
 			print(ply:GetName() .. " has no stars") 

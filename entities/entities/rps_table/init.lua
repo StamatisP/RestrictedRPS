@@ -28,7 +28,7 @@ function ENT:Think()
 end
 
 ENT.playersTable = {}
-ENT.players = {}
+//ENT.players = {}
 ENT.player1 = nil
 ENT.player2 = nil
 
@@ -207,7 +207,7 @@ function ENT:CleanSlate()
 	self:GetPlayer2():SetNWBool("PlayingTable", false)
 	self:SetPlayer1(nil)
 	self:SetPlayer2(nil)
-	table.Empty(self.players)
+	//table.Empty(self.players)
 	table.Empty(self.playersTable)
 	self.player1 = nil
 	self.player2 = nil
@@ -222,28 +222,24 @@ function ENT:Use(activator, caller)
 	//if !activator:inventoryHasItem("stars", 1) then print(activator:GetName() .. " has no stars") return end
 	if activator:ReturnPlayerVar("stars") < 1 then return end
 
-	if (table.Count(self.players) >= 2) then 
+	if (table.Count(self.playersTable) >= 2) then 
 		print("full table :(")
 		return
 	end
-	if (table.Count(self.playersTable) >= 2) then
-		print("table is full :(")
-		return
-	end
 
-	if (table.Count(self.players) == 0) then
+	if (table.Count(self.playersTable) == 0) then
 		
 		self:SetPlayer1(activator)
-		table.insert(self.players, activator:GetName()) // why do we have two player tables...
+		//table.insert(self.players, activator:GetName()) // why do we have two player tables...
 		table.insert(self.playersTable, activator)
 		print("you are first player")
 		activator:SetNWBool("TableView", true)
+		self.player1 = self:GetPlayer1()
+		//print(self.player1 .. " player 1")
 		return
 	end
 
-	self.player1 = self:GetPlayer1()
-
-	if (table.Count(self.players) == 1) then
+	if (table.Count(self.playersTable) == 1) then
 		//print("one player in table")
 		//print(activator:GetName() .. " activator")
 		//print(player1:GetName() .. " player1")
@@ -252,7 +248,7 @@ function ENT:Use(activator, caller)
 			return
 		end
 		self:SetPlayer2(activator)
-		table.insert(self.players, activator:GetName())
+		//table.insert(self.players, activator:GetName())
 		table.insert(self.playersTable, activator)
 		print("you are second player")
 		activator:SetNWBool("TableView", true)
@@ -260,7 +256,7 @@ function ENT:Use(activator, caller)
 
 	self.player2 = self:GetPlayer2()
 
-	if (table.Count(self.players) == 2) then
+	if (table.Count(self.playersTable) == 2) then
 		print("table start time")
 		if self:GetTableStarted() then return end
 		// table start!
@@ -279,7 +275,7 @@ end
 
 net.Receive("RemovePlayer", function(len, ply)
 	local ent = net.ReadEntity()
-	table.RemoveByValue(ent.players, ply:GetName())
+	//table.RemoveByValue(ent.players, ply:GetName())
 	table.RemoveByValue(ent.playersTable, ply) // experiment
 	print("is this even running")
 
@@ -295,6 +291,7 @@ net.Receive("RemovePlayer", function(len, ply)
 		end
 	else
 		print("player1: " .. tostring(IsValid(ent.player1)) .. " ; " .. "player2: " .. tostring(IsValid(ent.player2)))
+		print("player 1 or 2 is not in ent.player1 or 2.")
 	end
 	
 	print("removing " .. ply:GetName() .. " from table players")
