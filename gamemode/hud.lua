@@ -10,6 +10,7 @@ local scissorscards = 0
 local stars = 0
 local _roundstart = false
 local rockmat, papermat, scissorsmat
+local _curtimesubtract = nil
 
 function GM:HUDShouldDraw(name)
 	if name == "CHudBattery" or
@@ -133,20 +134,21 @@ local function UpdateMoney()
 end
 
 local function UpdateCompoundTime()
-	compoundTimeLeft = GetGlobalFloat("interestrepeat") // time to take a break
+	compoundTimeRate = 75 + CurTime()
+	print(compoundTimeRate) // time to take a break
 end
 
 function GM:Think()
 	if not _roundstart then return end
 	compoundTimeLeft = compoundTimeRate - CurTime()
-	if compoundTimeLeft <= 0 then 
-		compoundTimeLeft = CurTime() + compoundTimeRate
+	/*if compoundTimeLeft <= 0 then 
+		compoundTimeLeft = compoundTimeRate - _curtimesubtract
+		compoundTimeRate = compoundTimeRate + CurTime()
+		print(compoundTimeLeft)
 		//compoundTimeLeft = compoundTimeLeft + CurTime()
-	end
+	end*/
 end
 
-timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
-timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 //timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)
@@ -313,8 +315,13 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	papermat = Material("hud_paper.png")
 	scissorsmat = Material("hud_scissors.png")
 	timemat = Material("time_bg.png")
+	timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
+	timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
+
 	compoundTimeRate = GetGlobalInt("interestrepeat", 75) + CurTime()
+	_curtimesubtract = CurTime()
 	_roundstart = true
+	timer.Create("CompoundTimeHUD", GetGlobalInt("interestrepeat", 75), 0, UpdateCompoundTime)
 end)
 
 function GM:HUDPaint()

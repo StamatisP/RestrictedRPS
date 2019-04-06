@@ -132,6 +132,7 @@ end*/
 function GM:PlayerSpawn(ply)
 	if GetGlobalBool("IsRoundStarted", false) then
 		if ply:Team() == 2 then
+			ply:UnSpectate()
 			ply:SetupHands()
 			ply:SetWalkSpeed(180)
 			ply:SetRunSpeed(350)
@@ -139,7 +140,20 @@ function GM:PlayerSpawn(ply)
 			ply:SetAvoidPlayers(true)
 			ply:Give("weapon_fists")
 			ply:Give("weapon_empty_hands")
+			ply:Give("weapon_kidnap")
 			return 
+		end
+		if ply:GetNWBool("Defeated", false) then
+			/*local newpos = table.Random(defeatedSpawns)
+			ply:SetupHands()
+			ply:SetWalkSpeed(150)
+			ply:SetRunSpeed(320)
+			ply:SetCrouchedWalkSpeed(0.4)
+			ply:SetAvoidPlayers(true)
+			ply:SetTeam(1)
+			ply:SetPos(newpos:GetPos())*/
+			ply:UnSpectate()
+			return
 		end
 		GAMEMODE:PlayerSpawnAsSpectator(ply)
 		ply:SetTeam(TEAM_SPECTATOR)
@@ -147,6 +161,7 @@ function GM:PlayerSpawn(ply)
 		ply:Freeze(false)
 		return false
 	else
+		ply:UnSpectate()
 		math.randomseed(os.time())
 		ply:SetModel(playermodels[math.random(#playermodels)])
 		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
@@ -175,13 +190,14 @@ local defeatedSpawns
 timer.Simple(10, function()
 	defeatedSpawns = ents.FindByClass("defeated_spawn")
 end)
+
 timer.Create("PlayerStarsPunishment", 5, 0, function()
 	for k, ply in pairs(player.GetAll()) do
 		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
 			local newpos = table.Random(defeatedSpawns)
 			timer.Simple(10, function()
 				if ply:GetNWBool("Defeated", false) then return end
-				ply:SetPos(newpos:GetPos())
+				//ply:SetPos(newpos:GetPos())
 				ply:SetNWInt("Luck", 0)
 				ply:SetNWBool("Defeated", true)
 			end)
@@ -315,15 +331,17 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		return ""
 	end
 	if (playerMsg[1] == "/takestars") then
-		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		if not developerMode then return "" end
 		ply:TakeAwayFromPlayerVar("stars", 3)
 		return ""
 	end
 	if (playerMsg[1] == "/blacksuit") then
 		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		local newpos = ply:GetPos()
 		ply:SetTeam(2)
 		ply:SetPlayerColor(Vector(0, 0, 0))
 		ply:Spawn()
+		ply:SetPos(newpos)
 		return ""
 	end
 end)
@@ -338,6 +356,15 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 			print(ply:GetName() .. " has no stars") 
 			return false
 		end
+	end
+
+	if (ent:GetClass() == "func_button") then
+		//print(ply:Team())
+		if not (ply:Team() == 2) then 
+			//print("non-blacksuits cannot use") 
+			return false 
+		end
+		return true
 	end
 end)
 

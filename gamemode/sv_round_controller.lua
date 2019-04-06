@@ -3,13 +3,13 @@ local ply = FindMetaTable("Player")
 
 function GM:BeginRound()
 	if GetGlobalBool("IsRoundStarted", false) then return end
+	SetGlobalInt("interestrepeat", GetConVar("rps_interestrepeat"):GetInt())
 	hook.Run("RoundStarted")
 	//PrintTable(players)
 	local convar = GetConVar("rps_interestrepeat")
 	//print(convar:GetFloat() .. ": interest repeat rate")
 	self.round_status = 1
 	self:UpdateClientRoundStatus()
-	SetGlobalFloat("interestrepeat", GetConVar("rps_interestrepeat"):GetInt())
 	timer.Create("CompoundInterestTime", GetConVar("rps_interestrepeat"):GetInt(), 0, function()
 		//print("interest time!")
 		CompoundInterest()
