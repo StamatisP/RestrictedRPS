@@ -135,7 +135,7 @@ end
 
 local function UpdateCompoundTime()
 	compoundTimeRate = 75 + CurTime()
-	print(compoundTimeRate) // time to take a break
+	//print(compoundTimeRate) // time to take a break
 end
 
 function GM:Think()
