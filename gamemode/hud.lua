@@ -141,15 +141,7 @@ end
 function GM:Think()
 	if not _roundstart then return end
 	compoundTimeLeft = compoundTimeRate - CurTime()
-	/*if compoundTimeLeft <= 0 then 
-		compoundTimeLeft = compoundTimeRate - _curtimesubtract
-		compoundTimeRate = compoundTimeRate + CurTime()
-		print(compoundTimeLeft)
-		//compoundTimeLeft = compoundTimeLeft + CurTime()
-	end*/
 end
-
-//timer.Create("UpdateCompoundTime", GetGlobalFloat("interestrepeat"), 0, UpdateCompoundTime)
 
 local function CardChoiceGUI(enabled)
 	if enabled then
