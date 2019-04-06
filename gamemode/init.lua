@@ -47,6 +47,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("RRPS_VarDisconnect")
 	util.AddNetworkString("SendLeaderboardInfo")
 	util.AddNetworkString("PlayerReady")
+	util.AddNetworkString("BuyoutPlayer")
 end
 
 local playermodels = {
@@ -132,10 +133,11 @@ end*/
 function GM:PlayerSpawn(ply)
 	if GetGlobalBool("IsRoundStarted", false) then
 		if ply:Team() == 2 then
+			print("making " .. ply:Nick() .. " a blacksuit during the round")
 			ply:UnSpectate()
 			ply:SetupHands()
-			ply:SetWalkSpeed(180)
-			ply:SetRunSpeed(350)
+			ply:SetWalkSpeed(160)
+			ply:SetRunSpeed(320)
 			ply:SetCrouchedWalkSpeed(0.4)
 			ply:SetAvoidPlayers(true)
 			ply:Give("weapon_fists")
@@ -143,7 +145,7 @@ function GM:PlayerSpawn(ply)
 			ply:Give("weapon_kidnap")
 			return 
 		end
-		if ply:GetNWBool("Defeated", false) then
+		if ply:GetNWBool("Defeated", false) or ply:GetNWBool("Dragged", false) then
 			/*local newpos = table.Random(defeatedSpawns)
 			ply:SetupHands()
 			ply:SetWalkSpeed(150)
@@ -152,6 +154,7 @@ function GM:PlayerSpawn(ply)
 			ply:SetAvoidPlayers(true)
 			ply:SetTeam(1)
 			ply:SetPos(newpos:GetPos())*/
+			print("making " .. ply:Nick() .. " unspectate after being defeated or dragged")
 			ply:UnSpectate()
 			return
 		end
@@ -167,7 +170,7 @@ function GM:PlayerSpawn(ply)
 		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
 		ply:SetupHands()
 		ply:SetWalkSpeed(150)
-		ply:SetRunSpeed(320)
+		ply:SetRunSpeed(280)
 		ply:SetCrouchedWalkSpeed(0.4)
 		ply:SetAvoidPlayers(true)
 		ply:SetTeam(1)
@@ -336,7 +339,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		return ""
 	end
 	if (playerMsg[1] == "/blacksuit") then
-		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		if not developerMode then return "" end
 		local newpos = ply:GetPos()
 		ply:SetTeam(2)
 		ply:SetPlayerColor(Vector(0, 0, 0))
@@ -396,7 +399,7 @@ end)
 
 net.Receive("BuyoutPlayer", function(len, ply)
 	local person = net.ReadEntity()
-	if not person then return end
+	if not person then ErrorNoHalt("WTF PERSON IS NIL") return end
 
 	if ply:ReturnPlayerVar("stars") < 3 then return end
 

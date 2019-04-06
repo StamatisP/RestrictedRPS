@@ -31,7 +31,7 @@ local HitSound = Sound( "Flesh.ImpactHard" )
 local kidnappedPly = {}
 local hasBeenKidnapped = {}
 
-local reviveTime = 10
+local reviveTime = 20
 local waitTime = 1
 local clamp = 2000
 
@@ -199,6 +199,7 @@ function SWEP:kidnaprevive(ent)
 	associatedPlayer:Spawn()
 	associatedPlayer:SetPos(ent:GetPos())
 	associatedPlayer:SetVelocity(ent:GetPhysicsObject():GetVelocity())
+	associatedPlayer:SetNWBool("Dragged", false)
 end
 
 function SWEP:kidnapPlayer(ply)
@@ -227,6 +228,7 @@ function SWEP:kidnapPlayer(ply)
 	ply:DrawWorldModel(false)
 	ply:Spectate(OBS_MODE_CHASE)
 	ply:SpectateEntity(rag)
+	ply:SetNWBool("Dragged", true)
 	
     rag:Spawn()
     rag:Activate()
