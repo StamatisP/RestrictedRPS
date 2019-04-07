@@ -38,6 +38,7 @@ local function CreditsMenu()
 		text:AppendText("UI Design: GenerousGuy\n")
 		text:AppendText("Empty hands SWEP: Tatrabbit\n")
 		text:AppendText("Kidnap SWEP: NauticalCoding\n")
+		text:AppendText("Circles library: SneakySquid\n")
 
 
 		function text:PerformLayout()

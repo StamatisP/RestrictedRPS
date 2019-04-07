@@ -14,6 +14,7 @@ AddCSLuaFile("medialib.lua")
 AddCSLuaFile("music.lua")
 AddCSLuaFile("cl_credits.lua")
 AddCSLuaFile("cl_buyout.lua")
+AddCSLuaFile("circles.lua")
 
 include("sv_database.lua")
 include("items.lua")

@@ -11,6 +11,7 @@ local stars = 0
 local _roundstart = false
 local rockmat, papermat, scissorsmat
 local _curtimesubtract = nil
+include("circles.lua")
 
 function GM:HUDShouldDraw(name)
 	if name == "CHudBattery" or
@@ -56,26 +57,40 @@ local function normalize(min, max, val)
     return (val - min) / delta
 end
 
-local function DrawInfo()
+local roundTimerCircle = draw.CreateCircle(CIRCLE_FILLED)
+surface.SetDrawColor(0, 255, 0, 255)
+roundTimerCircle:SetRadius(35)
+roundTimerCircle:SetPos(width * 0.5, height * 0.04)
+roundTimerCircle:SetAngles(0, 360)
 
+
+local function DrawInfo()
 	if not _roundstart then return end
-	//print("fuck")
-	draw.RoundedBox(8, width * 0.01, height * 0.925, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // money
-	draw.RoundedBox(8, width * 0.01, height * 0.005, width / 3.885, height / 15.36, Color(50, 50, 50, 220)) // debt
-	//draw.RoundedBox(8, width * 0.88, height * 0.005, width / 9.066, height / 10, Color(50, 50, 50, 220)) // time left
+
 	surface.SetDrawColor(255, 255, 255, 210)
-	surface.SetMaterial(timemat)
-	surface.DrawTexturedRect(width * 0.88, height * 0.005, width / 9.066, height / 10)
-	//draw.RoundedBox(8, ScrW() * 0.28, ScrH() * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // rock
 	surface.SetMaterial(rockmat)
-	surface.DrawTexturedRect(width * 0.28, height * 0.86, width / 6, height / 6)
-	//draw.RoundedBox(8, width * 0.48, height * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // paper
+	surface.DrawTexturedRect(width * 0.15, height * 0.86, width / 6, height / 6)
+
 	surface.SetMaterial(papermat)
-	surface.DrawTexturedRect(width * 0.48, height * 0.86, width / 6, height / 6)
-	//draw.RoundedBox(8, width * 0.68, height * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // scissors 
+	surface.DrawTexturedRect(width * 0.40, height * 0.86, width / 6, height / 6)
+
 	surface.SetMaterial(scissorsmat)
-	surface.DrawTexturedRect(width * 0.68, height * 0.86, width / 6, height / 6)
-	draw.RoundedBox(8, width * 0.88, height * 0.925, width / 9.066, height / 15.36, Color(50, 50, 50, 220)) // stars
+	surface.DrawTexturedRect(width * 0.65, height * 0.86, width / 6, height / 6)
+
+	draw.RoundedBox(8, 300, 0, 400, 80, Color(102, 0, 16, 230)) // compound debt
+	surface.SetDrawColor(120, 60, 0, 255)
+	surface.DrawRect(310, 10, 380, 60)
+
+	draw.RoundedBox(8, 700, 0, 500, 100, Color(0, 0, 0, 230)) // middle timer/stars
+	surface.SetDrawColor(50, 50, 50, 255)
+	surface.DrawRect(710, 10, 480, 80)
+
+	draw.RoundedBox(8, 1200, 0, 400, 80, Color(0, 70, 0, 230)) // actual money
+	surface.SetDrawColor(0, 120, 60, 255)
+	surface.DrawRect(1210, 10, 380, 60)
+
+	draw.NoTexture()
+	roundTimerCircle:Draw()
 
 	local roundColor
 	local compoundColor
@@ -100,14 +115,14 @@ local function DrawInfo()
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
-	draw.SimpleTextOutlined(rockcards, 			"CardText", 	ScrW() * 0.397, 	ScrH() * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(papercards, 		"CardText", 	ScrW() * 0.597, 	ScrH() * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(scissorscards, 		"CardText", 	ScrW() * 0.797, 	ScrH() * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
-	draw.SimpleTextOutlined(moneyAfterFormat, 	"NormalText", 	ScrW() * 0.02, 		ScrH() * 0.935, 	Color(48, 221, 55, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(debtAfterFormat, 	"NormalText", 	ScrW() * 0.02, 		ScrH() * 0.015, 	Color(255, 80, 80, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(txt, 				"NormalText", 	ScrW() * 0.92, 		ScrH() * 0.015, 	roundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(compoundTxt,		"NormalText", 	ScrW() * 0.92, 		ScrH() * 0.055, 	compoundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	ScrW() * 0.93, 		ScrH() * 0.935, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(rockcards, 			"CardText", 	width * 0.27, 	height * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(papercards, 		"CardText", 	width * 0.52, 	height * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(scissorscards, 		"CardText", 	width * 0.77, 	height * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
+	draw.SimpleTextOutlined(moneyAfterFormat, 	"NormalText", 	width / 1.58, 	height * 0.015, 	Color(48, 221, 55, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(debtAfterFormat, 	"NormalText", 	width / 6.1, 	height * 0.015, 	Color(255, 80, 80, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(txt, 				"NormalText", 	width / 1.76, 	height * 0.01, 	roundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(compoundTxt,		"NormalText", 	width / 1.76, 	height * 0.05, 	compoundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	width * 0.41, 	height * 0.016, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 end
 
 function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
