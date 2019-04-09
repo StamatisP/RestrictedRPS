@@ -11,6 +11,8 @@ local stars = 0
 local _roundstart = false
 local rockmat, papermat, scissorsmat
 local _curtimesubtract = nil
+local compoundtimer = nil
+local roundtimer = nil
 include("circles.lua")
 
 function GM:HUDShouldDraw(name)
@@ -58,11 +60,21 @@ local function normalize(min, max, val)
 end
 
 local roundTimerCircle = draw.CreateCircle(CIRCLE_FILLED)
-surface.SetDrawColor(0, 255, 0, 255)
 roundTimerCircle:SetRadius(35)
-roundTimerCircle:SetPos(width * 0.5, height * 0.04)
+roundTimerCircle:SetPos(width * 0.55, height * 0.045)
 roundTimerCircle:SetAngles(0, 360)
+roundTimerCircle:SetRotation(270)
 
+local compoundTimerCircle = draw.CreateCircle(CIRCLE_FILLED)
+compoundTimerCircle:SetRadius(25)
+compoundTimerCircle:SetPos(width * 0.55, height * 0.045)
+compoundTimerCircle:SetAngles(0, 360)
+compoundTimerCircle:SetRotation(270)
+
+local circleDivider = draw.CreateCircle(CIRCLE_FILLED)
+circleDivider:SetRadius(15)
+circleDivider:SetPos(width * 0.55, height * 0.045)
+circleDivider:SetAngles(0, 360)
 
 local function DrawInfo()
 	if not _roundstart then return end
@@ -87,16 +99,29 @@ local function DrawInfo()
 
 	draw.RoundedBox(8, 1200, 0, 400, 80, Color(0, 70, 0, 230)) // actual money
 	surface.SetDrawColor(0, 120, 60, 255)
-	surface.DrawRect(1210, 10, 380, 60)
-
-	draw.NoTexture()
-	roundTimerCircle:Draw()
+	surface.DrawRect(1210, 10, 380, 60)	
 
 	local roundColor
 	local compoundColor
 	local timeLeft = math.max(0, GetGlobalFloat("endroundtime", 0) - CurTime())
 	local compoundTxt
 	local txt
+	//roundTimerCircle:SetAngles(0, normalize(0, compoundtimer, timeLeft))
+	//print(normalize(0, compoundtimer, timeLeft))
+	//print(compoundtimer, timeLeft)
+	roundTimerCircle:SetAngles(0, normalize(0, roundtimer, timeLeft) * 360)
+	compoundTimerCircle:SetAngles(0, normalize(0, compoundtimer, compoundTimeLeft) * 360)
+	//print(normalize(0, roundtimer, timeLeft))
+
+	draw.NoTexture()
+	surface.SetDrawColor(48, 221, 55, 255)
+	roundTimerCircle:Draw()
+	draw.NoTexture()
+	surface.SetDrawColor(255, 80, 80, 255)
+	compoundTimerCircle:Draw()
+	draw.NoTexture()
+	surface.SetDrawColor(120, 120, 120, 255)
+	circleDivider:Draw()
 
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
@@ -326,6 +351,8 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 
 	compoundTimeRate = GetGlobalInt("interestrepeat", 75) + CurTime()
+	compoundtimer = GetGlobalInt("interestrepeat", 75)
+	roundtimer = GetGlobalInt("endroundtime", 1200)
 	_curtimesubtract = CurTime()
 	_roundstart = true
 	timer.Create("CompoundTimeHUD", GetGlobalInt("interestrepeat", 75), 0, UpdateCompoundTime)
