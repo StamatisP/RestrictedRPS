@@ -114,13 +114,13 @@ local function DrawInfo()
 	//print(normalize(0, roundtimer, timeLeft))
 
 	draw.NoTexture()
-	surface.SetDrawColor(48, 221, 55, 255)
+	surface.SetDrawColor(0, 190, 100, 255)
 	roundTimerCircle:Draw()
 	draw.NoTexture()
-	surface.SetDrawColor(255, 80, 80, 255)
+	surface.SetDrawColor(180, 80, 80, 255)
 	compoundTimerCircle:Draw()
 	draw.NoTexture()
-	surface.SetDrawColor(120, 120, 120, 255)
+	surface.SetDrawColor(100, 100, 100, 255)
 	circleDivider:Draw()
 
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
