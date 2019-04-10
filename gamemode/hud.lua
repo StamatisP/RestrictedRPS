@@ -89,16 +89,16 @@ local function DrawInfo()
 	surface.SetMaterial(scissorsmat)
 	surface.DrawTexturedRect(width * 0.65, height * 0.86, width / 6, height / 6)
 
-	draw.RoundedBox(8, 300, 0, 400, 80, Color(102, 0, 16, 230)) // compound debt
-	surface.SetDrawColor(120, 60, 0, 255)
+	draw.RoundedBox(8, 300, 0, 400, 80, Color(100, 30, 30, 230)) // compound debt
+	surface.SetDrawColor(170, 50, 50, 255)
 	surface.DrawRect(310, 10, 380, 60)
 
 	draw.RoundedBox(8, 700, 0, 500, 100, Color(0, 0, 0, 230)) // middle timer/stars
 	surface.SetDrawColor(50, 50, 50, 255)
 	surface.DrawRect(710, 10, 480, 80)
 
-	draw.RoundedBox(8, 1200, 0, 400, 80, Color(0, 70, 0, 230)) // actual money
-	surface.SetDrawColor(0, 120, 60, 255)
+	draw.RoundedBox(8, 1200, 0, 400, 80, Color(0, 120, 60, 230)) // actual money
+	surface.SetDrawColor(0, 190, 95, 255)
 	surface.DrawRect(1210, 10, 380, 60)	
 
 	local roundColor
@@ -147,7 +147,7 @@ local function DrawInfo()
 	draw.SimpleTextOutlined(debtAfterFormat, 	"NormalText", 	width / 6.1, 	height * 0.015, 	Color(255, 80, 80, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 	draw.SimpleTextOutlined(txt, 				"NormalText", 	width / 1.76, 	height * 0.01, 	roundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 	draw.SimpleTextOutlined(compoundTxt,		"NormalText", 	width / 1.76, 	height * 0.05, 	compoundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	width * 0.41, 	height * 0.016, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	width * 0.41, 	height * 0.015, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 end
 
 function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
