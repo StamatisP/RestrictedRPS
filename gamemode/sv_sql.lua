@@ -14,7 +14,7 @@ local function TableExist()
  			if (sql.TableExists("rrps_player_info")) then
  				print("Table created.")
  			else
- 				ErrorNoHalt("Something messed up. ")
+ 				ErrorNoHalt("Something messed up. Player info table not created.")
  				print(sql.LastError(result))
  			end
  		end
@@ -37,7 +37,7 @@ function UpdatePlayerVarSQL(ply, amount, var)
 	if (result) then
 		print("Player "..var.." has been updated successfully. ", PrintTable(result))
 	else
-		ErrorNoHalt("Player "..var.." NOT successful, ", sql.LastError(result))
+		ErrorNoHalt("Player "..var.." update NOT successful, ", sql.LastError(result))
 	end
 end
 

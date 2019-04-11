@@ -32,7 +32,7 @@ local function inventoryItemButton(iname, name, amount, description, model, pare
 	if not dist then dist = 128 end
 	local p = vgui.Create("DPanel", parent)
 	p:SetPos(4, 4)
-	p:SetSize(64, 64)
+	p:SetSize(128, 128)
 
 	local mp = vgui.Create("DModelPanel", p)
 	mp:SetSize(p:GetWide(), p:GetTall() )
@@ -93,8 +93,8 @@ end
 
 
 function inventoryMenu()
-	local w = 506
-	local h = 512
+	local w = 564
+	local h = 210
 
 	f = vgui.Create("DFrame")
 	f:SetSize(w, h)

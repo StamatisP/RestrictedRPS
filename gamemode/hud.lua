@@ -79,6 +79,7 @@ circleDivider:SetAngles(0, 360)
 local function DrawInfo()
 	if not _roundstart then return end
 
+	//local curtimecheck = SysTime()
 	surface.SetDrawColor(255, 255, 255, 210)
 	surface.SetMaterial(rockmat)
 	surface.DrawTexturedRect(width * 0.15, height * 0.86, width / 6, height / 6)
@@ -89,17 +90,18 @@ local function DrawInfo()
 	surface.SetMaterial(scissorsmat)
 	surface.DrawTexturedRect(width * 0.65, height * 0.86, width / 6, height / 6)
 
-	draw.RoundedBox(8, 300, 0, 400, 80, Color(100, 30, 30, 230)) // compound debt
+	draw.RoundedBox(8, width / 6.4, 0, width / 4.8, height / 13.5, Color(100, 30, 30, 230)) // compound debt
 	surface.SetDrawColor(170, 50, 50, 255)
-	surface.DrawRect(310, 10, 380, 60)
+	surface.DrawRect(width / 6.1935, height / 108, width / 5.0526, height / 18)
 
-	draw.RoundedBox(8, 700, 0, 500, 100, Color(0, 0, 0, 230)) // middle timer/stars
+	draw.RoundedBox(8, width / 2.7428, 0, width / 3.84, height / 10.8, Color(0, 0, 0, 230)) // middle timer/stars
 	surface.SetDrawColor(50, 50, 50, 255)
-	surface.DrawRect(710, 10, 480, 80)
+	surface.DrawRect(width / 2.7042, height / 108, width / 4, height / 13.5)
 
-	draw.RoundedBox(8, 1200, 0, 400, 80, Color(0, 120, 60, 230)) // actual money
+	draw.RoundedBox(8, width / 1.6, 0, width / 4.8, height / 13.5, Color(0, 120, 60, 230)) // actual money
 	surface.SetDrawColor(0, 190, 95, 255)
-	surface.DrawRect(1210, 10, 380, 60)	
+	surface.DrawRect(width / 1.5867, height / 108, width / 5.0526, height / 18)	//all these divisions better not be laggy
+	//print(SysTime() - curtimecheck)
 
 	local roundColor
 	local compoundColor
@@ -120,7 +122,7 @@ local function DrawInfo()
 	surface.SetDrawColor(180, 80, 80, 255)
 	compoundTimerCircle:Draw()
 	draw.NoTexture()
-	surface.SetDrawColor(100, 100, 100, 255)
+	surface.SetDrawColor(50, 50, 50, 255)
 	circleDivider:Draw()
 
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
