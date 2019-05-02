@@ -286,10 +286,11 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		for k, v in pairs(player.GetAll()) do
 			//if (v:databaseGetValue("rockcards") == nil) then ErrorNoHalt("what is goin on") return end
 			//print(v:inventoryGetItemAmount("rockcards"))
-			if v:Team() == 2 then return end
-			rockcardAmount = rockcardAmount + v:ReturnPlayerVar("rockcards")
-			papercardAmount = papercardAmount + v:ReturnPlayerVar("papercards")
-			scissorscardAmount = scissorscardAmount + v:ReturnPlayerVar("scissorscards")
+			if v:Team() == 1 then 
+				rockcardAmount = rockcardAmount + v:ReturnPlayerVar("rockcards")
+				papercardAmount = papercardAmount + v:ReturnPlayerVar("papercards")
+				scissorscardAmount = scissorscardAmount + v:ReturnPlayerVar("scissorscards")
+			end
 		end
 		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
 		return ""
@@ -337,6 +338,12 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/takestars") then
 		if not developerMode then return "" end
 		ply:TakeAwayFromPlayerVar("stars", 3)
+		return ""
+	end
+	if (playerMsg[1] == "/getstars") then
+		if not developerMode then return "" end
+		if not tonumber(playerMsg[2]) then return "" end
+		ply:TakeAwayFromPlayerVar("stars", -tonumber(playerMsg[2]))
 		return ""
 	end
 	if (playerMsg[1] == "/blacksuit") then

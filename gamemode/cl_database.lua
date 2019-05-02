@@ -55,7 +55,7 @@ local function inventoryItemButton(iname, name, amount, description, model, pare
 	
 	local b = vgui.Create("DButton", p)
 	b:SetPos(4, 4)
-	b:SetSize(64, 64)
+	b:SetSize(128, 128)
 	b:SetText("")
 	b:SetTooltip(name .. ":\n\n" .. description)
 
@@ -78,6 +78,7 @@ local function inventoryItemButton(iname, name, amount, description, model, pare
 		local l = vgui.Create("DLabel", p)
 		l:SetPos(6, 4)
 		l:SetFont("default")
+		l:SetColor(Color(255, 30, 30, 255))
 		l:SetText(amount)
 		l:SizeToContents()
 	end

@@ -102,6 +102,7 @@ local function DrawInfo()
 	surface.SetDrawColor(0, 190, 95, 255)
 	surface.DrawRect(width / 1.5867, height / 108, width / 5.0526, height / 18)	//all these divisions better not be laggy
 	//print(SysTime() - curtimecheck)
+	// in the future, move the values to its own variables cuz all this arithmetic must not be healthy
 
 	local roundColor
 	local compoundColor
