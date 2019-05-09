@@ -7,7 +7,7 @@ local function enterLobby(ply)
 	isLobbyStarted = true
 
 	print("enter lobby")
-	//ReturnLeaderboard(ply)
+	ReturnLeaderboard(ply)
 end
 
 local function giveMoney()
@@ -42,7 +42,6 @@ end)
 	closeFrame()
 end)*/
 
-//hook.Add("PlayerSpawn","OpenPlayerLobby",enterLobby)
 // so basically, i have to check if the lobby is started, and if it isn't, send openLobby
 
-//hook.Add("PlayerSpawn", "OpenLobby", enterLobby)
+hook.Add("PlayerSpawn", "OpenLobby", enterLobby)

@@ -9,7 +9,7 @@ local function TableExist()
  		print("Table exists.")
  	else
  		if not (sql.TableExists("rrps_player_info")) then
- 			local query = "CREATE TABLE rrps_player_info ( unique_id varchar(255), money DECIMAL(20, 2), debt DECIMAL(20, 2) )"
+ 			local query = "CREATE TABLE rrps_player_info ( unique_id varchar(255), money DECIMAL(20, 2), debt DECIMAL(20, 2), name varchar(255) )"
  			local result = sql.Query(query)
  			if (sql.TableExists("rrps_player_info")) then
  				print("Table created.")
@@ -65,29 +65,31 @@ function ReturnPlayerVarSQL(ply, var)
 	end
 end
 
-/*function ReturnLeaderboard(ply)
-	local query = ("SELECT * FROM rrps_player_info") // to create this, i need a new var in the table for the player name
+function ReturnLeaderboard(ply)
+	local query = ("SELECT * FROM rrps_player_info LIMIT 10") // to create this, i need a new var in the table for the player name
 	local result = sql.Query(query)
+	print("is this even running")
 	if (result) then
 		print("Leaderboard returned.")
+		//PrintTable(result)
 		local json = util.TableToJSON(result)
 		//PrintTable(result)
 		//print(json)
 		local data = util.Compress(json)
 		if not data then ErrorNoHalt("data is nil!") return end
-		print(data)
 		net.Start("SendLeaderboardInfo")
-			net.WriteData(data, 60)
+			net.WriteUInt(#data, 16)
+			net.WriteData(data, #data)
 		net.Send(ply)
 		//return result
 	else
 		ErrorNoHalt("Leaderboard return error!")
 	end
-end*/
+end
 
 local function CreateNewPlayer(steamID, ply)
-	sql.Query("INSERT INTO rrps_player_info ('unique_id', 'money', 'debt') VALUES ('"..steamID.."', '0', '0')")
-	local result = sql.Query("SELECT unique_id, money, debt FROM rrps_player_info WHERE unique_id = '"..steamID.."'")
+	sql.Query("INSERT INTO rrps_player_info ('unique_id', 'money', 'debt', 'name') VALUES ('"..steamID.."', '0', '0', '"..ply:Nick().."')")
+	local result = sql.Query("SELECT unique_id, money, debt, name FROM rrps_player_info WHERE unique_id = '"..steamID.."'")
 	if (result) then
 		print("Player entry in database created!")
 	else
@@ -96,7 +98,7 @@ local function CreateNewPlayer(steamID, ply)
 end
 
 local function PlayerExists(ply)
-	local result = sql.Query("SELECT unique_id, money, debt FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
+	local result = sql.Query("SELECT unique_id, money, debt, name FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
 	if (result) then
 		// retrieve stats
 	else

@@ -4,6 +4,7 @@ local lobbyOpened = false
 local playerList = nil
 local lobbysound = nil
 local _roundstart = false
+local leaderboard
 // YO DUDE PUT A MUSIC PLAYER HERE
 
 local function openLobby() 
@@ -47,10 +48,45 @@ local function openLobby()
 		self:SetFGColor(255,255,255,255)
 	end
 
-	/*local leaderboardPanel = vgui.Create("DPanel",frame)
+	local leaderboardPanel = vgui.Create("DPanel",frame)
 	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
 	leaderboardPanel:SetPos(width / 96, height / 4)
-	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...*/
+	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...
+
+	local leaderboardScroll = vgui.Create("DScrollPanel", leaderboardPanel)
+	leaderboardScroll:SetSize(width, height)
+
+	local leaderboardList = vgui.Create("DListLayout", leaderboardScroll)
+	leaderboardList:SetSize(leaderboardScroll:GetWide(),leaderboardScroll:GetTall())
+
+	function leaderboardUpdate()
+		if !IsValid(frame) then return end
+		
+		leaderboardList:Clear()
+
+		for k, v in pairs(leaderboard) do
+			local PlayerPanel = vgui.Create("DPanel",leaderboardList)
+			PlayerPanel:SetSize(leaderboardList:GetWide(), 50)
+			PlayerPanel:SetPos(0, 0)
+			PlayerPanel.Paint = function()
+				draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 50, 50, 255))
+				draw.RoundedBox(0, 0, 49, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
+
+				// put a check here if they even have a name
+				draw.SimpleText(v.name, "DermaDefault", 20, 5, Color(255, 255, 255))
+				//draw.SimpleText("Ping: " .. v:Ping(), "DermaDefault", leaderboardList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
+				draw.SimpleText(v.debt, "DermaDefault", 30, 20, Color(255, 50, 50))
+				draw.SimpleText(v.money, "DermaDefault", 30, 30, Color(50, 255, 50))
+			end
+
+			/*local playerAvatar = vgui.Create("AvatarImage", PlayerPanel)
+			playerAvatar:SetSize(32, 32)
+			playerAvatar:SetPos(4, (PlayerPanel:GetTall() / 2) - 16)
+			playerAvatar:SetPlayer(v, 32)*/
+		end
+	end
+
+	timer.Create("leaderboardhh", 5, 0, leaderboardUpdate)
 
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(width / 2, height / 2.45)
@@ -201,9 +237,12 @@ hook.Add("RoundStarted","LobbyStart", function()
 end)
 
 net.Receive("SendLeaderboardInfo", function()
-	local data = net.ReadData(60)
+	local len = net.ReadUInt(16)
+	local data = net.ReadData(len)
+	if not data then ErrorNoHalt("why is data nil") end
 	local json = util.Decompress(data)
-	print(json)
-	local leaderboard = util.JSONToTable(json)
-	print(leaderboard)
+	if not json then ErrorNoHalt("why is json nil???") end
+	//print(json)
+	leaderboard = util.JSONToTable(json)
+	//PrintTable(leaderboard)
 end)
