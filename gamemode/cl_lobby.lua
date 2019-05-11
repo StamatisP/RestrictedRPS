@@ -73,20 +73,20 @@ local function openLobby()
 				draw.RoundedBox(0, 0, 49, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
 
 				// put a check here if they even have a name
-				draw.SimpleText(v.name, "DermaDefault", 20, 5, Color(255, 255, 255))
+				draw.SimpleText(v.name, "DermaDefault", 60, 5, Color(255, 255, 255))
 				//draw.SimpleText("Ping: " .. v:Ping(), "DermaDefault", leaderboardList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
-				draw.SimpleText(v.debt, "DermaDefault", 30, 20, Color(255, 50, 50))
-				draw.SimpleText(v.money, "DermaDefault", 30, 30, Color(50, 255, 50))
+				draw.SimpleText(v.money, "DermaDefault", 70, 20, Color(60, 255, 50))
+				draw.SimpleText(v.debt, "DermaDefault", 70, 30, Color(255, 50, 50))
 			end
 
-			/*local playerAvatar = vgui.Create("AvatarImage", PlayerPanel)
+			local playerAvatar = vgui.Create("AvatarImage", PlayerPanel)
 			playerAvatar:SetSize(32, 32)
-			playerAvatar:SetPos(4, (PlayerPanel:GetTall() / 2) - 16)
-			playerAvatar:SetPlayer(v, 32)*/
+			playerAvatar:SetPos(8, 8)
+			playerAvatar:SetSteamID(util.SteamIDTo64(v.unique_id), 32)
 		end
 	end
 
-	timer.Create("leaderboardhh", 5, 0, leaderboardUpdate)
+	timer.Create("leaderboardhh", 5, 1, leaderboardUpdate)
 
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(width / 2, height / 2.45)
