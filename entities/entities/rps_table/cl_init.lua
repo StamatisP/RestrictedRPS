@@ -3,6 +3,7 @@ local tableView = false
 
 function ENT:Draw()
 	self:DrawModel()
+	self:DrawShadow(true)
 end
 
 /*local function NormalView(ply, pos, angles, fov)

@@ -190,25 +190,6 @@ function GM:GetFallDamage(ply, speed)
 	return 0
 end
 
-local defeatedSpawns
-timer.Simple(10, function()
-	defeatedSpawns = ents.FindByClass("defeated_spawn")
-end)
-
-timer.Create("PlayerStarsPunishment", 5, 0, function()
-	for k, ply in pairs(player.GetAll()) do
-		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
-			local newpos = table.Random(defeatedSpawns)
-			timer.Simple(10, function()
-				if ply:GetNWBool("Defeated", false) then return end
-				//ply:SetPos(newpos:GetPos())
-				ply:SetNWInt("Luck", 0)
-				ply:SetNWBool("Defeated", true)
-			end)
-		end
-	end
-end)
-
 function GM:PlayerConnect(name, ip) 
 	print("Player "..name.." has connected with IP ("..ip..")")
 end
@@ -355,6 +336,11 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		ply:SetPos(newpos)
 		return ""
 	end
+	if (playerMsg[1] == "/victorious") then
+		if not developerMode then return "" end
+		ply:SetNWBool("Victorious", true)
+		print(ply:Nick() .. " is victorious")
+	end
 end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
@@ -367,6 +353,17 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 			print(ply:GetName() .. " has no stars") 
 			return false
 		end
+		return true
+	end
+
+	//print(ent:GetName())
+
+	if (ent:GetName() == "upper_button") then
+		if not (ply:Team() == 2) and not (ply:GetNWBool("Victorious", false)) then
+			print("ply is not a blacksuit and not victorious")
+			return false
+		end
+		return true
 	end
 
 	if (ent:GetClass() == "func_button") then

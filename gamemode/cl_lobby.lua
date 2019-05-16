@@ -75,8 +75,8 @@ local function openLobby()
 				// put a check here if they even have a name
 				draw.SimpleText(v.name, "DermaDefault", 60, 5, Color(255, 255, 255))
 				//draw.SimpleText("Ping: " .. v:Ping(), "DermaDefault", leaderboardList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
-				draw.SimpleText(v.money, "DermaDefault", 70, 20, Color(60, 255, 50))
-				draw.SimpleText(v.debt, "DermaDefault", 70, 30, Color(255, 50, 50))
+				draw.SimpleText(formatMoney(tonumber(v.money)), "DermaDefault", 70, 20, Color(60, 255, 50))
+				draw.SimpleText(formatMoney(tonumber(v.debt)), "DermaDefault", 70, 30, Color(255, 50, 50))
 			end
 
 			local playerAvatar = vgui.Create("AvatarImage", PlayerPanel)
@@ -166,6 +166,14 @@ local function openLobby()
 	
 	local moneyEntryText = moneyEntry:GetTextArea()
 	moneyEntryText:SetSize(100, 50)
+
+	if (BRANCH != "chromium") then
+		local chromiumWarn = vgui.Create("DLabel", frame)
+		chromiumWarn:SetSize(200, 100)
+		chromiumWarm:SetPos(frame:GetWide() / 4, frame:GetTall() / 4)
+		chromiumWarn:SetText("You don't have Chromium! Make sure to switch to the Chromium branch for the best experience.")
+	end
+	
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)

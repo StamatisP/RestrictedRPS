@@ -29,6 +29,33 @@ function GM:BeginRound()
 		v:SetNWInt("Luck", 50)
 		// luck will be used for determining what songs auto play
 	end
+
+	timer.Create("PlayerStarsPunishment", 5, 0, function()
+	for k, ply in pairs(player.GetAll()) do
+		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
+			local newpos = table.Random(defeatedSpawns)
+			timer.Simple(1, function()
+				if ply:GetNWBool("Defeated", false) then return end
+				//ply:SetPos(newpos:GetPos())
+				ply:SetNWInt("Luck", 0)
+				ply:SetNWBool("Defeated", true)
+			end)
+		end
+	end
+end)
+
+	timer.Create("PlayerWinCondition", 5, 0, function()
+		for k, ply in pairs(player.GetAll()) do
+			if ply:ReturnPlayerVar("stars") >= 3 
+			and ply:ReturnPlayerVar("rockcards") == 0 
+			and ply:ReturnPlayerVar("papercards") == 0 
+			and ply:ReturnPlayerVar("scissorscards") == 0 then
+				if ply:GetNWBool("Victorious", false) then return end
+				ply:SetNWBool("Victorious", true)
+				print(ply:Nick() .. " has become victorious!")
+			end
+		end
+	end)
 	// update money here
 end
 
@@ -81,9 +108,10 @@ function GM:EndRound()
 		if (playerMoney > 0) then
 			local newdebt = playerMoney - playerDebt
 			if v:GetNWBool("Defeated", false) then newdebt = newdebt + 2000000 end
-			if v:ReturnPlayerVar("rockcards") == 0 and v:ReturnPlayerVar("scissorscards") == 0 and v:ReturnPlayerVar("papercards") == 0 then // cause fuck optimization
-				newdebt = newdebt - (v:ReturnPlayerVar("stars") * 3000000)
-			end
+			if v:GetNWBool("Victorious", false) then newdebt = newdebt - 2000000 end
+			//if v:ReturnPlayerVar("rockcards") == 0 and v:ReturnPlayerVar("scissorscards") == 0 and v:ReturnPlayerVar("papercards") == 0 then // cause fuck optimization
+				//newdebt = newdebt - (v:ReturnPlayerVar("stars") * 300000)
+			//end idk why this is here
 
 			if newdebt > 0 then 
 
