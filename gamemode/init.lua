@@ -340,6 +340,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if not developerMode then return "" end
 		ply:SetNWBool("Victorious", true)
 		print(ply:Nick() .. " is victorious")
+		return ""
 	end
 end)
 
