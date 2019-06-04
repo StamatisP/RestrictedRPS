@@ -49,6 +49,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("SendLeaderboardInfo")
 	util.AddNetworkString("PlayerReady")
 	util.AddNetworkString("BuyoutPlayer")
+	util.AddNetworkString("AnnounceVictory")
 end
 
 local playermodels = {

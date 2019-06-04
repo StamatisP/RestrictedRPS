@@ -150,6 +150,10 @@ net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	end
 end)
 
+net.Receive("AnnounceVictory", function(len, ply)
+	chat.AddText(Color(0, 255, 0, 255), "Congratulations, you are victorious! Please go upstairs and enjoy your reward.")
+end)
+
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")
 CreateClientConVar("rps_selection", "Broken", false, true, "Your card selection.")
 

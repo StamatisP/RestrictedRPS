@@ -30,7 +30,7 @@ function GM:BeginRound()
 		// luck will be used for determining what songs auto play
 	end
 
-	timer.Create("PlayerStarsPunishment", 5, 0, function()
+	timer.Create("PlayerStarsPunishment", 4, 0, function()
 	for k, ply in pairs(player.GetAll()) do
 		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
 			local newpos = table.Random(defeatedSpawns)
@@ -44,7 +44,7 @@ function GM:BeginRound()
 	end
 end)
 
-	timer.Create("PlayerWinCondition", 5, 0, function()
+	timer.Create("PlayerWinCondition", 4, 0, function()
 		for k, ply in pairs(player.GetAll()) do
 			if ply:ReturnPlayerVar("stars") >= 3 
 			and ply:ReturnPlayerVar("rockcards") == 0 
@@ -54,6 +54,8 @@ end)
 				if ply:GetNWBool("Victorious", false) then return end
 				ply:SetNWBool("Victorious", true)
 				print(ply:Nick() .. " has become victorious!")
+				net.Start("AnnounceVictory")
+				net.Send(ply)
 			end
 		end
 	end)
@@ -79,7 +81,7 @@ function CompoundInterest()
 	//PrintTable(players)
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
 	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
-		if v:Team() == 2 or v:Team() == TEAM_SPECTATOR then return end
+		if v:Team() == 2 or v:Team() == TEAM_SPECTATOR or v:GetNWBool("Victorious", false) then return end
 		//print(body)
 		local money = v:ReturnPlayerVar("debt")
 		//print(money)
