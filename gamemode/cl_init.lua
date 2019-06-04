@@ -150,8 +150,20 @@ net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	end
 end)
 
-net.Receive("AnnounceVictory", function(len, ply)
+net.Receive("AnnounceVictory", function(len)
 	chat.AddText(Color(0, 255, 0, 255), "Congratulations, you are victorious! Please go upstairs and enjoy your reward.")
+end)
+
+net.Receive("PrivateMessage", function(len)
+	local message = net.ReadString()
+	local anon = net.ReadBool() // ill implement this one day
+	local sender = net.ReadString()
+	
+	if anon then
+		chat.AddText(Color(100, 100, 255), "An anonymous player has sent you a message: ", Color(255, 100, 100), message)
+	else
+		chat.AddText(Color(100, 100, 255), sender, " has sent you a message: ", Color(255, 100, 100), message)
+	end
 end)
 
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")

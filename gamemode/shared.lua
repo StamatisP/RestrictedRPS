@@ -88,6 +88,18 @@ function ReadRRPSVar()
 	return RRPSvar.name, val
 end
 
+function FindPlayer(text)
+	if not text or text == "" then return nil end
+	local players = player.GetAll()
+
+	for k, v in pairs(players) do
+		if string.find(string.lower(v:Nick()), string.lower(tostring(text)), 1, true) ~= nil then
+			return v
+		end
+	end
+	return nil
+end
+
 function fp(tbl)
     local func = tbl[1]
 

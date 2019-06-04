@@ -39,10 +39,24 @@ local function openLobby()
 	tutPanel:SetBackgroundColor(Color(70, 70, 70, 200))
 
 	local tutText = vgui.Create("RichText", tutPanel)
-	tutText:SetText("To win in this game, you must:\n1. Get rid of all your cards.\n2. Have 3 or more Stars.\n\nPress F1 to open your Inventory.\nPress F2 to open the Jukebox.\nPress F3 to open the Buy Out menu.\nPress F4 to open the Credits.\n\nType /cards in chat to check how many cards remain.\nType /dropmoney (number) to drop money.\nType /givemoney (number) to give money directly.")
+	tutText:SetText([[
+  To win in this game, you must:
+  1. Get rid of all your cards.
+  2. Have 3 or more Stars.
+
+  Press F1 to open your Inventory.
+  Press F2 to open the Jukebox.
+  Press F3 to open the Buy Out menu.
+  Press F4 to open the Credits.
+
+  Type /cards in chat to check how many cards remain.
+  Type /dropmoney (number) to drop money.
+  Type /givemoney (number) to give money directly.
+  Type /pm to privately message someone. 
+  Usage: /pm (name) (message)]])
 	tutText:Dock(FILL)
-	tutText:SetVerticalScrollbarEnabled(false)
-	tutText:SetSize(width / 4.5, height / 5)
+	tutText:SetVerticalScrollbarEnabled(true)
+	tutText:SetSize(width / 4, height / 4.5)
 	function tutText:PerformLayout()
 		self:SetFontInternal("ChatFont")
 		self:SetFGColor(255,255,255,255)
@@ -50,7 +64,7 @@ local function openLobby()
 
 	local leaderboardPanel = vgui.Create("DPanel",frame)
 	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
-	leaderboardPanel:SetPos(width / 96, height / 4)
+	leaderboardPanel:SetPos(width / 96, height / 3.5)
 	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...
 
 	local leaderboardScroll = vgui.Create("DScrollPanel", leaderboardPanel)

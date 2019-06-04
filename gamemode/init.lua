@@ -50,6 +50,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("PlayerReady")
 	util.AddNetworkString("BuyoutPlayer")
 	util.AddNetworkString("AnnounceVictory")
+	util.AddNetworkString("PrivateMessage")
 end
 
 local playermodels = {
@@ -277,6 +278,19 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		ply:ChatPrint(string.format("There are %i rock cards, %i paper cards, and %i scissors cards remaining.", rockcardAmount, papercardAmount, scissorscardAmount))
 		return ""
 	end
+	//pm command
+	if (playerMsg[1] == "/pm") then
+		if not isstring(playerMsg[2]) then return false end
+		
+
+		if FindPlayer(tostring(playerMsg[2])) then
+			net.Start("PrivateMessage")
+				net.WriteString(tostring(playerMsg[3]))
+				net.WriteBool(false)
+				net.WriteString(ply:Nick())
+			net.Send(FindPlayer(tostring(playerMsg[2])))
+		end
+	end
 
 	if (playerMsg[1] == "/dev") then
 		if not ply:IsSuperAdmin() then return "" end
@@ -341,6 +355,8 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		if not developerMode then return "" end
 		ply:SetNWBool("Victorious", true)
 		print(ply:Nick() .. " is victorious")
+		net.Start("AnnounceVictory")
+   		net.Send(ply)
 		return ""
 	end
 end)
@@ -362,7 +378,8 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 
 	if (ent:GetName() == "upper_button") then
 		if not (ply:Team() == 2) and not (ply:GetNWBool("Victorious", false)) then
-			print("ply is not a blacksuit and not victorious")
+			//ply:ChatPrint("You cannot access the upper level until you are Victorious.")
+			//print("ply is not a blacksuit and not victorious")
 			return false
 		end
 		return true
