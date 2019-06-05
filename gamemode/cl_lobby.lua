@@ -40,7 +40,7 @@ local function openLobby()
 
 	local tutText = vgui.Create("RichText", tutPanel)
 	tutText:SetText([[
-  To win in this game, you must:
+To win in this game, you must:
   1. Get rid of all your cards.
   2. Have 3 or more Stars.
 
@@ -186,6 +186,14 @@ local function openLobby()
 		chromiumWarn:SetSize(200, 100)
 		chromiumWarm:SetPos(frame:GetWide() / 4, frame:GetTall() / 4)
 		chromiumWarn:SetText("You don't have Chromium! Make sure to switch to the Chromium branch for the best experience.")
+	end
+
+	local discordButton = vgui.Create("DImageButton", frame)
+	discordButton:SetPos(width / 1.28, 0)
+	discordButton:SetImage("DiscordShoutout.png")
+	discordButton:SetSize(400, 300)
+	discordButton.DoClick = function()
+		gui.OpenURL("https://discord.gg/AsUzGwu")
 	end
 	
 
