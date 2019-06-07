@@ -11,8 +11,6 @@ local stars = 0
 local _roundstart = false
 local rockmat, papermat, scissorsmat
 local _curtimesubtract = nil
-local compoundtimer = nil
-local roundtimer = nil
 include("circles.lua")
 
 function GM:HUDShouldDraw(name)
@@ -112,8 +110,8 @@ local function DrawInfo()
 	//roundTimerCircle:SetAngles(0, normalize(0, compoundtimer, timeLeft))
 	//print(normalize(0, compoundtimer, timeLeft))
 	//print(compoundtimer, timeLeft)
-	roundTimerCircle:SetAngles(0, normalize(0, roundtimer, timeLeft) * 360)
-	compoundTimerCircle:SetAngles(0, normalize(0, compoundtimer, compoundTimeLeft) * 360)
+	roundTimerCircle:SetAngles(0, normalize(0, RoundTimer, timeLeft) * 360)
+	compoundTimerCircle:SetAngles(0, normalize(0, CompoundTimer, compoundTimeLeft) * 360)
 	//print(normalize(0, roundtimer, timeLeft))
 
 	draw.NoTexture()
@@ -139,7 +137,7 @@ local function DrawInfo()
 		scissorscards = 0
 	end
 
-	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("rps_roundtime"), timeLeft)
+	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("RoundTime"), timeLeft)
 	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
@@ -177,7 +175,7 @@ local function UpdateMoney()
 end
 
 local function UpdateCompoundTime()
-	compoundTimeRate = 75 + CurTime()
+	compoundTimeRate = CompoundTimer + CurTime()
 	//print(compoundTimeRate) // time to take a break
 end
 
@@ -353,12 +351,15 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
 	timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 
-	compoundTimeRate = GetGlobalInt("interestrepeat", 75) + CurTime()
-	compoundtimer = GetGlobalInt("interestrepeat", 75)
-	roundtimer = GetGlobalInt("endroundtime", 1200)
+	compoundTimeRate = CompoundTimer + CurTime()
+	print(compoundTimeRate)
+	//compoundtimer = GetGlobalFloat("interestrepeat", 75)
+	//print(compoundtimer)
+	//roundtimer = GetGlobalInt("endroundtime", 1200)
+	//print(roundtimer)
 	_curtimesubtract = CurTime()
 	_roundstart = true
-	timer.Create("CompoundTimeHUD", GetGlobalInt("interestrepeat", 75), 0, UpdateCompoundTime)
+	timer.Create("CompoundTimeHUD", CompoundTimer, 0, UpdateCompoundTime)
 end)
 
 function GM:HUDPaint()

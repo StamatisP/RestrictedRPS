@@ -15,6 +15,8 @@ include("cl_buyout.lua")
 local delay = 2
 local lastOccurrence = -delay
 RoundStarted = false
+CompoundTimer = nil
+RoundTimer = nil
 //TablePlayerIsUsing = LocalPlayer():GetNWEntity("TableUsing", NULL) or nil
 local RRPSvars = {}
 local pmeta = FindMetaTable("Player")
@@ -164,6 +166,14 @@ net.Receive("PrivateMessage", function(len)
 	else
 		chat.AddText(Color(100, 100, 255), sender, " has sent you a message: ", Color(255, 100, 100), message)
 	end
+end)
+
+net.Receive("UpdateRoundCompoundTimes", function()
+	local compound = net.ReadFloat()
+	local round = net.ReadInt(16)
+
+	CompoundTimer = compound
+	RoundTimer = round
 end)
 
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")

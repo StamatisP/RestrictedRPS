@@ -1,23 +1,27 @@
 GM.round_status = 0 -- 0 equals end, 1 = active
 local ply = FindMetaTable("Player")
+local roundtime
+local compoundtime
 
 function GM:BeginRound()
 	if GetGlobalBool("IsRoundStarted", false) then return end
-	SetGlobalInt("interestrepeat", GetConVar("rps_interestrepeat"):GetInt())
+	AdjustRoundLength()
+	AdjustCompoundRate()
+	print(roundtime)
+	net.Start("UpdateRoundCompoundTimes")
+		net.WriteFloat(compoundtime)
+		net.WriteInt(roundtime, 16)
+	net.Broadcast()
 	hook.Run("RoundStarted")
-	//PrintTable(players)
-	local convar = GetConVar("rps_interestrepeat")
-	//print(convar:GetFloat() .. ": interest repeat rate")
 	self.round_status = 1
 	self:UpdateClientRoundStatus()
-	timer.Create("CompoundInterestTime", GetConVar("rps_interestrepeat"):GetInt(), 0, function()
+	timer.Create("CompoundInterestTime", GetConVar("rps_interestrepeat"):GetFloat(), 0, function()
 		//print("interest time!")
 		CompoundInterest()
 	end)
 	local players = player.GetAll()
 	self.roundstart = CurTime()
 	SetGlobalFloat("roundstart", self.roundstart)
-	SetGlobalFloat("RoundTime", GetConVar("rps_roundtime"):GetInt())
 	SetGlobalBool("IsRoundStarted", true)
 	print("beginning round!")
 	for k, v in pairs(players) do
@@ -60,6 +64,19 @@ end)
 		end
 	end)
 	// update money here
+end
+
+function AdjustRoundLength()
+	roundtime = player.GetCount() * 30
+	GetConVar("rps_roundtime"):SetInt(roundtime)
+	//SetGlobalInt("RoundTime", GetConVar("rps_roundtime"):GetInt())
+	//print(GetConVar("rps_roundtime"):GetInt())
+end
+
+function AdjustCompoundRate()
+	compoundtime = GetConVar("rps_roundtime"):GetInt() / 16
+	GetConVar("rps_interestrepeat"):SetFloat(compoundtime)
+	//SetGlobalFloat("interestrepeat", GetConVar("rps_interestrepeat"):GetFloat())
 end
 
 function GM:Think()

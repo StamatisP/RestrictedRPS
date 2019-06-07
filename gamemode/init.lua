@@ -51,6 +51,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("BuyoutPlayer")
 	util.AddNetworkString("AnnounceVictory")
 	util.AddNetworkString("PrivateMessage")
+	util.AddNetworkString("UpdateRoundCompoundTimes")
 end
 
 local playermodels = {
@@ -86,7 +87,7 @@ resource.AddFile("materials/logo.png")*/
 resource.AddFile("DSMarkerFelt.ttf")
 resource.AddWorkshop("1694325066")
 
-CreateConVar("rps_roundtime", "1200", FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
+CreateConVar("rps_roundtime", player.GetCount() * 30, FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
 
 local developerMode = false
 local pmeta = FindMetaTable("Player")
