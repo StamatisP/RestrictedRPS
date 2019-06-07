@@ -100,6 +100,7 @@ end
 local function PlayerExists(ply)
 	local result = sql.Query("SELECT unique_id, money, debt, name FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
 	if (result) then
+		return
 		// retrieve stats
 	else
 		CreateNewPlayer(ply:SteamID(), ply)
@@ -107,10 +108,10 @@ local function PlayerExists(ply)
 end
 
 local function PlayerInitSpawn(ply)
-	timer.Create("SteamID_Delay", 1, 1, function()
-		timer.Create("SaveStat"..ply:SteamID(), 10, 0, function()
+	timer.Create("SteamID_Delay", 2, 1, function()
+		//timer.Create("SaveStat"..ply:SteamID(), 10, 0, function()
 			//saveStat(ply)
-		end)
+		//end)
 		PlayerExists(ply)
 	end)
 end

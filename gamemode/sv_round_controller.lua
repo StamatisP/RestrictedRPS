@@ -67,14 +67,14 @@ end)
 end
 
 function AdjustRoundLength()
-	roundtime = player.GetCount() * 30
+	roundtime = (player.GetCount() * 30) + 1 // this is to make sure the final compound occurs
 	GetConVar("rps_roundtime"):SetInt(roundtime)
 	//SetGlobalInt("RoundTime", GetConVar("rps_roundtime"):GetInt())
 	//print(GetConVar("rps_roundtime"):GetInt())
 end
 
 function AdjustCompoundRate()
-	compoundtime = GetConVar("rps_roundtime"):GetInt() / 16
+	compoundtime = GetConVar("rps_roundtime"):GetInt() / 24
 	GetConVar("rps_interestrepeat"):SetFloat(compoundtime)
 	//SetGlobalFloat("interestrepeat", GetConVar("rps_interestrepeat"):GetFloat())
 end
