@@ -197,6 +197,7 @@ local function CardChoiceGUI(enabled)
 		frame:SetDraggable(true)
 		frame:SetTitle("Check")
 		frame:MakePopup()
+		frame:SetKeyboardInputEnabled(false)
 
 		local dButtonReady = vgui.Create("DButton", frame)
 		dButtonReady:SetText("Confirm Choice")

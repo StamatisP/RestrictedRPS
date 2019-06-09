@@ -11,7 +11,7 @@ local function openLobby()
 
 	if lobbyOpened then return end // this is to prevent the lobby opening on players joining in after it opened
 	if _roundstart then return end
-	if LocalPlayer():Team() == TEAM_SPECTATOR then return end
+	if LocalPlayer():Team() == 3 then return end
 	lobbyOpened = true
 	print("openlobby call")
 	local frame = vgui.Create("DFrame")
@@ -157,9 +157,9 @@ To win in this game, you must:
 		for k, v in pairs(player.GetAll()) do
 			local PlayerPanel = vgui.Create("DPanel", PlayerList)
 			PlayerPanel:SetSize(PlayerList:GetWide(), 50)
-			PlayerPanel:SetPos(0, 0)
-			if not v then return end
+			PlayerPanel:SetPos(0, 0)	
 			PlayerPanel.Paint = function()
+				if not v then return end
 				if v:GetNWBool("rps_ready", false) then
 					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 100, 50, 255))
 				else
@@ -184,6 +184,7 @@ To win in this game, you must:
 	if (BRANCH != "chromium") then
 		local chromiumWarn = vgui.Create("DLabel", frame)
 		chromiumWarn:SetSize(900, 900)
+		chromiumWarn:SetFont("CardText")
 		chromiumWarn:SetColor(Color(255, 0, 0))
 		chromiumWarn:SetPos(frame:GetWide() / 4, frame:GetTall() / 4)
 		chromiumWarn:SetText("You don't have Chromium! Make sure to switch to the Chromium branch for the best experience.")
@@ -259,6 +260,9 @@ print("cl lobby load end")
 
 hook.Add("InitPostEntity", "stupid_music", function()
 	if MySelf:IsValid() then
+		if GetGlobalBool("RoundStarted", false) then
+			return
+		end
 		openLobby()
 	end
 end)

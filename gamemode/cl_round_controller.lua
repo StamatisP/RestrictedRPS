@@ -22,6 +22,7 @@ function getRoundStatus(  )
 end
 
 local function EndRoundLobby()
+	if not LocalPlayer():ReturnPlayerVar("money") then return end
 	local width = ScrW()
 	local height = ScrH()
 	local frame = vgui.Create("DFrame")
@@ -32,10 +33,7 @@ local function EndRoundLobby()
 	frame:SetDraggable(false)
 	frame:SetTitle("")
 	frame.Paint = function(s, w, h)
-
-		//draw.RoundedBox(0,0,0,w,h,Color(100,100,100,255))
 		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,40))
-
 	end
 	frame:MakePopup()
 	frame:SetKeyboardInputEnabled(false)

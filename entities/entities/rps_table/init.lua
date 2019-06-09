@@ -272,7 +272,7 @@ function ENT:Use(activator, caller)
 	// i want the table to start (a function probably) when 2 players are in
 	// i want players to be able to leave the table
 
-	//PrintTable(self.playersTable)
+	PrintTable(self.playersTable)
 end
 
 net.Receive("RemovePlayer", function(len, ply)

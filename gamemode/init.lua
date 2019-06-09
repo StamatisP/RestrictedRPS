@@ -92,6 +92,7 @@ CreateConVar("rps_roundtime", player.GetCount() * 30, FCVAR_REPLICATED + FCVAR_A
 local developerMode = false
 local pmeta = FindMetaTable("Player")
 local voiceDistance = 400 * 400
+specSpawns = {}
 
 local startWeapons = {
 	"weapon_fists"
@@ -133,6 +134,7 @@ end
 		self:Give(v)
 	end
 end*/
+specSpawns = ents.FindByClass("spectator_spawn")
 
 function GM:PlayerSpawn(ply)
 	if GetGlobalBool("IsRoundStarted", false) then
@@ -162,11 +164,14 @@ function GM:PlayerSpawn(ply)
 			ply:UnSpectate()
 			return
 		end
-		GAMEMODE:PlayerSpawnAsSpectator(ply)
-		ply:SetTeam(TEAM_SPECTATOR)
-		ply:Spectate(OBS_MODE_ROAMING)
-		ply:Freeze(false)
-		return false
+		//GAMEMODE:PlayerSpawnAsSpectator(ply)
+		//ply:SetTeam(TEAM_SPECTATOR)
+		//ply:Spectate(OBS_MODE_ROAMING)
+		//ply:Freeze(false)
+		//return false
+		local newpos = table.Random(specSpawns)
+		ply:SetPos(newpos:GetPos())
+		return
 	else
 		ply:UnSpectate()
 		math.randomseed(os.time())
@@ -185,7 +190,7 @@ function GM:PlayerInitialSpawn(ply)
 	print("Player "..ply:Name().." has spawned.")
 	ply.RRPSvars = ply.RRPSvars or {}
 	if GetGlobalBool("IsRoundStarted", false) then
-		ply:SetTeam(TEAM_SPECTATOR)
+		ply:SetTeam(3)
 	end
 end
 
@@ -365,7 +370,7 @@ end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	if not (IsValid(ent)) then return end
-	if ply:Team() == TEAM_SPECTATOR then return false end
+	if ply:Team() == 3 then return false end
 
 	if (ent:GetClass() == "rps_table") then
 		ply:SetNWEntity("TableUsing", ent)
@@ -407,6 +412,12 @@ function GM:PlayerDisconnected(ply)
 	net.Start("RRPS_VarDisconnect")
 		net.WriteUInt(ply:UserID(), 16)
 	net.Broadcast()
+end
+
+function ChatPrintToAllPlayers(message)
+	for k, ply in pairs(player.GetAll()) do
+		ply:ChatPrint(message)
+	end
 end
 
 net.Receive("ZawaPlay", function(len, ply)
@@ -469,6 +480,7 @@ function pmeta:ReturnPlayerVar(var)
 	local vars = self.RRPSvars
 
 	vars = vars or {}
+	//if not vars[var] then return 0 end
 	return vars[var]
 end
 
