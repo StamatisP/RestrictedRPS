@@ -78,6 +78,8 @@ To win in this game, you must:
 		
 		leaderboardList:Clear()
 
+		if not leaderboard then return end
+
 		for k, v in pairs(leaderboard) do
 			local PlayerPanel = vgui.Create("DPanel",leaderboardList)
 			PlayerPanel:SetSize(leaderboardList:GetWide(), 50)
@@ -156,6 +158,7 @@ To win in this game, you must:
 			local PlayerPanel = vgui.Create("DPanel", PlayerList)
 			PlayerPanel:SetSize(PlayerList:GetWide(), 50)
 			PlayerPanel:SetPos(0, 0)
+			if not v then return end
 			PlayerPanel.Paint = function()
 				if v:GetNWBool("rps_ready", false) then
 					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 100, 50, 255))
@@ -163,18 +166,15 @@ To win in this game, you must:
 					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 50, 50, 255))
 				end
 				draw.RoundedBox(0, 0, 49, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
-
+				
 				// put a check here if they even have a name
-				draw.SimpleText(v:GetName(), "DermaDefault", 50, 15, Color(255, 255, 255))
+				draw.SimpleText(v:Nick(), "DermaDefault", 50, 15, Color(255, 255, 255))
 				draw.SimpleText("Ping: " .. v:Ping(), "DermaDefault", PlayerList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
 			end
-
 			local playerAvatar = vgui.Create("AvatarImage", PlayerPanel)
 			playerAvatar:SetSize(32, 32)
 			playerAvatar:SetPos(4, (PlayerPanel:GetTall() / 2) - 16)
 			playerAvatar:SetPlayer(v, 32)
-
-
 		end
 	end
 	
@@ -183,8 +183,9 @@ To win in this game, you must:
 
 	if (BRANCH != "chromium") then
 		local chromiumWarn = vgui.Create("DLabel", frame)
-		chromiumWarn:SetSize(200, 100)
-		chromiumWarm:SetPos(frame:GetWide() / 4, frame:GetTall() / 4)
+		chromiumWarn:SetSize(900, 900)
+		chromiumWarn:SetColor(Color(255, 0, 0))
+		chromiumWarn:SetPos(frame:GetWide() / 4, frame:GetTall() / 4)
 		chromiumWarn:SetText("You don't have Chromium! Make sure to switch to the Chromium branch for the best experience.")
 	end
 

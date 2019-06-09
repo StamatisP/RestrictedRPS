@@ -37,13 +37,11 @@ function GM:BeginRound()
 	timer.Create("PlayerStarsPunishment", 4, 0, function()
 	for k, ply in pairs(player.GetAll()) do
 		if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
-			local newpos = table.Random(defeatedSpawns)
-			timer.Simple(1, function()
-				if ply:GetNWBool("Defeated", false) then return end
-				//ply:SetPos(newpos:GetPos())
-				ply:SetNWInt("Luck", 0)
+			if not ply:GetNWBool("Defeated", false) then 
 				ply:SetNWBool("Defeated", true)
-			end)
+				ply:ChatPrint(ply:Nick() .. " has been defeated!")
+				ply:SetNWInt("Luck", 0)
+			end
 		end
 	end
 end)
@@ -57,7 +55,8 @@ end)
 			and ply:GetNWInt("TableWins", 0) >= 3 then // the table wins nwint is to make sure the player didn't legit just drop all their cards to cheat
 				if ply:GetNWBool("Victorious", false) then return end
 				ply:SetNWBool("Victorious", true)
-				print(ply:Nick() .. " has become victorious!")
+				ply:ChatPrint(ply:Nick() .. " is victorious!")
+				ply:SetNWInt("Luck", 100)
 				net.Start("AnnounceVictory")
 				net.Send(ply)
 			end
@@ -67,7 +66,7 @@ end)
 end
 
 function AdjustRoundLength()
-	roundtime = (player.GetCount() * 30) + 1 // this is to make sure the final compound occurs
+	roundtime = (player.GetCount() * 70) + 0.9 // this is to make sure the final compound occurs
 	GetConVar("rps_roundtime"):SetInt(roundtime)
 	//SetGlobalInt("RoundTime", GetConVar("rps_roundtime"):GetInt())
 	//print(GetConVar("rps_roundtime"):GetInt())
@@ -117,8 +116,10 @@ function GM:EndRound()
 	timer.Destroy("CompoundInterestTime")
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
-		if not v then ErrorNoHalt("what???") return end
-		if v:Team() == 2 or v:Team() == TEAM_SPECTATOR then return end
+		if not v then ErrorNoHalt("what???") goto continue end
+		if v:Team() == 2 or v:Team() == TEAM_SPECTATOR then 
+			goto continue 
+		end
 
 		local playerMoney = v:ReturnPlayerVar("money")
 		local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
@@ -134,24 +135,25 @@ function GM:EndRound()
 			//end idk why this is here
 
 			if newdebt > 0 then 
-
+				// player has more debt than money
 				UpdatePlayerVarSQL(v, newdebt + playerMoneySQL, "money") 
 				//UpdatePlayerVarSQL(v, playerDebt - newdebt, "debt")
 				UpdatePlayerVarSQL(v, playerDebtSQL - newdebt, "debt")
 			end
 
 			if newdebt < 0 then 
-
+				// player has more money than debt
 				UpdatePlayerVarSQL(v, 0, "money")
 				UpdatePlayerVarSQL(v, (math.abs(newdebt) + playerDebtSQL), "debt")  
 			end
 
 			if newdebt == 0 then 
+				// player has equal money and debt
 				//UpdatePlayerVarSQL(v, 0, "money")
 				//UpdatePlayerVarSQL(v, 0, "debt") no need to update any vars, if newdebt is 0, that means they can pay off their debt.
 			end
 		end
-
+		::continue::
 	end
 	sql.Commit()
 	timer.Simple(25, function()

@@ -283,13 +283,14 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/pm") then
 		if not isstring(playerMsg[2]) then return false end
 		
-
 		if FindPlayer(tostring(playerMsg[2])) then
 			net.Start("PrivateMessage")
 				net.WriteString(tostring(playerMsg[3]))
 				net.WriteBool(false)
 				net.WriteString(ply:Nick())
 			net.Send(FindPlayer(tostring(playerMsg[2])))
+		else
+			print("player " .. playerMsg[2] .. " was not found!")
 		end
 	end
 

@@ -95,6 +95,8 @@ function FindPlayer(text)
 	for k, v in pairs(players) do
 		if string.find(string.lower(v:Nick()), string.lower(tostring(text)), 1, true) ~= nil then
 			return v
+		else
+			print("could not find player " .. text)
 		end
 	end
 	return nil

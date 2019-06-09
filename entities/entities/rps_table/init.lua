@@ -123,7 +123,7 @@ function ENT:OpenPhase()
 	//cards are revealed, winner is decided
 	local player1Choice = self.player1:GetInfo("rps_selection")
 	local player2Choice = self.player2:GetInfo("rps_selection")
-	print(self:GetPlayer1():ReturnPlayerVar("papercards"))
+	//print(self:GetPlayer1():ReturnPlayerVar("papercards"))
 
 	if player1Choice == "Rock" then
 		if not (self:GetPlayer1():ReturnPlayerVar("rockcards") >= 1) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
@@ -141,7 +141,7 @@ function ENT:OpenPhase()
 	if player2Choice == "Rock" then self:GetPlayer2():TakeAwayFromPlayerVar("rockcards", 1)
 	elseif player2Choice == "Paper" then self:GetPlayer2():TakeAwayFromPlayerVar("papercards", 1)
 	elseif player2Choice == "Scissors" then self:GetPlayer2():TakeAwayFromPlayerVar("scissorscards", 1)
-	else print("player2choice is not rock, paper, or scissors... " .. player2Choice)
+	else ErrorNoHalt("player2choice is not rock, paper, or scissors... " .. player2Choice)
 	end
 	
 	if player1Choice == player2Choice then
@@ -272,7 +272,7 @@ function ENT:Use(activator, caller)
 	// i want the table to start (a function probably) when 2 players are in
 	// i want players to be able to leave the table
 
-	PrintTable(self.playersTable)
+	//PrintTable(self.playersTable)
 end
 
 net.Receive("RemovePlayer", function(len, ply)
