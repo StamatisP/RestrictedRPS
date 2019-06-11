@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture" "models/gamecard/GameCard_Scissors"
-	"$surfaceprop" "paper"
-	"$model" 1
-}

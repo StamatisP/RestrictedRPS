@@ -33,6 +33,10 @@ local function CreditsMenu()
 		text:AppendText("Help with sound: Bassclefff \n")
 		text:InsertClickableTextEnd()
 
+		text:InsertClickableTextStart("OpenNanner")
+		text:AppendText("Table model and textures: NannerCoco \n")
+		text:InsertClickableTextEnd()
+
 		text:AppendText("Fonts: DS Marker Felt by Typographer Mediengestaltung \n")
 		text:AppendText("Card Letter Design: Tambur \n")
 		text:AppendText("UI Design: GenerousGuy\n")
@@ -55,6 +59,8 @@ local function CreditsMenu()
 					gui.OpenURL("https://twitter.com/Stamosxd")
 				elseif (signalValue == "OpenBass") then
 					gui.OpenURL("https://twitter.com/bassclef_map3")
+				elseif (signalValue == "OpenNanner") then
+					gui.OpenURL("https://twitter.com/NannerCoco")
 				end
 			end
 		end

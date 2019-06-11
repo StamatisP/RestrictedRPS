@@ -5,7 +5,7 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self.m_bInitialized = true
-	self:SetModel("models/table/table.mdl")
+	self:SetModel("models/table/game_table.mdl")
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_NONE)
 	self:SetSolid(SOLID_VPHYSICS)
