@@ -66,7 +66,7 @@ function ReturnPlayerVarSQL(ply, var)
 end
 
 function ReturnLeaderboard(ply)
-	local query = ("SELECT * FROM rrps_player_info LIMIT 10") // to create this, i need a new var in the table for the player name
+	local query = ("SELECT * FROM rrps_player_info ORDER BY debt ASC LIMIT 10") // to create this, i need a new var in the table for the player name
 	local result = sql.Query(query)
 	//print("is this even running")
 	if (result) then
