@@ -92,7 +92,7 @@ CreateConVar("rps_roundtime", player.GetCount() * 30, FCVAR_REPLICATED + FCVAR_A
 local developerMode = false
 local pmeta = FindMetaTable("Player")
 local voiceDistance = 400 * 400
-specSpawns = {}
+local specSpawns = {}
 
 local startWeapons = {
 	"weapon_fists"
@@ -134,10 +134,15 @@ end
 		self:Give(v)
 	end
 end*/
-specSpawns = ents.FindByClass("spectator_spawn")
+
+hook.Add("InitPostEntity", "SpecSpawnFill", function()
+	specSpawns = ents.FindByClass("spectator_spawn")
+	print("printing spec spawns")
+	PrintTable(specSpawns)
+end)
 
 function GM:PlayerSpawn(ply)
-	if GetGlobalBool("IsRoundStarted", false) then
+	if self.round_status == 1 then
 		if ply:Team() == 2 then
 			print("making " .. ply:Nick() .. " a blacksuit during the round")
 			ply:UnSpectate()
@@ -164,13 +169,21 @@ function GM:PlayerSpawn(ply)
 			ply:UnSpectate()
 			return
 		end
-		//GAMEMODE:PlayerSpawnAsSpectator(ply)
-		//ply:SetTeam(TEAM_SPECTATOR)
-		//ply:Spectate(OBS_MODE_ROAMING)
-		//ply:Freeze(false)
-		//return false
-		local newpos = table.Random(specSpawns)
+		print("Spectator " .. ply:Nick() .. " has spawned.")
+		ply:UnSpectate()
+		local newpos = specSpawns[math.random(#specSpawns)]
+		print(newpos)
+		ply:SetModel(playermodels[math.random(#playermodels)])
+		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
+		ply:SetupHands()
+		ply:SetWalkSpeed(150)
+		ply:SetRunSpeed(280)
+		ply:SetCrouchedWalkSpeed(0.4)
+		ply:SetAvoidPlayers(true)
+		ply:SetTeam(3)
 		ply:SetPos(newpos:GetPos())
+		net.Start("CloseLobby")
+		net.Send(ply)
 		return
 	else
 		ply:UnSpectate()
@@ -183,6 +196,8 @@ function GM:PlayerSpawn(ply)
 		ply:SetCrouchedWalkSpeed(0.4)
 		ply:SetAvoidPlayers(true)
 		ply:SetTeam(1)
+		net.Start("OpenLobby")
+		net.Send(ply)
 	end
 end
 
@@ -370,7 +385,7 @@ end)
 
 hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	if not (IsValid(ent)) then return end
-	if ply:Team() == 3 then return false end
+	//if ply:Team() == 3 then return false end
 
 	if (ent:GetClass() == "rps_table") then
 		ply:SetNWEntity("TableUsing", ent)

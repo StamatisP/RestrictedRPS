@@ -36,7 +36,7 @@ function GM:BeginRound()
 
 	timer.Create("PlayerStarsPunishment", 4, 0, function()
 	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 2 or ply:Team() != 3 then
+		if ply:Team() != 2 and ply:Team() != 3 then
 			if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
 				if not ply:GetNWBool("Defeated", false) then 
 					ply:SetNWBool("Defeated", true)
@@ -52,7 +52,8 @@ end)
 
 	timer.Create("PlayerWinCondition", 4, 0, function()
 		for k, ply in pairs(player.GetAll()) do
-			if ply:Team() != 2 or ply:Team() != 3 then
+			//print(ply:Nick() .. " " .. ply:Team())
+			if ply:Team() != 2 and ply:Team() != 3 then
 				if ply:ReturnPlayerVar("stars") >= 3 
 				and ply:ReturnPlayerVar("rockcards") == 0 
 				and ply:ReturnPlayerVar("papercards") == 0 
@@ -125,7 +126,7 @@ function GM:EndRound()
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
 		if not v then ErrorNoHalt("what???") return end
-		if v:Team() != 2 or v:Team() != 3 then 
+		if v:Team() != 2 and v:Team() != 3 then 
 			local playerMoney = v:ReturnPlayerVar("money")
 			local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
 			local playerDebt = v:ReturnPlayerVar("debt")

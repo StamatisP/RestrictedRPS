@@ -94,6 +94,7 @@ end
 
 
 function inventoryMenu()
+	if LocalPlayer():Team() == 3 then return end
 	local w = 564
 	local h = 210
 

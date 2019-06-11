@@ -5,16 +5,17 @@ local playerList = nil
 local lobbysound = nil
 local _roundstart = false
 local leaderboard
+local frame = nil
 // YO DUDE PUT A MUSIC PLAYER HERE
 
 local function openLobby() 
 
 	if lobbyOpened then return end // this is to prevent the lobby opening on players joining in after it opened
 	if _roundstart then return end
-	if LocalPlayer():Team() == 3 then return end
+	//if LocalPlayer():Team() == 3 then return end
 	lobbyOpened = true
 	print("openlobby call")
-	local frame = vgui.Create("DFrame")
+	frame = vgui.Create("DFrame")
 	frame:SetSize(ScrW(),ScrH())
 	frame:Center()
 	frame:SetVisible(true)
@@ -144,11 +145,6 @@ To win in this game, you must:
 		LocalPlayer():ConCommand("disconnect")
 	end
 
-	function closeFrame()
-		print("frame closed")
-		frame:Close()
-	end
-
 	function scoreboardUpdate()
 		if !IsValid(frame) then return end
 		//print("update")
@@ -157,9 +153,10 @@ To win in this game, you must:
 		for k, v in pairs(player.GetAll()) do
 			local PlayerPanel = vgui.Create("DPanel", PlayerList)
 			PlayerPanel:SetSize(PlayerList:GetWide(), 50)
-			PlayerPanel:SetPos(0, 0)	
+			PlayerPanel:SetPos(0, 0)
+			local pname = v:Nick()
+			local pping = v:Ping()	
 			PlayerPanel.Paint = function()
-				if not v then return end
 				if v:GetNWBool("rps_ready", false) then
 					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 100, 50, 255))
 				else
@@ -168,8 +165,9 @@ To win in this game, you must:
 				draw.RoundedBox(0, 0, 49, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
 				
 				// put a check here if they even have a name
-				draw.SimpleText(v:Nick(), "DermaDefault", 50, 15, Color(255, 255, 255))
-				draw.SimpleText("Ping: " .. v:Ping(), "DermaDefault", PlayerList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
+				//if not v then return end
+				draw.SimpleText(pname, "DermaDefault", 50, 15, Color(255, 255, 255))
+				draw.SimpleText("Ping: " .. pping, "DermaDefault", PlayerList:GetWide() - 20, 10, Color(140, 255, 140), TEXT_ALIGN_RIGHT)
 			end
 			local playerAvatar = vgui.Create("AvatarImage", PlayerPanel)
 			playerAvatar:SetSize(32, 32)
@@ -201,7 +199,7 @@ To win in this game, you must:
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
-	timer.Simple(1.5, function() 
+	timer.Simple(2, function() 
 		lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 	end)
 
@@ -242,6 +240,13 @@ To win in this game, you must:
 	end)
 end
 
+local function closeFrame()
+	if not frame then return end
+	print("frame closed")
+	//print(frame)
+	frame:Close()
+end
+
 net.Receive("CloseLobby", function(len, ply)
 	print("closelobby received")
 	--LocalPlayer():StopSound("little_zawa")
@@ -258,18 +263,29 @@ print("cl lobby load end")
 
 //net.Receive("OpenLobby", timer.Simple(2, openLobby))
 
-hook.Add("InitPostEntity", "stupid_music", function()
+/*hook.Add("InitPostEntity", "stupid_music", function()
 	if MySelf:IsValid() then
 		if GetGlobalBool("RoundStarted", false) then
 			return
 		end
 		openLobby()
 	end
+end)*/
+
+net.Receive("OpenLobby", function()
+	openLobby()
 end)
 
 hook.Add("RoundStarted","LobbyStart", function()
 	_roundstart = true
 end)
+
+/*timer.Create("CheckRoundStart", 1, 0, function()
+	if _roundstart and not frame then 
+		closeFrame() 
+		timer.Destroy("CheckRoundStart")
+	end
+end)*/
 
 net.Receive("SendLeaderboardInfo", function()
 	local len = net.ReadUInt(16)

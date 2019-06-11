@@ -184,7 +184,7 @@ function pmeta:ReturnPlayerVar(var)
 	local vars = RRPSvars[self:UserID()]
 	//this runs on the player themselves btw
 	//print(vars[var])
-	return vars and vars[var] or nil
+	return vars and vars[var] or 0
 end
 
 local function RetrievePlayerVar(userID, var, value)
