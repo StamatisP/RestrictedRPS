@@ -137,8 +137,8 @@ end*/
 
 hook.Add("InitPostEntity", "SpecSpawnFill", function()
 	specSpawns = ents.FindByClass("spectator_spawn")
-	print("printing spec spawns")
-	PrintTable(specSpawns)
+	//print("printing spec spawns")
+	//PrintTable(specSpawns)
 end)
 
 function GM:PlayerSpawn(ply)
@@ -172,7 +172,7 @@ function GM:PlayerSpawn(ply)
 		print("Spectator " .. ply:Nick() .. " has spawned.")
 		ply:UnSpectate()
 		local newpos = specSpawns[math.random(#specSpawns)]
-		print(newpos)
+		//print(newpos)
 		ply:SetModel(playermodels[math.random(#playermodels)])
 		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
 		ply:SetupHands()

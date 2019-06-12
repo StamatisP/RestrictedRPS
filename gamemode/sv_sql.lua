@@ -99,7 +99,7 @@ end
 
 local function PlayerExists(ply)
 	local result = sql.Query("SELECT unique_id, money, debt, name FROM rrps_player_info WHERE unique_id = '"..ply:SteamID().."'")
-	if (result) or ply:SteamID() == "STEAM_0:0:0" then
+	if (result) or ply:SteamID() == "STEAM_0:0:0" or ply:SteamID() == "BOT" then
 		return
 		// retrieve stats
 	else
