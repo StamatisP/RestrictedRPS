@@ -266,6 +266,8 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 
 			return ""
 		end
+		ply:ChatPrint("Usage: /dropmoney 1000")
+		return ""
 	end
 	// give money command
 	if (playerMsg[1] == "/givemoney") then
@@ -279,8 +281,10 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 				print("giving " .. ply:Nick() .. " money")
 			end
 
-			return ""
+			return "You have dropped $" .. tonumber(playerMsg[2])
 		end
+		ply:ChatPrint("Usage: /givemoney 1000")
+		return ""
 	end
 	// check cards command
 	if (playerMsg[1] == "/cards") then
@@ -301,7 +305,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	end
 	//pm command
 	if (playerMsg[1] == "/pm") then
-		if not isstring(playerMsg[2]) then return false end
+		if not isstring(playerMsg[2]) then ply:ChatPrint("Usage: /pm (player name)") return "" end
 		
 		if FindPlayer(tostring(playerMsg[2])) then
 			net.Start("PrivateMessage")
@@ -311,6 +315,8 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 			net.Send(FindPlayer(tostring(playerMsg[2])))
 		else
 			print("player " .. playerMsg[2] .. " was not found!")
+			ply:ChatPrint("Player not found. Try typing it differently.")
+			return ""
 		end
 	end
 
@@ -379,6 +385,19 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		print(ply:Nick() .. " is victorious")
 		net.Start("AnnounceVictory")
    		net.Send(ply)
+		return ""
+	end
+	if (playerMsg[1] == "/help") then
+		ply:ChatPrint([[
+  Press F1 to open your Inventory.
+  Press F2 to open the Jukebox.
+  Press F3 to open the Buy Out menu.
+  Press F4 to open the Credits.]])
+		ply:ChatPrint([[
+  Type /cards to check how many cards remain.
+  Type /dropmoney (number) to drop money.
+  Type /givemoney (number) to give money to who you are looking at.
+  Type /pm to privately message someone.]])
 		return ""
 	end
 end)
