@@ -34,9 +34,16 @@ local function openLobby()
 	local width = ScrW()
 	local height = ScrH()
 
+	local tutCallout = vgui.Create("DImage", frame)
+	local tutImg = Material("tutcallout.png", "alphatest nocull")
+	tutCallout:SetKeepAspect(true)
+	tutCallout:SetMaterial(tutImg)
+	tutCallout:SetPos(width / 1.25, height / -54)
+	tutCallout:SetSize(256, 256)
+
 	local tutPanel = vgui.Create("DPanel", frame)
-	tutPanel:SetSize(width / 4.5, height / 2) //1.2 / 426.6, 201
-	tutPanel:SetPos(width / 1.3, height / 54) // 20, 11.5
+	tutPanel:SetSize(width / 4.5, height / 3) //1.2 / 426.6, 201
+	tutPanel:SetPos(width / 1.3, height / 5) // 20, 11.5
 	tutPanel:SetBackgroundColor(Color(244, 66, 101, 200))
 
 	local tutText = vgui.Create("RichText", tutPanel)
@@ -65,12 +72,14 @@ local function openLobby()
 	end
 
 	local leaderboardPanel = vgui.Create("DPanel",frame)
-	leaderboardPanel:SetSize(width / 4.5, height / 1.5)
-	leaderboardPanel:SetPos(width / 96, height / 3.5)
+	local leaderboardConst = height / 2.16
+	leaderboardPanel:SetSize(width / 4.5, leaderboardConst)
+	// 720... the panel should be 10playersx50px, so 500. 1080 / 2.16 = 500
+	leaderboardPanel:SetPos(width / 96, height / 2.05)
 	leaderboardPanel:SetBackgroundColor(Color(70, 70, 70, 220)) // todo: implement leaderboard...
 
 	local leaderboardScroll = vgui.Create("DScrollPanel", leaderboardPanel)
-	leaderboardScroll:SetSize(width, height)
+	leaderboardScroll:SetSize(leaderboardPanel:GetWide(), leaderboardPanel:GetTall())
 
 	local leaderboardList = vgui.Create("DListLayout", leaderboardScroll)
 	leaderboardList:SetSize(leaderboardScroll:GetWide(),leaderboardScroll:GetTall())
@@ -84,11 +93,11 @@ local function openLobby()
 
 		for k, v in pairs(leaderboard) do
 			local PlayerPanel = vgui.Create("DPanel",leaderboardList)
-			PlayerPanel:SetSize(leaderboardList:GetWide(), 50)
+			PlayerPanel:SetSize(leaderboardList:GetWide(), leaderboardConst / 10)
 			PlayerPanel:SetPos(0, 0)
 			PlayerPanel.Paint = function()
 				draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 50, 50, 255))
-				draw.RoundedBox(0, 0, 49, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
+				draw.RoundedBox(0, 0, (leaderboardConst / 10) - 1, PlayerPanel:GetWide(), 1, Color(255, 255, 255, 255))
 
 				// put a check here if they even have a name
 				draw.SimpleText(v.name, "DermaDefault", 60, 5, Color(255, 255, 255))
@@ -104,7 +113,7 @@ local function openLobby()
 		end
 	end
 
-	timer.Create("leaderboardhh", 5, 1, leaderboardUpdate)
+	timer.Create("leaderboardhh", 2, 1, leaderboardUpdate)
 
 	local panelBg = vgui.Create("DPanel", frame)
 	panelBg:SetSize(width / 2, height / 2.45)
@@ -190,7 +199,7 @@ local function openLobby()
 	end
 
 	local discordButton = vgui.Create("DImageButton", frame)
-	discordButton:SetPos(width / 96, height / 54)
+	discordButton:SetPos(width / 96, 0)
 	// width / 1.28, 0
 	discordButton:SetImage("DiscordShoutout.png")
 	discordButton:SetSize(400, 300)
