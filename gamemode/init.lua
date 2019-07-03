@@ -135,6 +135,8 @@ end
 	end
 end*/
 
+// TODO IN FUTURE: WithinABox seems to be useful to keep people out of places
+
 hook.Add("InitPostEntity", "SpecSpawnFill", function()
 	specSpawns = ents.FindByClass("spectator_spawn")
 	//print("printing spec spawns")

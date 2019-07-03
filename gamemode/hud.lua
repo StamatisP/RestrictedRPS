@@ -9,7 +9,7 @@ local papercards = 0
 local scissorscards = 0
 local stars = 0
 local _roundstart = false
-local rockmat, papermat, scissorsmat
+local rockmat, papermat, scissorsmat, timemat, zawamat
 local _curtimesubtract = nil
 include("circles.lua")
 
@@ -174,8 +174,73 @@ local function UpdateMoney()
 	moneyAfterFormat = formatMoney(roundedMoney)
 end
 
+local function ZawaEffect()
+	//surface.SetDrawColor(255, 255, 255, 210)
+	//surface.SetMaterial(zawamat)
+	//surface.DrawTexturedRect(math.random(0, width), math.random(0, height), 256, 256)
+	print("zawaing bro im zawaing")
+	local zawaFrame = vgui.Create("DFrame")
+	zawaFrame:SetSize(256, 256)
+	zawaFrame:SetPos(math.random(256, width - 256), math.random(256, height - 256))
+	zawaFrame:ShowCloseButton(false)
+	zawaFrame:SetDraggable(false)
+	zawaFrame:SetTitle("")
+	zawaFrame.Paint = function(s, w, h)
+		draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0, 0))
+	end
+
+	local zawaImg = vgui.Create("DImage", zawaFrame)
+	zawaImg:SetSize(256, 256)
+
+	if not zawamat then ErrorNoHalt("no zawa mat!!!") return end
+	zawaImg:SetMaterial(zawamat)
+	
+	local alpha = 0
+	timer.Create("FadeInZawa", 0.05, 0, function()
+		print("fading in")
+		print(alpha)
+		if alpha >= 255 then 
+			timer.Create("FadeOutZawa", 0.05, 0, function()
+				print("fading out")
+				print(alpha)
+				zawaImg:SetImageColor(Color(255, 255, 255, alpha))
+				alpha = alpha - 15
+				if alpha <= 0 then
+					zawaFrame:Close()
+					timer.Destroy("FadeOutZawa")
+				end
+			end)
+			timer.Destroy("FadeInZawa")
+		end
+		zawaImg:SetImageColor(Color(255, 255, 255, alpha))
+		alpha = alpha + 15
+	end)
+end
+
+local function ZawaParticles()
+	local playerpos = LocalPlayer():GetPos()
+	local emitter = ParticleEmitter(playerpos)
+
+	for i = 0, 3 do
+		local part = emitter:Add(zawamat, playerpos)
+		if (part) then
+			part:SetPos(Vector(playerpos.x + math.random(-20, 20), playerpos.y + math.random(-20, 20), playerpos.z + math.random(-20, 20)))
+			part:SetDieTime( math.random(2, 3) ) -- How long the particle should "live"
+			part:SetStartAlpha( 255 ) -- Starting alpha of the particle
+			part:SetEndAlpha( 0 ) -- Particle size at the end if its lifetime
+			part:SetStartSize( 40 ) -- Starting size
+			part:SetEndSize( 0 ) -- Size when removed
+
+			part:SetGravity( Vector( 0, 0, 30 ) ) -- Gravity of the particle
+			part:SetVelocity( VectorRand() * 50 ) -- Initial velocity of the particle
+		end
+	end
+	emitter:Finish()
+end
+
 local function UpdateCompoundTime()
 	compoundTimeRate = CompoundTimer + CurTime()
+	ZawaParticles()
 	//print(compoundTimeRate) // time to take a break
 end
 
@@ -349,6 +414,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	papermat = Material("hud_paper.png")
 	scissorsmat = Material("hud_scissors.png")
 	timemat = Material("time_bg.png")
+	zawamat = Material("zawa")
 	timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
 	timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 
