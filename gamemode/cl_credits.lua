@@ -19,29 +19,29 @@ local function CreditsMenu()
 
 		text:InsertColorChange(255, 255, 255, 255)
 		text:InsertClickableTextStart("OpenKaiji")
-		text:AppendText("Inspired by: Kaiji Ultimate Survivor (Watch it!!!)\n")
+		text:AppendText("Inspired by: Kaiji Ultimate Survivor (Check it out.)\n")
 		text:InsertClickableTextEnd()
 
 		text:InsertClickableTextStart("OpenTurtle")
-		text:AppendText("Gamemode code: Mineturtle\n")
+		text:AppendText("Gamemode Code: Mineturtle\n")
 		text:InsertClickableTextEnd()
 
 		text:InsertClickableTextStart("OpenBass")
-		text:AppendText("Help with sound: Bassclefff\n")
+		text:AppendText("Sound Help: Bassclefff\n")
 		text:InsertClickableTextEnd()
 
 		text:InsertClickableTextStart("OpenNanner")
-		text:AppendText("Table model and textures: NannerCoco\n")
+		text:AppendText("Table Model and Textures: NannerCoco\n")
 		text:InsertClickableTextEnd()
 
 		text:AppendText("Music: Hideki Taniuchi\n")
 		text:AppendText("Fonts: DS Marker Felt by Typographer Mediengestaltung\n")
 		text:AppendText("Card Letter Design: Tambur\n")
 		text:AppendText("UI Design: GenerousGuy\n")
-		text:AppendText("Empty hands SWEP: Tatrabbit\n")
+		text:AppendText("Empty Hands SWEP: Tatrabbit\n")
 		text:AppendText("Kidnap SWEP: NauticalCoding\n")
 		text:AppendText("Circles library: SneakySquid\n")
-
+		text:AppendText("Gamemode Icon: Raspberry (Clara)\n")
 
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")
