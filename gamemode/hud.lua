@@ -240,7 +240,7 @@ end
 
 local function UpdateCompoundTime()
 	compoundTimeRate = CompoundTimer + CurTime()
-	ZawaParticles()
+	//ZawaParticles()
 	//print(compoundTimeRate) // time to take a break
 end
 
@@ -252,10 +252,11 @@ end
 local function CardChoiceGUI(enabled)
 	if enabled then
 		local choice = nil
-		local confirmColor = Color(185, 22, 22, 255)
-		local defaultColor = Color(225, 228, 227, 255)
+		local dButtonRock, dButtonPaper, dButtonScissors
+		local confirmColor = Color(255, 255, 255, 255)
+		local defaultColor = Color(255, 255, 255, 150)
 		local frame = vgui.Create("DFrame")
-		frame:SetSize(300, 250)
+		frame:SetSize(1075, 600)
 		frame:Center()
 		frame:SetVisible(true)
 		frame:ShowCloseButton(false)
@@ -266,7 +267,7 @@ local function CardChoiceGUI(enabled)
 
 		local dButtonReady = vgui.Create("DButton", frame)
 		dButtonReady:SetText("Confirm Choice")
-		dButtonReady:SetPos(25, 200)
+		dButtonReady:SetPos((frame:GetWide() / 2) - 25, frame:GetTall() / 1.1)
 		dButtonReady:SetSize(100, 30)
 		dButtonReady:SetEnabled(false)
 		dButtonReady.DoClick = function()
@@ -280,63 +281,75 @@ local function CardChoiceGUI(enabled)
 			net.SendToServer()
 		end
 
-		local dButtonRock = vgui.Create("DButton", frame)
-		dButtonRock:SetText("Rock")
-		dButtonRock:SetPos(25, 50)
-		dButtonRock:SetSize(250, 30)
-		dButtonRock.Paint = function (self, w, h)
+		local function SetButtonColors()
 			if choice == "Rock" then
-				//dButtonRock:SetColor(confirmColor)
-				draw.RoundedBox(0,0,0,w,h,confirmColor)
-			elseif choice != "Rock" then
-				draw.RoundedBox(0,0,0,w,h,defaultColor)
+				dButtonRock:SetColor(confirmColor)
+				dButtonPaper:SetColor(defaultColor)
+				dButtonScissors:SetColor(defaultColor) // i hate this so much
+			elseif choice == "Paper" then
+				dButtonRock:SetColor(defaultColor)
+				dButtonPaper:SetColor(confirmColor)
+				dButtonScissors:SetColor(defaultColor)
+			elseif choice == "Scissors" then
+				dButtonRock:SetColor(defaultColor)
+				dButtonPaper:SetColor(defaultColor)
+				dButtonScissors:SetColor(confirmColor)
+			elseif not choice then
+				return
 			end
 		end
+
+		dButtonRock = vgui.Create("DImageButton", frame)
+		dButtonRock:SetImage("choice_rock.png")
+		//dButtonRock:SetText("Rock")
+		dButtonRock:SetPos(25, 50)
+		dButtonRock:SetSize(325, 425)
+		dButtonRock:SetStretchToFit(true)
 		dButtonRock.DoClick = function()
+			//dButtonRock:SetColor(confirmColor)
 			frame:SetTitle("Set")
 			RunConsoleCommand("rps_selection", "Rock")
 			choice = "Rock"
 			dButtonReady:SetEnabled(true)
+			SetButtonColors()
 		end
 
-		local dButtonPaper = vgui.Create("DButton", frame)
-		dButtonPaper:SetText("Paper")
-		dButtonPaper:SetPos(25, 100)
-		dButtonPaper:SetSize(250, 30)
-		dButtonPaper.Paint = function(self, w, h)
-			if choice == "Paper" then
-				draw.RoundedBox(0,0,0,w,h,confirmColor)
-			elseif choice != "Paper" then
-				draw.RoundedBox(0,0,0,w,h,defaultColor)
-			end
-		end
+		dButtonPaper = vgui.Create("DImageButton", frame)
+		dButtonPaper:SetImage("choice_paper.png")
+		//dButtonPaper:SetText("Paper")
+		dButtonPaper:SetPos(375, 50)
+		dButtonPaper:SetSize(325, 425)
+		dButtonPaper:SetStretchToFit(true)
 		dButtonPaper.DoClick = function()
+			//dButtonPaper:SetColor(confirmColor)
 			frame:SetTitle("Set")
 			RunConsoleCommand("rps_selection", "Paper")
 			choice = "Paper"
 			dButtonReady:SetEnabled(true)
-			// couldn't i just like... dButtonPaper:SetColor(confirmcolor) dButtonRock:SetColor(defaultcolor) etc with scissors
+			SetButtonColors()
 		end
 
-		local dButtonScissors = vgui.Create("DButton", frame)
-		dButtonScissors:SetText("Scissors")
-		dButtonScissors:SetPos(25, 150)
-		dButtonScissors:SetSize(250, 30)
-		dButtonScissors.Paint = function(self, w, h)
-			if choice == "Scissors" then
-				draw.RoundedBox(0,0,0,w,h,confirmColor)
-			elseif choice != "Scissors" then
-				draw.RoundedBox(0,0,0,w,h,defaultColor)
-			end
-		end
+		dButtonScissors = vgui.Create("DImageButton", frame)
+		dButtonScissors:SetImage("choice_scissors.png")
+		//dButtonScissors:SetText("Scissors")
+		dButtonScissors:SetPos(725, 50)
+		dButtonScissors:SetSize(325, 425)
+		dButtonScissors:SetStretchToFit(true)
 		dButtonScissors.DoClick = function()
+			//dButtonScissors:SetColor(confirmColor)
 			frame:SetTitle("Set")
 			RunConsoleCommand("rps_selection", "Scissors")
 			choice = "Scissors"
 			dButtonReady:SetEnabled(true)
+			SetButtonColors()
 		end
 
+		//dButtonRock:SetColor(defaultColor)
+		//dButtonPaper:SetColor(defaultColor)
+		//dButtonScissors:SetColor(defaultColor)
+
 		if not (LocalPlayer():ReturnPlayerVar("rockcards") >= 1) then
+			print("disabled")
 			dButtonRock:SetEnabled(false)
 		end
 		if not (LocalPlayer():ReturnPlayerVar("papercards") >= 1) then
@@ -427,6 +440,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	_curtimesubtract = CurTime()
 	_roundstart = true
 	timer.Create("CompoundTimeHUD", CompoundTimer, 0, UpdateCompoundTime)
+	timer.Simple(2, function() CardChoiceGUI(true) end)
 end)
 
 function GM:HUDPaint()
