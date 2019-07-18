@@ -75,7 +75,7 @@ end)
 end
 
 function AdjustRoundLength()
-	roundtime = (player.GetCount() * 70) + 0.9 // this is to make sure the final compound occurs
+	roundtime = (player.GetCount() * 70) 
 	GetConVar("rps_roundtime"):SetInt(roundtime)
 	//SetGlobalInt("RoundTime", GetConVar("rps_roundtime"):GetInt())
 	//print(GetConVar("rps_roundtime"):GetInt())

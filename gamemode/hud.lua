@@ -11,6 +11,7 @@ local stars = 0
 local _roundstart = false
 local rockmat, papermat, scissorsmat, timemat, zawamat
 local _curtimesubtract = nil
+local ChoiceTimer, totalTime, choiceTime
 include("circles.lua")
 
 function GM:HUDShouldDraw(name)
@@ -123,6 +124,12 @@ local function DrawInfo()
 	draw.NoTexture()
 	surface.SetDrawColor(50, 50, 50, 255)
 	circleDivider:Draw()
+	if ChoiceTimer then
+		local choiceColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), totalTime, choiceTime)
+		draw.NoTexture()
+		surface.SetDrawColor(choiceColor)
+		ChoiceTimer:Draw()
+	end
 
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
@@ -265,12 +272,48 @@ local function CardChoiceGUI(enabled)
 		frame:MakePopup()
 		frame:SetKeyboardInputEnabled(false)
 
+		ChoiceTimer = draw.CreateCircle(CIRCLE_FILLED)
+		ChoiceTimer:SetRadius(35)
+		ChoiceTimer:SetPos(width / 2, height / 6)
+		ChoiceTimer:SetAngles(0, 360)
+		ChoiceTimer:SetRotation(270)
+
+		totalTime = 30 + CurTime()
+
+		timer.Create("CircleAngleSetter", 0, 0, function()
+			choiceTime = totalTime - CurTime()
+			ChoiceTimer:SetAngles(0, normalize(0, 30, choiceTime) * 360)
+		end)
+
+		timer.Create("ChoiceTimeLimit", 30, 1, function() 
+			RunConsoleCommand("rps_selection", "Rock")
+			choice = "Rock"
+			frame:Close()
+			// i need to write the entity that the player is looking at...
+			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
+			net.Start("ArePlayersReady")
+			net.WriteEntity(ent)
+			net.WriteString(LocalPlayer():GetName())
+			net.WriteBool(true)
+			net.SendToServer()
+			timer.Destroy("ChoiceTimeLimit")
+			timer.Destroy("CircleAngleSetter")
+			ChoiceTimer = nil
+			totalTime = nil
+			choiceTime = nil
+		end)
+
 		local dButtonReady = vgui.Create("DButton", frame)
 		dButtonReady:SetText("Confirm Choice")
 		dButtonReady:SetPos((frame:GetWide() / 2) - 25, frame:GetTall() / 1.1)
 		dButtonReady:SetSize(100, 30)
 		dButtonReady:SetEnabled(false)
 		dButtonReady.DoClick = function()
+			timer.Destroy("ChoiceTimeLimit")
+			timer.Destroy("CircleAngleSetter")
+			ChoiceTimer = nil
+			totalTime = nil
+			choiceTime = nil
 			frame:Close()
 			// i need to write the entity that the player is looking at...
 			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
@@ -348,14 +391,14 @@ local function CardChoiceGUI(enabled)
 		//dButtonPaper:SetColor(defaultColor)
 		//dButtonScissors:SetColor(defaultColor)
 
-		if not (LocalPlayer():ReturnPlayerVar("rockcards") >= 1) then
+		if (LocalPlayer():ReturnPlayerVar("rockcards") < 1) then
 			print("disabled")
 			dButtonRock:SetEnabled(false)
 		end
-		if not (LocalPlayer():ReturnPlayerVar("papercards") >= 1) then
+		if (LocalPlayer():ReturnPlayerVar("papercards") < 1) then
 			dButtonPaper:SetEnabled(false)
 		end
-		if not (LocalPlayer():ReturnPlayerVar("scissorscards") >= 1) then
+		if (LocalPlayer():ReturnPlayerVar("scissorscards") < 1) then
 			dButtonScissors:SetEnabled(false)
 		end
 		
@@ -440,7 +483,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	_curtimesubtract = CurTime()
 	_roundstart = true
 	timer.Create("CompoundTimeHUD", CompoundTimer, 0, UpdateCompoundTime)
-	timer.Simple(2, function() CardChoiceGUI(true) end)
+	//timer.Simple(2, function() CardChoiceGUI(true) end)
 end)
 
 function GM:HUDPaint()

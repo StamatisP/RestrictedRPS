@@ -210,7 +210,7 @@ local function openLobby()
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
-	timer.Simple(2, function() 
+	timer.Simple(4, function() 
 		lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 	end)
 
@@ -254,7 +254,7 @@ end
 local function closeFrame()
 	if not frame then return end
 	print("frame closed")
-	//print(frame)
+	print(frame)
 	frame:Close()
 end
 
