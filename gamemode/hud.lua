@@ -286,8 +286,10 @@ local function CardChoiceGUI(enabled)
 		end)
 
 		timer.Create("ChoiceTimeLimit", 30, 1, function() 
-			RunConsoleCommand("rps_selection", "Rock")
-			choice = "Rock"
+			if not choice then
+				choice = "Rock"
+				RunConsoleCommand("rps_selection", "Rock")
+			end
 			frame:Close()
 			// i need to write the entity that the player is looking at...
 			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
@@ -314,6 +316,7 @@ local function CardChoiceGUI(enabled)
 			ChoiceTimer = nil
 			totalTime = nil
 			choiceTime = nil
+			choice = nil
 			frame:Close()
 			// i need to write the entity that the player is looking at...
 			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
