@@ -6,6 +6,7 @@ local lobbysound = nil
 local _roundstart = false
 local leaderboard
 local frame = nil
+util.PrecacheSound("music/littlezawa_loop_by_bass.wav")
 // YO DUDE PUT A MUSIC PLAYER HERE
 
 local function openLobby() 
@@ -210,7 +211,8 @@ local function openLobby()
 
 	//local musicVolumeSlider = vgui.Create("DNumSlider", frame)
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
-	timer.Simple(4, function() 
+	timer.Simple(4, function()
+		if _roundstart then return end
 		lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 	end)
 
@@ -261,7 +263,7 @@ end
 net.Receive("CloseLobby", function(len, ply)
 	print("closelobby received")
 	--LocalPlayer():StopSound("little_zawa")
-	if !(lobbysound == nil) then
+	if (lobbysound ~= nil) then
 		lobbysound:FadeOut(2)
 	end
 	timer.Destroy("ScoreboardUpdate")

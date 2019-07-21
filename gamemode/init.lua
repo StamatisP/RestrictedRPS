@@ -139,6 +139,7 @@ end*/
 
 hook.Add("InitPostEntity", "SpecSpawnFill", function()
 	specSpawns = ents.FindByClass("spectator_spawn")
+	//print(#ents.FindByClass("*"))
 	//print("printing spec spawns")
 	//PrintTable(specSpawns)
 end)
@@ -175,6 +176,8 @@ function GM:PlayerSpawn(ply)
 		ply:UnSpectate()
 		local newpos = specSpawns[math.random(#specSpawns)]
 		//print(newpos)
+		//print(math.random(#specSpawns))
+		//print(#specSpawns)
 		ply:SetModel(playermodels[math.random(#playermodels)])
 		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
 		ply:SetupHands()
@@ -279,11 +282,25 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 			local roundedamount = math.Round(amount, 2)
 
 			if (roundedamount > 0) then
-				ply:UpdatePlayerVar("money", plyBalance + roundedamount)
-				print("giving " .. ply:Nick() .. " money")
+				local tr = ply:GetEyeTrace()
+				if (tr.Entity ~= ply) then
+					if (tr.Entity:IsPlayer()) then
+						print(tr.Entity)
+						ply:UpdatePlayerVar("money", plyBalance - roundedamount)
+						tr.Entity:UpdatePlayerVar("money", tr.Entity:ReturnPlayerVar("money") + roundedamount)
+						ply:ChatPrint("You have given " .. tr.Entity:Nick() .. " $" .. roundedamount .. ".")
+						return ""
+					end
+					ply:ChatPrint("You need to look at the target player!")
+					return ""
+				else
+					ply:ChatPrint("You need to look at the target player!")
+					return ""
+				end
+			else
+				ply:ChatPrint("Amount must be greater than 0!")
+				return ""
 			end
-
-			return "You have dropped $" .. tonumber(playerMsg[2])
 		end
 		ply:ChatPrint("Usage: /givemoney 1000")
 		return ""
@@ -307,7 +324,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	end
 	//pm command
 	if (playerMsg[1] == "/pm") then
-		if not isstring(playerMsg[2]) then ply:ChatPrint("Usage: /pm (player name)") return "" end
+		if not isstring(playerMsg[2]) then ply:ChatPrint("Usage: /pm \"player name\" \"message\"") return "" end
 		
 		if FindPlayer(tostring(playerMsg[2])) then
 			net.Start("PrivateMessage")

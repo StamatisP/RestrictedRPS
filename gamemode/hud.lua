@@ -79,6 +79,7 @@ local function DrawInfo()
 	if not _roundstart then return end
 
 	//local curtimecheck = SysTime()
+	// IN THE FUTURE: make a table for all of these shared divisions/multiplications
 	surface.SetDrawColor(255, 255, 255, 210)
 	surface.SetMaterial(rockmat)
 	surface.DrawTexturedRect(width * 0.15, height * 0.86, width / 6, height / 6)
