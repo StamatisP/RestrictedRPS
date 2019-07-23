@@ -11,7 +11,8 @@ local stars = 0
 local _roundstart = false
 local rockmat, papermat, scissorsmat, timemat, zawamat
 local _curtimesubtract = nil
-local ChoiceTimer, totalTime, choiceTime
+local ChoiceTimer, totalTime
+local choiceTime = 0
 include("circles.lua")
 
 function GM:HUDShouldDraw(name)
@@ -53,7 +54,8 @@ end
 local width = ScrW()
 local height = ScrH()
 
-local function normalize(min, max, val) 
+local function normalize(min, max, val)
+	if not min or not max or not val then ErrorNoHalt("you forgot min max or val!") return end
     local delta = max - min
     return (val - min) / delta
 end

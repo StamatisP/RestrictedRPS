@@ -1,8 +1,15 @@
 local LoadedSounds
 local songString
 math.randomseed(os.time())
+util.PrecacheSound("music/littlezawa_loop_by_bass.wav")
+util.PrecacheSound("sfx/win1_fate.wav")
+util.PrecacheSound("sfx/loss1_trap.wav")
 if CLIENT then
 	LoadedSounds = {} -- this table caches existing CSoundPatches
+	WinSounds = {}
+	LoseSounds = {}
+	WinSounds[1] = "sfx/win1_fate.wav"
+	LoseSounds[1] = "sfx/loss1_trap.wav"
 end
 
 function ReadSound( FileName, IsMusic )
@@ -71,3 +78,12 @@ net.Receive("FadeInMusic", function(len)
 end)
 -- IDEA: A JUKEBOX LUA SCRIPT
 -- IT'S A CLIENTSIDE THING THAT RANDOMLY PICKS SONGS, OR YOU PICK THEM YOURSELF
+hook.Add("PlayerTableWin", "PlayWinSoundFX", function()
+	print("hook win!")
+	surface.PlaySound(WinSounds[math.random(#WinSounds)])
+end)
+
+hook.Add("PlayerTableLoss", "PlayLossSoundFX", function()
+	print("hook loss!")
+	surface.PlaySound(LoseSounds[math.random(#LoseSounds)])
+end)

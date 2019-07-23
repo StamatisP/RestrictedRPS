@@ -52,6 +52,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("AnnounceVictory")
 	util.AddNetworkString("PrivateMessage")
 	util.AddNetworkString("UpdateRoundCompoundTimes")
+	util.AddNetworkString("PlayerTableUpdate")
 end
 
 local playermodels = {

@@ -176,6 +176,16 @@ net.Receive("UpdateRoundCompoundTimes", function()
 	RoundTimer = round
 end)
 
+net.Receive("PlayerTableUpdate", function()
+	local haveWon = net.ReadBool()
+	print("player table update")
+	if haveWon then
+		hook.Run("PlayerTableWin")
+	else
+		hook.Run("PlayerTableLoss")
+	end
+end)
+
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")
 CreateClientConVar("rps_selection", "Broken", false, true, "Your card selection.")
 

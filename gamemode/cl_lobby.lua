@@ -6,7 +6,6 @@ local lobbysound = nil
 local _roundstart = false
 local leaderboard
 local frame = nil
-util.PrecacheSound("music/littlezawa_loop_by_bass.wav")
 // YO DUDE PUT A MUSIC PLAYER HERE
 
 local function openLobby() 
@@ -213,6 +212,7 @@ local function openLobby()
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
 	timer.Simple(4, function()
 		if _roundstart then return end
+		if not LocalPlayer() then return end
 		lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 	end)
 
