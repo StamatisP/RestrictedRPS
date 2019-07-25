@@ -76,6 +76,30 @@ Network Strings
 		"AnnounceWinnerOfMatch"
 		Announces winner of table match.
 
+		"UpdatePlayerVar"
+		Updates player var.
+
+		"RRPS_InitializeVars"
+		Duh.
+
+		"RRPS_VarDisconnect"
+		Clears player vars when disconnect.
+
+		"SendLeaderboardInfo"
+		Duh.
+
+		"PrivateMessage"
+		Duh.
+
+		"UpdateRoundCompoundTimes"
+		I hate explaining these.
+
+		"PlayerTableUpdate"
+		When player wins at a table.
+
+		"PlayerTableStatusUpdate"
+		Called when player enters table.
+
 	Client to Server
 		"StartGame"
 		Admin button to start the round.
@@ -100,3 +124,12 @@ Network Strings
 
 		"ArePlayersReady"
 		Verifies if both players at table are ready to play.
+
+		"PlayerReady"
+		When player readies up in lobby.
+
+		"BuyoutPlayer"
+		Buys out a player.
+
+		"AnnounceVictory"
+		Announces when player is victorious.
