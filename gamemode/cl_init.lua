@@ -132,7 +132,7 @@ end
 	end
 end*/
 
-hook.Add("Think", "InputManager", inputManager)
+//hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
 
 //i should implement credits one day... thank you bass
@@ -184,6 +184,10 @@ net.Receive("PlayerTableUpdate", function()
 	else
 		hook.Run("PlayerTableLoss")
 	end
+end)
+
+net.Receive("PlayerTableStatusUpdate", function()
+	hook.Run("PlayerTableEnter")
 end)
 
 CreateClientConVar("rps_money", "1000000", false, true, "Amount of money you desire.")

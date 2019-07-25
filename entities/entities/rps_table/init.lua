@@ -249,6 +249,8 @@ function ENT:Use(activator, caller)
 		table.insert(self.playersTable, activator)
 		print("you are first player")
 		activator:SetNWBool("TableView", true)
+		net.Start("PlayerTableStatusUpdate")
+		net.Send(activator)
 		self.player1 = self:GetPlayer1()
 		//print(self.player1 .. " player 1")
 		return
@@ -267,6 +269,8 @@ function ENT:Use(activator, caller)
 		table.insert(self.playersTable, activator)
 		print("you are second player")
 		activator:SetNWBool("TableView", true)
+		net.Start("PlayerTableStatusUpdate")
+		net.Send(activator)
 	end
 
 	self.player2 = self:GetPlayer2()

@@ -321,3 +321,15 @@ hook.Add("PlayerTableLoss", "QuietMusicLoss", function()
 		FadeInMusic(oldvol, 2, CLIP)
 	end)
 end)
+
+hook.Add("PlayerTableEnter", "LouderMusicEnter", function()
+	if not CLIP then return end
+	local oldvol = CLIP:getVolume()
+	FadeInMusic(oldvol * 1.5, 1, CLIP)
+end)
+
+hook.Add("PlayerTableExit", "QuietMusicExit", function()
+	if not CLIP then return end
+	local oldvol = CLIP:getVolume()
+	FadeOutMusic(oldvol / 1.5, 1, CLIP)
+end)

@@ -37,6 +37,12 @@ Client Hooks
 	"PlayerTableLoss"
 	When player has lost at a table.
 
+	"PlayerTableEnter"
+	When player enters a table.
+
+	"PlayerTableExit"
+	When player exits a table.
+
 	"RoundStarted"
 	When round starts.
 

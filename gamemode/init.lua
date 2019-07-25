@@ -52,7 +52,8 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("AnnounceVictory")
 	util.AddNetworkString("PrivateMessage")
 	util.AddNetworkString("UpdateRoundCompoundTimes")
-	util.AddNetworkString("PlayerTableUpdate")
+	util.AddNetworkString("PlayerTableUpdate") // naming sucks... this is for when a player wins a match at table
+	util.AddNetworkString("PlayerTableStatusUpdate")
 end
 
 local playermodels = {
