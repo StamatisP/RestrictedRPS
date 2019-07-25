@@ -92,7 +92,7 @@ end
 local function keyUse()
 	if hook.Run("StartChat") then print("startchat true") return end
 	if gui.IsConsoleVisible() then return end
-	if input.IsKeyDown(KEY_E) then 
+	if input.IsKeyDown(KEY_E) then
 		/*local eyetrace = LocalPlayer():GetEyeTrace()
 		// check if eyetrace hit sky or world
 		if eyetrace.HitSky == false then
@@ -114,7 +114,17 @@ local function keyUse()
 		net.SendToServer()
 
 		hook.Run("KEY_USE")
+		//hook.Run("PlayerTableWin")
 	end
+	/*if input.IsKeyDown(KEY_P) then
+		local timeElapsed = CurTime() - lastOccurrence
+		if timeElapsed < delay then 
+			//print(timeElapsed .. " < " .. delay)
+			return
+		end
+		lastOccurrence = CurTime()
+		hook.Run("PlayerTableLoss")
+	end*/
 end
 
 /*local function inputManager()

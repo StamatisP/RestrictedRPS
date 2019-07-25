@@ -17,9 +17,8 @@ local function print(s)
 end
 
 local function FadeInMusic(volumeTarget, time, clip)
-	local volincrement = volumeTarget / (time * 25)
-	clip:setVolume(0)
-	local newvol = 0
+	local volincrement = volumeTarget / (time * 30)
+	local newvol = clip:getVolume()
 	timer.Create("fadein", 0.02, 0, function()
 		newvol = newvol + volincrement
 		//print(newvol)
@@ -37,13 +36,19 @@ end
 local function FadeOutMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
 	local newvol = clip:getVolume()
-	timer.Create("fadeout", 0.01, 0, function()
+	timer.Create("fadeout", 0.02, 0, function()
 		//if newvol < volumeTarget then timer.Destroy("fadeout") end
 		newvol = newvol - volincrement
 		//print(newvol)
 		clip:setVolume(newvol)
+		//print(newvol)
+		isFading = true
+		if newvol <= volumeTarget then
+			timer.Destroy("fadeout")
+			print("fadeout done")
+			isFading = false
+		end
 	end)
-	if newvol <= 0 then timer.Destroy("fadeout") end
 end
 
 local function AssembleAvailableSongs()
@@ -94,6 +99,7 @@ local function PlayMusic(tab)
 	end)
 	mediaclip:on("playing", function()
 		timer.Pause("AutoPlaylist")
+		mediaclip:setVolume(0)
 		FadeInMusic(vol, 5, mediaclip)
 		isBuffering = false
 		timer.Destroy("BufferingError")
@@ -106,7 +112,7 @@ local function PlayMusic(tab)
 	end)
 	mediaclip:on("error", function(errorId, errorDesc)
 		timer.UnPause("AutoPlaylist")
-		ErrorNoHalt(errorId, errorDesc, " mediaclip error! is ignorable")
+		ErrorNoHalt(PrintTable(errorId), errorDesc, " mediaclip error! is ignorable")
 	end)
 	mediaclip:on("paused", function()
 		//if IsValid(CLIP) then CLIP:stop() end
@@ -196,7 +202,7 @@ local function JukeboxFrame()
 		volume.OnValueChanged = function(_, val)
 			if val > 100 then val = 100 end
 			if val < 0 then val = 0 end
-			local vald = val / 100
+			local vald = val / 200
 			if isFading then 
 				timer.Destroy("fadein")
 				isFading = false
@@ -206,6 +212,7 @@ local function JukeboxFrame()
 			GetConVar("rps_jukeboxvolume"):SetFloat(vol)
 			if not IsValid(mediaclip) then return end
 			mediaclip:setVolume(vol)
+			print(vol)
 		end
 
 		local playlistCheck = vgui.Create("DCheckBoxLabel", frame)
@@ -295,4 +302,22 @@ hook.Add("RoundEnded","JukeboxRoundEnded",function()
 	//FadeOutMusic(vol, 5, CLIP)
 
 	PlayMusic(GetSpecificSong("Memories"))
+end)
+
+hook.Add("PlayerTableWin", "QuietMusic", function()
+	if not CLIP then return end
+	local oldvol = CLIP:getVolume()
+	FadeOutMusic(oldvol / 3, 1, CLIP)
+	timer.Simple(9, function()
+		FadeInMusic(oldvol, 2, CLIP)
+	end)
+end)
+
+hook.Add("PlayerTableLoss", "QuietMusicLoss", function()
+	if not CLIP then return end
+	local oldvol = CLIP:getVolume()
+	FadeOutMusic(oldvol / 3, 1, CLIP)
+	timer.Simple(9, function()
+		FadeInMusic(oldvol, 2, CLIP)
+	end)
 end)

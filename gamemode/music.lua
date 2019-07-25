@@ -93,7 +93,7 @@ musicPlaylist[12] = {
 }
 
 musicPlaylist[13] = {
-	song = "https://www.youtube.com/watch?v=x0bGK9YlKRk",
+	song = "https://www.youtube.com/watch?v=Tts7Nv_hNhk",
 	title = "Despair",
 	luck = 50,
 	autoplay = false

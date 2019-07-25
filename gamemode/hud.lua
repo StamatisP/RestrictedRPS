@@ -282,6 +282,7 @@ local function CardChoiceGUI(enabled)
 		ChoiceTimer:SetRotation(270)
 
 		totalTime = 30 + CurTime()
+		choiceTime = totalTime
 
 		timer.Create("CircleAngleSetter", 0, 0, function()
 			choiceTime = totalTime - CurTime()
