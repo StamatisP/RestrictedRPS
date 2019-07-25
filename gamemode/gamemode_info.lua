@@ -55,3 +55,48 @@ Server Hooks
 
 	"RoundEnded"
 	When round ends.
+
+Network Strings
+	Server to Client
+		"OpenLobby"
+		Opens the lobby on the player.
+
+		"closeLobby"
+		Closes the lobby on the player.
+
+		"UpdateTableView"
+		Tells the client to switch to table cam mode.
+
+		"FadeInMusic"
+		Originally for playing lobby music on the player. Deprecated, remove.
+
+		"PlayerTableCheckGUIEnable"
+		When both players enter table, and the GUI appears.
+
+		"AnnounceWinnerOfMatch"
+		Announces winner of table match.
+
+	Client to Server
+		"StartGame"
+		Admin button to start the round.
+
+		"KEY_USE"
+		Called when player presses the E key. Useless?
+
+		"ZawaPlay"
+		Plays a zawa sound on the clients position.
+
+		"UpdateRoundStatus"
+		Updates the round status.
+
+		"database"
+		Deprecated, remove.
+
+		"InventoryDrop"
+		When player drops item.
+
+		"RemovePlayer"
+		Called to remove player from gametable player table.
+
+		"ArePlayersReady"
+		Verifies if both players at table are ready to play.
