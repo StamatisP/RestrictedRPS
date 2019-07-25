@@ -476,8 +476,7 @@ function ChatPrintToAllPlayers(message)
 end
 
 net.Receive("ZawaPlay", function(len, ply)
-	ReadSound("ambient/zawa1.wav", false)
-	print("zawa")
+	sound.Play("zawa_sound", ply:GetPos())
 end)
 
 net.Receive("KEY_USE", function(len, ply)

@@ -11,6 +11,7 @@ include("cl_jukebox.lua")
 include("music.lua")
 include("cl_credits.lua")
 include("cl_buyout.lua")
+include("sounds.lua")
 
 local delay = 2
 local lastOccurrence = -delay
@@ -117,23 +118,23 @@ local function keyUse()
 	end*/
 end
 
-/*local function inputManager()
-	if input.IsKeyDown(KEY_Z) then
-		//print(LocalPlayer():GetNWBool("TableView"))
-		local timeElapsed = CurTime() - lastOccurrence
-		if timeElapsed < delay then
-			return
-		else
-			lastOccurrence = CurTime()
-			net.Start("ZawaPlay")
-			-- ZawaPlay is in init.lua
-			net.SendToServer()
-		end
-	end
-end*/
+local function ZawaZawa()
+	local plyLuck = LocalPlayer():GetNWInt("Luck", 50)
+	local zawaDelay = Lerp(plyLuck / 100, math.random(15, 30), math.random(180, 220)) // in seconds
+	// if luck is 100, player will hear the zawas every 3 minutes
+	print("next zawa in " .. zawaDelay .. " seconds.")
+	timer.Create("ZawaPlayer", zawaDelay, 0, function()
+		plyLuck = LocalPlayer():GetNWInt("Luck", 50)
+		zawaDelay = Lerp(plyLuck / 100, math.random(15, 30), math.random(180, 220))
+		//sound.Play("zawa_sound", LocalPlayer:GetPos()) // should this be serverside?
+		net.Start("ZawaPlay")
+		net.SendToServer()
+		print("next zawa in " .. zawaDelay .. " seconds.")
+	end)
+end
 
-//hook.Add("Think", "InputManager", inputManager)
 hook.Add("Think","e_pressed", keyUse)
+hook.Add("RoundStarted", "ZawaSounds", ZawaZawa)
 
 //i should implement credits one day... thank you bass
 
