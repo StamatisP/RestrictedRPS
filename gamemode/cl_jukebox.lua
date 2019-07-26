@@ -4,7 +4,7 @@ local frame, play, mediaclip, pause, vol, service, label, selectedSong
 local title = " "
 local jukeboxOpen = false
 local CLIP = nil
-local autoplaylistEnabled = GetConVar("rps_autoplayenabled"):GetBool() or false
+local autoplaylistEnabled = GetConVar("rps_autoplayenabled"):GetBool() or true
 local vol = GetConVar("rps_jukeboxvolume"):GetFloat() or 0.05
 local isFading = false
 local roundended = false
@@ -19,6 +19,7 @@ end
 local function FadeInMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
 	local newvol = clip:getVolume()
+	if isFading then clip:setVolume(volumeTarget) return end
 	timer.Create("fadein", 0.02, 0, function()
 		newvol = newvol + volincrement
 		//print(newvol)
@@ -36,6 +37,7 @@ end
 local function FadeOutMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
 	local newvol = clip:getVolume()
+	if isFading then clip:setVolume(volumeTarget) return end
 	timer.Create("fadeout", 0.02, 0, function()
 		//if newvol < volumeTarget then timer.Destroy("fadeout") end
 		newvol = newvol - volincrement

@@ -119,17 +119,18 @@ local function keyUse()
 end
 
 local function ZawaZawa()
-	local plyLuck = LocalPlayer():GetNWInt("Luck", 50)
-	local zawaDelay = Lerp(plyLuck / 100, math.random(15, 30), math.random(180, 220)) // in seconds
+	local zawaDelay = math.random(15, 30) // in seconds
 	// if luck is 100, player will hear the zawas every 3 minutes
 	print("next zawa in " .. zawaDelay .. " seconds.")
 	timer.Create("ZawaPlayer", zawaDelay, 0, function()
-		plyLuck = LocalPlayer():GetNWInt("Luck", 50)
+		local plyLuck = LocalPlayer():GetNWInt("Luck", 50)
 		zawaDelay = Lerp(plyLuck / 100, math.random(15, 30), math.random(180, 220))
+		timer.Adjust("ZawaPlayer", zawaDelay, 0)
 		//sound.Play("zawa_sound", LocalPlayer:GetPos()) // should this be serverside?
 		net.Start("ZawaPlay")
 		net.SendToServer()
 		print("next zawa in " .. zawaDelay .. " seconds.")
+		print(timer.TimeLeft("ZawaPlayer"))
 	end)
 end
 
