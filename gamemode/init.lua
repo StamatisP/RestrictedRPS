@@ -26,6 +26,7 @@ include("sounds.lua")
 include("sh_soundmanager.lua")
 include("sv_soundmanager.lua")
 include("sv_sql.lua")
+include("sv_seats.lua")
 //include("mysqlite.lua")
 
 function GM:AddNetworkStrings()
@@ -341,6 +342,15 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		end
 	end
 
+	if (playerMsg[1] == "/respawn") then
+		ply:SetPos(ents.FindByClass("info_player_start")[math.random(1, 10)])
+	end
+
+	if (playerMsg[1] == "/speccam") then
+		if not ply:IsSuperAdmin() or not developerMode then return "" end
+		GAMEMODE:PlayerSpawnAsSpectator(ply)
+	end
+
 	if (playerMsg[1] == "/dev") then
 		if not ply:IsSuperAdmin() then return "" end
 		if (tonumber(playerMsg[2])) then
@@ -428,11 +438,11 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	//if ply:Team() == 3 then return false end
 
 	if (ent:GetClass() == "rps_table") then
-		ply:SetNWEntity("TableUsing", ent)
 		if not (ply:ReturnPlayerVar("stars") >= 1) then 
 			print(ply:GetName() .. " has no stars") 
 			return false
 		end
+		ply:SetNWEntity("TableUsing", ent)
 		return true
 	end
 
@@ -453,6 +463,11 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 			//print("non-blacksuits cannot use") 
 			return false 
 		end
+		return true
+	end
+
+	if (ent:GetClass() == "prop_vehicle_prisoner_pod") then
+		print("vehicle enter")
 		return true
 	end
 end)

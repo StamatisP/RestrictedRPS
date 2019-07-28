@@ -2,6 +2,7 @@ local tableView = false
 local calcviewTable = {}
 local delay = 2
 local lastOccurrence = -delay
+local canExitTable = true
 
 local function NormalView(ply, pos, angles, fov)
 	//	print("normal view time")
@@ -37,7 +38,8 @@ end
 hook.Add("CalcView", "CameraView", myCalcView)
 
 // problem here: pressing E makes you sometimes leave the table right when you enter it. the delay needs to be reset upon entering a table
-hook.Add("KEY_USE", "ExitTable", function()
+hook.Add("KeyRelease", "ExitTable", function(player, key)
+	if key != IN_USE || canExitTable == false then return end
 	if !LocalPlayer():GetNWBool("TableView") then print("tableview false") return end
 	if LocalPlayer():GetNWBool("PlayingTable", false) then print("playingtable true") return end
 	local timeElapsed = CurTime() - lastOccurrence
@@ -56,4 +58,12 @@ hook.Add("KEY_USE", "ExitTable", function()
 		print("tableview is false, setting nwbool tableview to false")
 		// in the future, i should offload the key_use thing to another script or something
 	end
+end)
+
+hook.Add("PlayerTableEnter", "PreventInstantExit", function()
+	canExitTable = false
+	timer.Simple(2, function()
+		canExitTable = true
+		print("can now exit table.")
+	end)
 end)

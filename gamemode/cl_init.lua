@@ -87,7 +87,6 @@ function CreateGameFonts()
 		additive = false,
 		outline = false,
 	})
-
 end
 
 local function keyUse()

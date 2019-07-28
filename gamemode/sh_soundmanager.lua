@@ -4,6 +4,17 @@ math.randomseed(os.time())
 util.PrecacheSound("music/littlezawa_loop_by_bass.wav")
 util.PrecacheSound("sfx/win1_fate.wav")
 util.PrecacheSound("sfx/loss1_trap.wav")
+util.PrecacheSound("ambient/zawa1.wav")
+util.PrecacheSound("ambient/zawa2.wav")
+util.PrecacheSound("ambient/zawa3.wav")
+util.PrecacheSound("ambient/zawa4.wav")
+util.PrecacheSound("ambient/zawa5.wav")
+util.PrecacheSound("ambient/zawa6.wav")
+util.PrecacheSound("ambient/zawa7.wav")
+util.PrecacheSound("ambient/zawa8.wav")
+util.PrecacheSound("ambient/zawa9.wav")
+util.PrecacheSound("ambient/zawa10.wav")
+util.PrecacheSound("ambient/zawa11.wav")
 if CLIENT then
 	LoadedSounds = {} -- this table caches existing CSoundPatches
 	WinSounds = {}

@@ -78,7 +78,7 @@ circleDivider:SetPos(width * 0.55, height * 0.045)
 circleDivider:SetAngles(0, 360)
 
 local function DrawInfo()
-	if not _roundstart then return end
+	if not _roundstart or localplayer:Team() == TEAM_SPECTATOR then return end
 
 	//local curtimecheck = SysTime()
 	// IN THE FUTURE: make a table for all of these shared divisions/multiplications
@@ -137,10 +137,10 @@ local function DrawInfo()
 	if not txt then txt = string.ToMinutesSeconds(timeLeft) end
 	if not compoundTxt then compoundTxt = string.ToMinutesSeconds(compoundTimeLeft) end
 
-	rockcards = LocalPlayer():ReturnPlayerVar("rockcards")
-	papercards = LocalPlayer():ReturnPlayerVar("papercards")
-	scissorscards = LocalPlayer():ReturnPlayerVar("scissorscards")
-	stars = LocalPlayer():ReturnPlayerVar("stars")
+	rockcards = localplayer:ReturnPlayerVar("rockcards")
+	papercards = localplayer:ReturnPlayerVar("papercards")
+	scissorscards = localplayer:ReturnPlayerVar("scissorscards")
+	stars = localplayer:ReturnPlayerVar("stars")
 	if not rockcards or not papercards or not scissorscards then
 		rockcards = 0
 		papercards = 0

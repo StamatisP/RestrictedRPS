@@ -42,6 +42,7 @@ local function CreditsMenu()
 		text:AppendText("Kidnap SWEP: NauticalCoding\n")
 		text:AppendText("Circles library: SneakySquid\n")
 		text:AppendText("Gamemode Icon: Raspberry (Clara)\n")
+		text:AppendText("Ideas and Functions: DarkRP (Falco)\n")
 
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")

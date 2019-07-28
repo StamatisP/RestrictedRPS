@@ -21,11 +21,13 @@ function GM:CreateTeams()
 	team.SetUp(1, "Players", Color(150, 100, 100, 255), false)
 	team.SetUp(2, "Blacksuits", Color(20, 20, 20, 255), false)
 	team.SetUp(3, "Spectators", Color(200, 200, 0, 255), true)
+	team.SetUp(TEAM_SPECTATOR, "FreeCamSpec", Color(255, 255, 255, 255), true)
 	//team.SetUp(TEAM_SPECTATOR, "SpectatorsObsolete", Color(200, 200, 0, 255), true)
 
 	team.SetSpawnPoint(1, "info_player_deathmatch")
 	team.SetSpawnPoint(2, "info_player_deathmatch")
 	team.SetSpawnPoint(3, "spectator_spawn")
+	team.SetSpawnPoint(4, "spectator_spawn")
 end	
 
 function GM:GetRoundTime()
