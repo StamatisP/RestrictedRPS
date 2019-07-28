@@ -321,14 +321,13 @@ local function CardChoiceGUI(enabled)
 			totalTime = nil
 			choiceTime = nil
 			choice = nil
-			frame:Close()
-			// i need to write the entity that the player is looking at...
 			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
 			net.Start("ArePlayersReady")
 			net.WriteEntity(ent)
 			net.WriteString(LocalPlayer():GetName())
 			net.WriteBool(true)
 			net.SendToServer()
+			frame:Close()
 		end
 
 		local function SetButtonColors()

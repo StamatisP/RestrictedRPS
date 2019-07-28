@@ -42,6 +42,7 @@ local function FadeOutMusic(volumeTarget, time, clip)
 		//if newvol < volumeTarget then timer.Destroy("fadeout") end
 		newvol = newvol - volincrement
 		//print(newvol)
+		if not clip then return end
 		clip:setVolume(newvol)
 		//print(newvol)
 		isFading = true

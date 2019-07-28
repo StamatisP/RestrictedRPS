@@ -86,23 +86,26 @@ ENT.player2Ready = nil
 net.Receive("ArePlayersReady", function(len, ply)
 	if not ply:GetNWBool("TableView") then return end
 	local ent = net.ReadEntity()
-	if ent == nil then
-		ErrorNoHalt("Entity is nil! Player " .. ply .. " brought this up!")
+	local name = net.ReadString()
+	local ready = net.ReadBool()
+	if ent == nil || name == nil || ready == nil then
+		ErrorNoHalt("Entity, name, or ready is nil! Player " .. ply .. " brought this up!")
 		// implement a way to make the match end in a tie if this happens
+		ent:CleanSlate()
 		return
 	end
-	ent:PlayerReadyCheck()
+	ent:PlayerReadyCheck(name, ready)
 end)
 
-function ENT:PlayerReadyCheck()
+function ENT:PlayerReadyCheck(name, ready)
 
 	print("player ready check")
 	if (self.player1Name == nil) then
-		self.player1Name = net.ReadString()
-		self.player1Ready = net.ReadBool()
+		self.player1Name = name
+		self.player1Ready = ready
 	elseif (self.player2Name == nil) then
-		self.player2Name = net.ReadString()
-		self.player2Ready = net.ReadBool()
+		self.player2Name = name
+		self.player2Ready = ready
 	end
 	
 	if self.player1Ready && self.player2Ready then
