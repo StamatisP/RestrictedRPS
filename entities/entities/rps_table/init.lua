@@ -52,8 +52,8 @@ function ENT:TableStart()
 	if self:GetTableStarted() then return end
 	print("table start!")
 	self:SetTableStarted(true)
-	self.player1:SetNWBool("PlayingTable", true)
-	self.player2:SetNWBool("PlayingTable", true)
+	self:GetPlayer1():SetNWBool("PlayingTable", true)
+	self:GetPlayer2():SetNWBool("PlayingTable", true)
 	self:CheckPhase()
 end	
 
@@ -73,6 +73,7 @@ end
 function ENT:CheckPhase()
 	if !self:GetTableStarted() then return end
 	//players must select their card, do a net send/broadcast or something
+	print("check phase")
 	net.Start("PlayerTableCheckGUIEnable")
 	net.Send(self.playersTable)
 end
@@ -85,8 +86,10 @@ ENT.player2Ready = nil
 // https://i.imgur.com/weQFbLT.png
 net.Receive("ArePlayersReady", function(len, ply)
 	if not ply:GetNWBool("TableView") then return end
+	print("areplayersready")
 	local ent = net.ReadEntity()
-	local name = net.ReadString()
+	//local name = net.ReadString() // why the fuck do i send the localplayers name if i can just do ply:Nick()???
+	local name = ply:Nick()
 	local ready = net.ReadBool()
 	if ent == nil || name == nil || ready == nil then
 		ErrorNoHalt("Entity, name, or ready is nil! Player " .. ply .. " brought this up!")
@@ -108,7 +111,7 @@ function ENT:PlayerReadyCheck(name, ready)
 		self.player2Ready = ready
 	end
 	
-	if self.player1Ready && self.player2Ready then
+	if self.player1Ready && self.player2Ready then // make these network vars
 		self:SetPhase()
 	end
 
@@ -118,40 +121,44 @@ function ENT:SetPhase()
 	if !self:GetTableStarted() then return end
 	//card is placed down on table upside down
 	// you could bet here i guess, but thats for later
+	print("open phase!")
 	self:OpenPhase()
 end
 
 function ENT:OpenPhase()
 	if !self:GetTableStarted() then return end
+	if not self:GetPlayer1() || not self:GetPlayer2() then ErrorNoHalt("did someone disconnect? fuck em") return end
 	//cards are revealed, winner is decided
-	local player1Choice = self.player1:GetInfo("rps_selection")
-	local player2Choice = self.player2:GetInfo("rps_selection")
+	local _player1 = self:GetPlayer1()
+	local _player2 = self:GetPlayer2()
+	local player1Choice = _player1:GetInfo("rps_selection")
+	local player2Choice = _player2:GetInfo("rps_selection")
 	//print(self:GetPlayer1():ReturnPlayerVar("papercards"))
 
 	if player1Choice == "Rock" then
-		if not (self:GetPlayer1():ReturnPlayerVar("rockcards") >= 1) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
-		self:GetPlayer1():TakeAwayFromPlayerVar("rockcards", 1)
+		if not (_player1:ReturnPlayerVar("rockcards") >= 1) then ErrorNoHalt("Player does not have required rock cards!!! exploit?") end
+		_player1:TakeAwayFromPlayerVar("rockcards", 1)
 	elseif player1Choice == "Paper" then 
-		if not (self:GetPlayer1():ReturnPlayerVar("papercards") >= 1) then ErrorNoHalt("Player does not have required paper cards!!! exploit?") end
-		self:GetPlayer1():TakeAwayFromPlayerVar("papercards", 1)
+		if not (_player1:ReturnPlayerVar("papercards") >= 1) then ErrorNoHalt("Player does not have required paper cards!!! exploit?") end
+		_player1:TakeAwayFromPlayerVar("papercards", 1)
 	elseif player1Choice == "Scissors" then
-		if not (self:GetPlayer1():ReturnPlayerVar("scissorscards") >= 1) then ErrorNoHalt("Player does not have required scissors cards!!! exploit?") end	 
-		self:GetPlayer1():TakeAwayFromPlayerVar("scissorscards", 1)
+		if not (_player1:ReturnPlayerVar("scissorscards") >= 1) then ErrorNoHalt("Player does not have required scissors cards!!! exploit?") end	 
+		_player1:TakeAwayFromPlayerVar("scissorscards", 1)
 	else 
 		ErrorNoHalt("player1choice is not rock, paper, or scissors... " .. player1Choice)
 	end
 	//wheres my fucking switch statement, lua
-	if player2Choice == "Rock" then self:GetPlayer2():TakeAwayFromPlayerVar("rockcards", 1)
-	elseif player2Choice == "Paper" then self:GetPlayer2():TakeAwayFromPlayerVar("papercards", 1)
-	elseif player2Choice == "Scissors" then self:GetPlayer2():TakeAwayFromPlayerVar("scissorscards", 1)
+	if player2Choice == "Rock" then _player2:TakeAwayFromPlayerVar("rockcards", 1)
+	elseif player2Choice == "Paper" then _player2:TakeAwayFromPlayerVar("papercards", 1)
+	elseif player2Choice == "Scissors" then _player2:TakeAwayFromPlayerVar("scissorscards", 1) // just realized that theres no checks for cards here
 	else ErrorNoHalt("player2choice is not rock, paper, or scissors... " .. player2Choice)
 	end
 	
 	if player1Choice == player2Choice then
 		
 		net.Start("AnnounceWinnerOfMatch")
-				net.WriteString(self.player1:GetName())
-				net.WriteString(self.player2:GetName())
+				net.WriteString(_player1:GetName())
+				net.WriteString(_player2:GetName())
 				net.WriteString(player1Choice)
 				net.WriteString(player2Choice)
 				net.WriteBool(true)
@@ -164,48 +171,48 @@ function ENT:OpenPhase()
 			// for v in pairs(data[player1choice]) do
 			// if v == player2choice then return true. at the end, return false
 			// player 1 wins
-			self.player2:TakeAwayFromPlayerVar("stars", 1)
-			self.player1:TakeAwayFromPlayerVar("stars", -1)
+			_player2:TakeAwayFromPlayerVar("stars", 1)
+			_player1:TakeAwayFromPlayerVar("stars", -1)
 			net.Start("AnnounceWinnerOfMatch")
-				net.WriteString(self.player1:GetName())
-				net.WriteString(self.player2:GetName())
+				net.WriteString(_player1:GetName())
+				net.WriteString(_player2:GetName())
 				net.WriteString(player1Choice)
 				net.WriteString(player2Choice)
 				net.WriteBool(false)
 			net.Broadcast()
 			net.Start("PlayerTableUpdate")
 				net.WriteBool(true)
-			net.Send(self.player1)
+			net.Send(_player1)
 			net.Start("PlayerTableUpdate")
 				net.WriteBool(false)
-			net.Send(self.player2) // is this a terrible practice?
+			net.Send(_player2) // is this a terrible practice?
 			// dont need to broadcast, could just send to both players 
-			self.player1:SetNWInt("TableWins", self.player1:GetNWInt("TableWins", 0) + 1)
-			print(self.player1:GetName() .. " beats " .. self.player2:GetName() .. "!")
+			_player1:SetNWInt("TableWins", _player1:GetNWInt("TableWins", 0) + 1)
+			print(_player1:GetName() .. " beats " .. _player2:GetName() .. "!")
 			print(player1Choice .. " beats " .. player2Choice .. "!")
 			// net.send a chat.AddText notifying when someone wins, and with what cards
 
 		elseif (self:CheckWins(player2Choice, player1Choice)) then
 
 			// player 2 wins
-			self.player1:TakeAwayFromPlayerVar("stars", 1)
-			self.player2:TakeAwayFromPlayerVar("stars", -1)
+			_player1:TakeAwayFromPlayerVar("stars", 1)
+			_player2:TakeAwayFromPlayerVar("stars", -1)
 			net.Start("AnnounceWinnerOfMatch")
-				net.WriteString(self.player2:GetName())
-				net.WriteString(self.player1:GetName())
+				net.WriteString(_player2:GetName())
+				net.WriteString(_player1:GetName())
 				net.WriteString(player2Choice)
 				net.WriteString(player1Choice)
 				net.WriteBool(false)
 			net.Broadcast()
 			net.Start("PlayerTableUpdate")
 				net.WriteBool(false)
-			net.Send(self.player1)
+			net.Send(_player1)
 			net.Start("PlayerTableUpdate")
 				net.WriteBool(true)
-			net.Send(self.player2)
-			self.player2:SetNWInt("TableWins", self.player2:GetNWInt("TableWins", 0) + 1)
+			net.Send(_player2)
+			_player2:SetNWInt("TableWins", _player2:GetNWInt("TableWins", 0) + 1)
 			print(player2Choice .. " beats " .. player1Choice .. "!")
-			print(self.player2:GetName() .. " beats " .. self.player1:GetName() .. "!")
+			print(_player2:GetName() .. " beats " .. _player1:GetName() .. "!")
 
 		elseif (player1Choice == "Broken" || player2Choice == "Broken") then
 			// choice broke
@@ -227,8 +234,6 @@ function ENT:CleanSlate()
 	self:SetPlayer2(nil)
 	//table.Empty(self.players)
 	table.Empty(self.playersTable)
-	self.player1 = nil
-	self.player2 = nil
 	self.player1Name = nil
 	self.player2Name = nil
 	self.player1Ready = nil
@@ -254,7 +259,6 @@ function ENT:Use(activator, caller)
 		activator:SetNWBool("TableView", true)
 		net.Start("PlayerTableStatusUpdate")
 		net.Send(activator)
-		self.player1 = self:GetPlayer1()
 		//print(self.player1 .. " player 1")
 		return
 	end
@@ -297,22 +301,24 @@ end
 
 net.Receive("RemovePlayer", function(len, ply)
 	local ent = net.ReadEntity()
+	local _player1 = ent:GetPlayer1()
+	local _player2 = ent:GetPlayer2()
 	//table.RemoveByValue(ent.players, ply:GetName())
 	table.RemoveByValue(ent.playersTable, ply) // experiment
 	print("is this even running")
 
-	if IsValid(ent.player1) or IsValid(ent.player2) then
-		if ent.player1:GetName() == ply:GetName() then
+	if IsValid(_player1) or IsValid(_player2) then
+		if _player1:GetName() == ply:GetName() then
 			print("player1 is player")
-			ent.player1 = nil
-		elseif ent.player2:GetName() == ply:GetName() then
+			ent:SetPlayer1(nil)
+		elseif _player2:GetName() == ply:GetName() then
 			print("player 2 is player")
-			ent.player2 = nil
+			ent:SetPlayer2(nil)
 		else
-			print(ent.player1:GetName() .. " is not " .. ply:GetName())
+			print(_player1:GetName() .. " is not " .. ply:GetName())
 		end
 	else
-		print("player1: " .. tostring(IsValid(ent.player1)) .. " ; " .. "player2: " .. tostring(IsValid(ent.player2)))
+		print("player1: " .. tostring(IsValid(_player1)) .. " ; " .. "player2: " .. tostring(IsValid(_player2)))
 		print("player 1 or 2 is not in ent.player1 or 2.")
 	end
 	

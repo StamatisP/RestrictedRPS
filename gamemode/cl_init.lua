@@ -126,6 +126,7 @@ local function ZawaZawa()
 		zawaDelay = Lerp(plyLuck / 100, math.random(15, 30), math.random(180, 220))
 		timer.Adjust("ZawaPlayer", zawaDelay, 0)
 		//sound.Play("zawa_sound", LocalPlayer:GetPos()) // should this be serverside?
+		ZawaEffect() // in hud.lua
 		net.Start("ZawaPlay")
 		net.SendToServer()
 		print("next zawa in " .. zawaDelay .. " seconds.")

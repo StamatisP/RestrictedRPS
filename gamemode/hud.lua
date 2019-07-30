@@ -184,7 +184,7 @@ local function UpdateMoney()
 	moneyAfterFormat = formatMoney(roundedMoney)
 end
 
-local function ZawaEffect()
+function ZawaEffect()
 	//surface.SetDrawColor(255, 255, 255, 210)
 	//surface.SetMaterial(zawamat)
 	//surface.DrawTexturedRect(math.random(0, width), math.random(0, height), 256, 256)
@@ -201,20 +201,19 @@ local function ZawaEffect()
 
 	local zawaImg = vgui.Create("DImage", zawaFrame)
 	zawaImg:SetSize(256, 256)
-
-	if not zawamat then ErrorNoHalt("no zawa mat!!!") return end
-	zawaImg:SetMaterial(zawamat)
+	zawaImg:SetImage("zawa.png")
+	zawaImg:SetImageColor(Color(255, 255, 255, 0))
 	
 	local alpha = 0
-	timer.Create("FadeInZawa", 0.05, 0, function()
-		print("fading in")
-		print(alpha)
+	timer.Create("FadeInZawa", 0.002, 0, function()
+		//print("fading in")
+		//print(alpha)
 		if alpha >= 255 then 
-			timer.Create("FadeOutZawa", 0.05, 0, function()
-				print("fading out")
-				print(alpha)
+			timer.Create("FadeOutZawa", 0.002, 0, function()
+				//print("fading out")
+				//print(alpha)
 				zawaImg:SetImageColor(Color(255, 255, 255, alpha))
-				alpha = alpha - 15
+				alpha = alpha - 5
 				if alpha <= 0 then
 					zawaFrame:Close()
 					timer.Destroy("FadeOutZawa")
@@ -223,7 +222,7 @@ local function ZawaEffect()
 			timer.Destroy("FadeInZawa")
 		end
 		zawaImg:SetImageColor(Color(255, 255, 255, alpha))
-		alpha = alpha + 15
+		alpha = alpha + 5
 	end)
 end
 
@@ -294,19 +293,18 @@ local function CardChoiceGUI(enabled)
 				choice = "Rock"
 				RunConsoleCommand("rps_selection", "Rock")
 			end
-			frame:Close()
-			// i need to write the entity that the player is looking at...
-			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
-			net.Start("ArePlayersReady")
-			net.WriteEntity(ent)
-			net.WriteString(LocalPlayer():GetName())
-			net.WriteBool(true)
-			net.SendToServer()
 			timer.Destroy("ChoiceTimeLimit")
 			timer.Destroy("CircleAngleSetter")
 			ChoiceTimer = nil
 			totalTime = nil
 			choiceTime = nil
+			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
+			net.Start("ArePlayersReady")
+			net.WriteEntity(ent)
+			net.WriteBool(true)
+			net.SendToServer()
+			frame:Close()
+			// i need to write the entity that the player is looking at...
 		end)
 
 		local dButtonReady = vgui.Create("DButton", frame)
@@ -324,7 +322,6 @@ local function CardChoiceGUI(enabled)
 			local ent = LocalPlayer():GetNWEntity("TableUsing", NULL)
 			net.Start("ArePlayersReady")
 			net.WriteEntity(ent)
-			net.WriteString(LocalPlayer():GetName())
 			net.WriteBool(true)
 			net.SendToServer()
 			frame:Close()
@@ -476,7 +473,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	papermat = Material("hud_paper.png")
 	scissorsmat = Material("hud_scissors.png")
 	timemat = Material("time_bg.png")
-	zawamat = Material("zawa")
+	//zawamat = Material("zawa")
 	timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
 	timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
 
@@ -489,6 +486,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	_curtimesubtract = CurTime()
 	_roundstart = true
 	timer.Create("CompoundTimeHUD", CompoundTimer, 0, UpdateCompoundTime)
+	//ZawaEffect()
 	//timer.Simple(2, function() CardChoiceGUI(true) end)
 end)
 
