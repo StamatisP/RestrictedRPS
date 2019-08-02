@@ -201,7 +201,7 @@ local function openLobby()
 	local discordButton = vgui.Create("DImageButton", frame)
 	discordButton:SetPos(width / 96, 0)
 	// width / 1.28, 0
-	discordButton:SetImage("DiscordShoutout.png")
+	discordButton:SetImage("discord_shoutout.png")
 	discordButton:SetSize(400, 300)
 	discordButton.DoClick = function()
 		gui.OpenURL("https://discord.gg/AsUzGwu")
@@ -212,7 +212,7 @@ local function openLobby()
 	timer.Create("ScoreboardUpdate", 1, 0, scoreboardUpdate)
 	timer.Simple(4, function()
 		if _roundstart then return end
-		if not LocalPlayer() then return end
+		if not IsValid(LocalPlayer()) then return end
 		lobbysound = FadeInMusicSndMng("music/littlezawa_loop_by_bass.wav")	
 	end)
 
@@ -254,7 +254,7 @@ local function openLobby()
 end
 
 local function closeFrame()
-	if not frame then return end
+	if not IsValid(frame) then return end
 	print("frame closed")
 	print(frame)
 	frame:Close()

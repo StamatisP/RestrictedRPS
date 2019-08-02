@@ -133,3 +133,10 @@ Network Strings
 
 		"AnnounceVictory"
 		Announces when player is victorious.
+Global Vars
+	Client
+		"CompoundTimer"
+		Compound time rate.
+
+		"RoundTimer"
+		Round time.

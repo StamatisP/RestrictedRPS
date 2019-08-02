@@ -28,7 +28,6 @@ function ENT:Think()
 end
 
 ENT.playersTable = {}
-//ENT.players = {}
 ENT.player1 = nil
 ENT.player2 = nil
 
@@ -76,6 +75,10 @@ function ENT:CheckPhase()
 	print("check phase")
 	net.Start("PlayerTableCheckGUIEnable")
 	net.Send(self.playersTable)
+	// make timer for 30 seconds
+	timer.Create("TimeLimit", 30, 1, function()
+		self:CleanSlate()
+	end)
 end
 
 ENT.player1Name = nil
@@ -122,6 +125,7 @@ function ENT:SetPhase()
 	//card is placed down on table upside down
 	// you could bet here i guess, but thats for later
 	print("open phase!")
+	timer.Destroy("TimeLimit")
 	self:OpenPhase()
 end
 

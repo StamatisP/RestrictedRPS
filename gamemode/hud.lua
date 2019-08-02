@@ -13,6 +13,7 @@ local rockmat, papermat, scissorsmat, timemat, zawamat
 local _curtimesubtract = nil
 local ChoiceTimer, totalTime
 local choiceTime = 0
+local EndRoundTime
 include("circles.lua")
 
 function GM:HUDShouldDraw(name)
@@ -128,7 +129,8 @@ local function DrawInfo()
 	surface.SetDrawColor(50, 50, 50, 255)
 	circleDivider:Draw()
 	if ChoiceTimer then
-		local choiceColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), totalTime, choiceTime)
+		choiceColor = InterpolateColor(Color(255, 0, 0), Color(0, 255, 0), totalTime, totalTime - choiceTime, totalTime - 30)
+		//print(totalTime .. " - " .. choiceTime .. " = " .. totalTime - choiceTime)
 		draw.NoTexture()
 		surface.SetDrawColor(choiceColor)
 		ChoiceTimer:Draw()
@@ -147,8 +149,8 @@ local function DrawInfo()
 		scissorscards = 0
 	end
 
-	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("RoundTime"), timeLeft)
-	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), GetGlobalFloat("interestrepeat", 0), compoundTimeLeft)
+	roundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), RoundTimer, timeLeft)
+	compoundColor = InterpolateColor(Color(10, 210, 10), Color(255, 0, 0), CompoundTimer, compoundTimeLeft)
 
 	// in the future, if scrw > 1920, switch to a different, bigger font
 	draw.SimpleTextOutlined(rockcards, 			"CardText", 	width * 0.27, 	height * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
@@ -161,10 +163,11 @@ local function DrawInfo()
 	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	width * 0.41, 	height * 0.015, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 end
 
-function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue)
+function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue, minvalue)
 	local hsvStart = ColorToHSV(finishcolor)
 	local hsvFinish = ColorToHSV(startcolor)
-	local hueLerp = Lerp(normalize(0, maxvalue, currentvalue), hsvStart, hsvFinish)
+	minvalue = minvalue or 0
+	local hueLerp = Lerp(normalize(minvalue, maxvalue, currentvalue), hsvStart, hsvFinish)
 	local finalHsv = HSVToColor(hueLerp, 1, 1)
 	return finalHsv
 end
@@ -213,7 +216,7 @@ function ZawaEffect()
 				//print("fading out")
 				//print(alpha)
 				zawaImg:SetImageColor(Color(255, 255, 255, alpha))
-				alpha = alpha - 5
+				alpha = alpha - 10
 				if alpha <= 0 then
 					zawaFrame:Close()
 					timer.Destroy("FadeOutZawa")
@@ -222,7 +225,7 @@ function ZawaEffect()
 			timer.Destroy("FadeInZawa")
 		end
 		zawaImg:SetImageColor(Color(255, 255, 255, alpha))
-		alpha = alpha + 5
+		alpha = alpha + 10
 	end)
 end
 
@@ -281,10 +284,11 @@ local function CardChoiceGUI(enabled)
 		ChoiceTimer:SetRotation(270)
 
 		totalTime = 30 + CurTime()
-		choiceTime = totalTime
+		choiceTime = CurTime()
 
 		timer.Create("CircleAngleSetter", 0, 0, function()
 			choiceTime = totalTime - CurTime()
+			//print(choiceTime)
 			ChoiceTimer:SetAngles(0, normalize(0, 30, choiceTime) * 360)
 		end)
 
@@ -416,20 +420,6 @@ net.Receive("PlayerTableCheckGUIEnable", function(len, ply)
 	CardChoiceGUI(true)
 end)
 
-/*hook.Add( "HUDPaint", "PaintName", function()  
-    for k, ent in ipairs(player.GetAll()) do  
-        if ent != LocalPlayer() then
-               local dist = LocalPlayer():GetPos():Distance(ent:GetPos())  
-               local BoneIndx = ent:LookupBone("ValveBiped.Bip01_Head1")  
-               local pos = ent:GetBonePosition( BoneIndx )  
-               pos.z = pos.z + 10 + (dist * 0.0325) --Makes it move up the further away you are..  
-               local ScrnPos = pos:ToScreen()  
-               draw.SimpleText( ent:Nick() .. "\n" .. inventoryGetItem("stars"), "ScoreboardDefault", ScrnPos.x, ScrnPos.y, Color(255,255,255,255), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER) 
-        end 
-    end  
-end)  */
-// hoo yeah its darkrp referencing time
-
 local function safeText(text)
 	return string.match(text, "^#([a-zA-Z_]+)$") and text .. " " or text
 end
@@ -443,6 +433,7 @@ pmeta.drawPlayerInfo = pmeta.drawPlayerInfo or function(self)
 
 	draw.SimpleText(safeText(self:Nick()), "ScoreboardDefault", pos.x + 1, pos.y + 1, Color(0, 0, 0, 255), 1)
 	draw.SimpleText(safeText(self:Nick()), "ScoreboardDefault", pos.x, pos.y, Color(255, 255, 255, 255), 1)
+	if self:Team() ~= 1 then return end
 
 	draw.SimpleText(self:ReturnPlayerVar("stars") .. " Stars", "ScoreboardDefault", pos.x + 1, pos.y + 21, Color(0, 0, 0, 255), 1)
 	draw.SimpleText(self:ReturnPlayerVar("stars") .. " Stars", "ScoreboardDefault", pos.x, pos.y + 20, Color(255, 191, 0, 255), 1)
@@ -479,6 +470,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 
 	compoundTimeRate = CompoundTimer + CurTime()
 	print(compoundTimeRate)
+	//EndRoundTime = GetGlobalFloat("endroundtime", 0)
 	//compoundtimer = GetGlobalFloat("interestrepeat", 75)
 	//print(compoundtimer)
 	//roundtimer = GetGlobalInt("endroundtime", 1200)

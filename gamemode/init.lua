@@ -252,10 +252,6 @@ function GM:CanPlayerSuicide( ply )
 	return ply:IsSuperAdmin()
 end
 
-function GM:PlayerDisconnected(ply)
-	ply:databaseDisconnect()
-end
-
 hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	local playerMsg = string.lower(text)
 	playerMsg = string.Explode(" ", playerMsg)
@@ -479,6 +475,10 @@ end)
 end)*/
 
 function GM:PlayerDisconnected(ply)
+	local ent = ply:GetNWEntity("TableUsing", NULL)
+	if IsValid(ent) then
+		ent:CleanSlate()
+	end
 	net.Start("RRPS_VarDisconnect")
 		net.WriteUInt(ply:UserID(), 16)
 	net.Broadcast()

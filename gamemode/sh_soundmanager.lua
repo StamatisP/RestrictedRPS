@@ -83,10 +83,10 @@ function FadeInMusicSndMng(song)
 	end
 end
 
-net.Receive("FadeInMusic", function(len)
+/*net.Receive("FadeInMusic", function(len)
 	songString = net.ReadString()
 	FadeInMusicSndMng(songString)
-end)
+end)*/
 -- IDEA: A JUKEBOX LUA SCRIPT
 -- IT'S A CLIENTSIDE THING THAT RANDOMLY PICKS SONGS, OR YOU PICK THEM YOURSELF
 hook.Add("PlayerTableWin", "PlayWinSoundFX", function()
