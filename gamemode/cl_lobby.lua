@@ -85,11 +85,11 @@ local function openLobby()
 	leaderboardList:SetSize(leaderboardScroll:GetWide(),leaderboardScroll:GetTall())
 
 	function leaderboardUpdate()
-		if !IsValid(frame) then return end
+		if !IsValid(frame) then print ("frame not valid") return end
 		
 		leaderboardList:Clear()
 
-		if not leaderboard then return end
+		if not leaderboard then print("leaderboard not valid") return end
 
 		for k, v in pairs(leaderboard) do
 			local PlayerPanel = vgui.Create("DPanel",leaderboardList)
@@ -169,6 +169,8 @@ local function openLobby()
 			PlayerPanel.Paint = function()
 				if v:GetNWBool("rps_ready", false) then
 					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 100, 50, 255))
+				elseif v:IsAdmin() then
+					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(133, 50, 168, 255))
 				else
 					draw.RoundedBox(0, 0, 0, PlayerPanel:GetWide(), PlayerPanel:GetTall(), Color(50, 50, 50, 255))
 				end
@@ -306,7 +308,7 @@ net.Receive("SendLeaderboardInfo", function()
 	if not data then ErrorNoHalt("why is data nil") end
 	local json = util.Decompress(data)
 	if not json then ErrorNoHalt("why is json nil???") end
-	//print(json)
+	print("leaderboard info sent")
 	leaderboard = util.JSONToTable(json)
 	//PrintTable(leaderboard)
 end)

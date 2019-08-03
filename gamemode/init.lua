@@ -331,6 +331,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 				net.WriteBool(false)
 				net.WriteString(ply:Nick())
 			net.Send(FindPlayer(tostring(playerMsg[2])))
+			return ""
 		else
 			print("player " .. playerMsg[2] .. " was not found!")
 			ply:ChatPrint("Player not found. Try typing it differently.")
@@ -406,6 +407,13 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		ply:SetPos(newpos)
 		return ""
 	end
+	if (playerMsg[1] == "/becomeplayer") then
+		if not developerMode then return "" end
+		local newpos = ply:GetPos()
+		ply:SetTeam(1)
+		ply:Spawn()
+		ply:SetPos(newpos)
+	end
 	if (playerMsg[1] == "/victorious") then
 		if not developerMode then return "" end
 		ply:SetNWBool("Victorious", true)
@@ -450,6 +458,10 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 			//print("ply is not a blacksuit and not victorious")
 			return false
 		end
+		ply:SetCollisionGroup(COLLISION_GROUP_WEAPON)
+		timer.Simple(2, function()
+			ply:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+		end)
 		return true
 	end
 
@@ -466,6 +478,8 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 		print("vehicle enter")
 		return true
 	end
+
+	return true
 end)
 
 /*hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len, ply)

@@ -60,7 +60,7 @@ function ReturnPlayerVarSQL(ply, var)
 		return GetValueFromResult(result, var)
 		//PrintTable(result)
 	else
-		ErrorNoHalt("Player "..var.." failed to get! ")
+		ErrorNoHalt("Player ".. ply:Nick() .. ": " .. var.." failed to get! ")
 		print(sql.LastError(result))
 	end
 end

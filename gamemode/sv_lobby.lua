@@ -3,11 +3,11 @@ print("sv_lobby start")
 
 local function enterLobby(ply)
 
+	ReturnLeaderboard(ply)
 	if isLobbyStarted then return end
 	isLobbyStarted = true
 
 	print("enter lobby")
-	ReturnLeaderboard(ply)
 end
 
 local function giveMoney()

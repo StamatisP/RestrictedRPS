@@ -57,8 +57,7 @@ end)
 				if ply:ReturnPlayerVar("stars") >= 3 
 				and ply:ReturnPlayerVar("rockcards") == 0 
 				and ply:ReturnPlayerVar("papercards") == 0 
-				and ply:ReturnPlayerVar("scissorscards") == 0 
-				and ply:GetNWInt("TableWins", 0) >= 3 then // the table wins nwint is to make sure the player didn't legit just drop all their cards to cheat
+				and ply:ReturnPlayerVar("scissorscards") == 0 then // the table wins nwint is to make sure the player didn't legit just drop all their cards to cheat
 					if ply:GetNWBool("Victorious", false) then return end
 					ply:SetNWBool("Victorious", true)
 					//ply:ChatPrint(ply:Nick() .. " is victorious!")

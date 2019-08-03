@@ -841,6 +841,7 @@ function HTMLMedia:openUrl(url)
 end
 function HTMLMedia:runJS(js, ...)
 	local code = string.format(js, ...)
+	if not IsValid(self.panel) then return end
 	self.panel:QueueJavascript(code)
 end
 
