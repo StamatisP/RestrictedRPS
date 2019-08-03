@@ -94,7 +94,7 @@ CreateConVar("rps_roundtime", player.GetCount() * 30, FCVAR_REPLICATED + FCVAR_A
 
 local developerMode = false
 local pmeta = FindMetaTable("Player")
-local voiceDistance = 450 * 450
+local voiceDistance = 500 * 500
 local specSpawns = {}
 
 local startWeapons = {
