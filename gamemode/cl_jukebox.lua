@@ -296,6 +296,10 @@ hook.Add("RoundStarted","JukeboxEnable",function()
 		math.randomseed(os.time())
 		AutoPlaylist()
 	end)
+	timer.Create("ClampVolume", 2, 0, function()
+		if not CLIP then return end
+		CLIP:setVolume(math.Clamp(vol, vol / 1.5, vol * 1.5))
+	end)
 end)
 
 concommand.Add("jukebox", JukeboxFrame)
