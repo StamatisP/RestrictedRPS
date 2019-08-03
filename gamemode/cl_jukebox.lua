@@ -16,15 +16,20 @@ local function print(s)
 	oldPrint("cl_jukebox.lua: " .. s)
 end
 
+local function SetVolumeClamp(volume, clip)
+	if not clip then return end
+	clip:setVolume(math.Clamp(volume, vol / 1.5, vol * 1.5))
+end
+
 local function FadeInMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
 	local newvol = clip:getVolume()
-	if isFading then clip:setVolume(volumeTarget) return end
+	if isFading then SetVolumeClamp(volumeTarget, clip) return end
 	timer.Create("fadein", 0.02, 0, function()
 		newvol = newvol + volincrement
 		//print(newvol)
 		if not clip then return end
-		clip:setVolume(newvol)
+		SetVolumeClamp(newvol, clip)
 		isFading = true
 		if newvol >= volumeTarget then 
 			timer.Destroy("fadein") 
@@ -37,13 +42,13 @@ end
 local function FadeOutMusic(volumeTarget, time, clip)
 	local volincrement = volumeTarget / (time * 30)
 	local newvol = clip:getVolume()
-	if isFading then clip:setVolume(volumeTarget) return end
+	if isFading then SetVolumeClamp(volumeTarget, clip) return end
 	timer.Create("fadeout", 0.02, 0, function()
 		//if newvol < volumeTarget then timer.Destroy("fadeout") end
 		newvol = newvol - volincrement
 		//print(newvol)
 		if not clip then return end
-		clip:setVolume(newvol)
+		SetVolumeClamp(newvol, clip)
 		//print(newvol)
 		isFading = true
 		if newvol <= volumeTarget then
@@ -296,10 +301,10 @@ hook.Add("RoundStarted","JukeboxEnable",function()
 		math.randomseed(os.time())
 		AutoPlaylist()
 	end)
-	timer.Create("ClampVolume", 2, 0, function()
+	/*timer.Create("ClampVolume", 2, 0, function()
 		if not CLIP then return end
 		CLIP:setVolume(math.Clamp(vol, vol / 1.5, vol * 1.5))
-	end)
+	end)*/
 end)
 
 concommand.Add("jukebox", JukeboxFrame)
