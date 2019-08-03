@@ -166,7 +166,7 @@ function ENT:OpenPhase()
 				net.WriteString(player1Choice)
 				net.WriteString(player2Choice)
 				net.WriteBool(true)
-			net.Broadcast()
+			net.Send(self:GetNearbyPlayers())
 		print("this ends in a tie.")
 	else
 
@@ -183,7 +183,7 @@ function ENT:OpenPhase()
 				net.WriteString(player1Choice)
 				net.WriteString(player2Choice)
 				net.WriteBool(false)
-			net.Broadcast()
+			net.Send(self:GetNearbyPlayers())
 			net.Start("PlayerTableUpdate")
 				net.WriteBool(true)
 			net.Send(_player1)
@@ -207,7 +207,7 @@ function ENT:OpenPhase()
 				net.WriteString(player2Choice)
 				net.WriteString(player1Choice)
 				net.WriteBool(false)
-			net.Broadcast()
+			net.Send(self:GetNearbyPlayers())
 			net.Start("PlayerTableUpdate")
 				net.WriteBool(false)
 			net.Send(_player1)
@@ -226,6 +226,10 @@ function ENT:OpenPhase()
 
 	self:CleanSlate()
 	// put this all in a function like CleanState() shit like that 
+end
+
+function ENT:GetNearbyPlayers()
+	return ents.FindInSphere(self:GetPos(), 250)
 end
 
 function ENT:CleanSlate()

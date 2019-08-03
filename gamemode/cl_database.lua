@@ -92,6 +92,9 @@ local function inventoryDrop(item)
 	net.SendToServer()
 end
 
+local function inventoryTrade(item)
+	// IMPLEMENT IN FUTURE
+end
 
 function inventoryMenu()
 	if LocalPlayer():Team() == 3 then return end
@@ -150,8 +153,15 @@ function inventoryMenu()
 						f:Close()
 					end)*/
 
-					buttons["Drop"] = (function()
-						inventoryDrop(k)
+					if k == stars then
+						buttons["Drop"] = (function()
+							inventoryDrop(k)
+							f:Close()
+						end)
+					end
+
+					buttons["Trade"] = (function()
+						inventoryTrade(k)
 						f:Close()
 					end)
 

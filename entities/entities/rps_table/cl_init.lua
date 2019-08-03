@@ -4,6 +4,12 @@ local tableView = false
 function ENT:Draw()
 	self:DrawModel()
 	self:DrawShadow(true)
+
+	//render.SetColorMaterial()
+	//render.DrawWireframeSphere(self:GetPos(), 250, 50, 50, Color(255, 0, 0))
+
+	//render.SetColorMaterial()
+	//render.DrawWireframeSphere(self:GetPos(), -150, 50, 50, Color(255, 0, 0))
 end
 
 /*local function NormalView(ply, pos, angles, fov)
