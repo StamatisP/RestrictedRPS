@@ -158,8 +158,8 @@ local function DrawInfo()
 	draw.SimpleTextOutlined(scissorscards, 		"CardText", 	width * 0.77, 	height * 0.929, 	Color(114, 6, 6, 255), 	TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 3, Color(255, 255, 255, 255))
 	draw.SimpleTextOutlined(moneyAfterFormat, 	"NormalText", 	width / 1.58, 	height * 0.015, 	Color(48, 221, 55, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 	draw.SimpleTextOutlined(debtAfterFormat, 	"NormalText", 	width / 6.1, 	height * 0.015, 	Color(255, 80, 80, 255),TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(txt, 				"NormalText", 	width / 1.76, 	height * 0.01, 	roundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
-	draw.SimpleTextOutlined(compoundTxt,		"NormalText", 	width / 1.76, 	height * 0.05, 	compoundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(txt, 				"NormalText", 	width / 1.76, 	height * 0.01, 		roundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
+	draw.SimpleTextOutlined(compoundTxt,		"NormalText", 	width / 1.76, 	height * 0.05, 		compoundColor, 			TEXT_ALIGN_LEFT, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 	draw.SimpleTextOutlined("Stars: " .. stars, "CardText", 	width * 0.41, 	height * 0.015, 	Color(255, 191, 0, 255),TEXT_ALIGN_CENTER, 	TEXT_ALIGN_TOP, 2, Color(0, 0, 0, 255))
 end
 
