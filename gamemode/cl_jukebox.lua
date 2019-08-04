@@ -22,7 +22,7 @@ local function SetVolumeClamp(volume, clip)
 end
 
 local function FadeInMusic(volumeTarget, time, clip)
-	local volincrement = volumeTarget / (time * 30)
+	local volincrement = volumeTarget / (time * 50)
 	local newvol = clip:getVolume()
 	if isFading then SetVolumeClamp(volumeTarget, clip) return end
 	timer.Create("fadein", 0.02, 0, function()
@@ -40,7 +40,7 @@ local function FadeInMusic(volumeTarget, time, clip)
 end
 
 local function FadeOutMusic(volumeTarget, time, clip)
-	local volincrement = volumeTarget / (time * 30)
+	local volincrement = volumeTarget / (time * 50) // 0.02 * 50 = 1, so this can be used like seconds now
 	local newvol = clip:getVolume()
 	if isFading then SetVolumeClamp(volumeTarget, clip) return end
 	timer.Create("fadeout", 0.02, 0, function()
@@ -80,7 +80,7 @@ local function GetRandomSong()
 	local musicTable = {}
 	// this is for autoplaylist only, not a shuffle
 	AssembleAvailableSongs()
-	musicTable = table.Random(availableSongs) // in future use math.random, check table.random wiki
+	musicTable = availableSongs[math.random(#availableSongs)]
 	//print(musicTable.title)
 	if not label then return musicTable end
 	label:SetText(musicTable.title)
@@ -108,7 +108,7 @@ local function PlayMusic(tab)
 	mediaclip:on("playing", function()
 		timer.Pause("AutoPlaylist")
 		mediaclip:setVolume(0)
-		FadeInMusic(vol, 5, mediaclip)
+		FadeInMusic(vol, 3, mediaclip)
 		isBuffering = false
 		timer.Destroy("BufferingError")
 	end)
@@ -213,6 +213,7 @@ local function JukeboxFrame()
 			local vald = val / 200
 			if isFading then 
 				timer.Destroy("fadein")
+				timer.Destroy("fadeout")
 				isFading = false
 			end
 
@@ -311,7 +312,7 @@ concommand.Add("jukebox", JukeboxFrame)
 
 hook.Add("RoundEnded","JukeboxRoundEnded",function()
 	roundended = true
-	//FadeOutMusic(vol, 5, CLIP)
+	//FadeOutMusic(vol, 5, CLIP) i want a fadeout of the current song somehow...
 
 	PlayMusic(GetSpecificSong("Memories"))
 end)
@@ -321,7 +322,7 @@ hook.Add("PlayerTableWin", "QuietMusic", function()
 	local oldvol = CLIP:getVolume()
 	FadeOutMusic(oldvol / 3, 1, CLIP)
 	timer.Simple(9, function()
-		FadeInMusic(oldvol, 2, CLIP)
+		FadeInMusic(oldvol, 3, CLIP)
 	end)
 end)
 
@@ -330,20 +331,18 @@ hook.Add("PlayerTableLoss", "QuietMusicLoss", function()
 	local oldvol = CLIP:getVolume()
 	FadeOutMusic(oldvol / 3, 1, CLIP)
 	timer.Simple(9, function()
-		FadeInMusic(oldvol, 2, CLIP)
+		FadeInMusic(oldvol, 3, CLIP)
 	end)
 end)
 
 hook.Add("PlayerTableEnter", "LouderMusicEnter", function()
 	if not CLIP then return end
-	local oldvol = vol
 	if isFading then return end
-	FadeInMusic(oldvol * 1.5, 1, CLIP)
+	FadeInMusic(vol * 1.5, 1, CLIP)
 end)
 
 hook.Add("PlayerTableExit", "QuietMusicExit", function()
 	if not CLIP then return end
-	local oldvol = vol
 	if isFading then return end
-	FadeOutMusic(oldvol / 1.5, 1, CLIP)
+	FadeOutMusic(vol / 1.5, 1, CLIP)
 end)
