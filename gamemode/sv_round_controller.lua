@@ -106,7 +106,7 @@ function CompoundInterest()
 	//PrintTable(players)
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
 	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
-		if v:Team() == 2 or v:Team() == 3 or v:GetNWBool("Victorious", false) then return end
+		if v:Team() ~= 1 or v:GetNWBool("Victorious", false) then return end
 		//print(body)
 		local money = v:ReturnPlayerVar("debt")
 		//print(money)
@@ -126,31 +126,44 @@ function GM:EndRound()
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
 		if not v then ErrorNoHalt("what???") return end
-		if v:Team() != 2 and v:Team() != 3 then 
+		if v:Team() == 1 then 
 			local playerMoney = v:ReturnPlayerVar("money")
 			local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
 			local playerDebt = v:ReturnPlayerVar("debt")
 			local playerDebtSQL = ReturnPlayerVarSQL(v, "debt")
 
 			if (playerMoney > 0) then
+				playerMoney = playerMoney + v:ReturnPlayerVar("stars") * 300000
+				v:UpdatePlayerVar("money", playerMoney)
 				local newdebt = playerMoney - playerDebt
-				if v:GetNWBool("Defeated", false) then newdebt = newdebt + 2000000 end
-				if v:GetNWBool("Victorious", false) then newdebt = newdebt - 2000000 end
+				//if v:GetNWBool("Defeated", false) then newdebt = newdebt + 2000000 end
+				//if v:GetNWBool("Victorious", false) then newdebt = newdebt - 2000000 end
 				//if v:ReturnPlayerVar("rockcards") == 0 and v:ReturnPlayerVar("scissorscards") == 0 and v:ReturnPlayerVar("papercards") == 0 then // cause fuck optimization
 					//newdebt = newdebt - (v:ReturnPlayerVar("stars") * 300000)
 				//end idk why this is here
+				// you fucking idiot THIS WAS A GOOD IDEA SOMEWHAT
 
 				if newdebt > 0 then 
-					// player has more debt than money
+					// player has more money than debt
 					UpdatePlayerVarSQL(v, newdebt + playerMoneySQL, "money") 
 					//UpdatePlayerVarSQL(v, playerDebt - newdebt, "debt")
 					UpdatePlayerVarSQL(v, playerDebtSQL - newdebt, "debt")
+					if playerDebtSQL - newdebt <= 0 then
+						UpdatePlayerVarSQL(0, "debt") // if the money covers the debt, then set it to 0
+					end
 				end
 
 				if newdebt < 0 then 
-					// player has more money than debt
-					UpdatePlayerVarSQL(v, 0, "money")
-					UpdatePlayerVarSQL(v, (math.abs(newdebt) + playerDebtSQL), "debt")  
+					// player has more DEBT than money
+					if playerMoneySQL - newdebt <= 0 then
+						UpdatePlayerVarSQL(v, 0, "money") // sets your money to 0 if you cant cover debt
+						UpdatePlayerVarSQL(v, playerDebtSQL + math.abs(newdebt), "debt")
+					else
+						UpdatePlayerVarSQL(v, playerMoneySQL - newdebt, "money")
+						// dont need to set debt here because you could cover debt
+					end
+					
+					//UpdatePlayerVarSQL(v, (math.abs(newdebt) + playerDebtSQL), "debt")  
 				end
 
 				if newdebt == 0 then 

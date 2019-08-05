@@ -118,7 +118,7 @@ local function keyUse()
 end
 
 local function ZawaZawa()
-	local zawaDelay = math.random(30, 60) // in seconds
+	local zawaDelay = math.random(15, 60) // in seconds
 	// if luck is 100, player will hear the zawas every 3 minutes
 	print("next zawa in " .. zawaDelay .. " seconds.")
 	timer.Create("ZawaPlayer", zawaDelay, 0, function()
