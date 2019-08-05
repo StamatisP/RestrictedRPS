@@ -44,6 +44,7 @@ local function CreditsMenu()
 		text:AppendText("Gamemode Icon: Raspberry (Clara)\n")
 		text:AppendText("Ideas and Functions: DarkRP (Falco)\n")
 		text:AppendText("Chair Functionality: Cinema\n")
+		text:AppendText("LED Screen Help: MacTavish\n")
 
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")

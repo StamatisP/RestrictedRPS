@@ -209,6 +209,10 @@ function GM:PlayerSpawn(ply)
 	end
 end
 
+function GM:PlayerNoClip(ply)
+	return ply:IsAdmin()
+end
+
 function GM:PlayerInitialSpawn(ply) 
 	print("Player "..ply:Name().." has spawned.")
 	ply.RRPSvars = ply.RRPSvars or {}
@@ -480,6 +484,16 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	end
 
 	return true
+end)
+
+hook.Add("RoundStarted", "SpawnCardScreen", function()
+	local cardscreen = ents.FindByClass("card_screen")[1]
+	cardscreen:SetPos(Vector(1225.0625, -4773.96875, 489.34375))
+	cardscreen:SetAngles(Angle(90.000, -90.000, 180))
+	cardscreen:SetText("Card Screen Bro")
+	cardscreen:Activate()
+	print(cardscreen:GetPos())
+	print(cardscreen:GetAngles())
 end)
 
 /*hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len, ply)
