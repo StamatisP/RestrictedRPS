@@ -93,7 +93,13 @@ local function inventoryDrop(item)
 end
 
 local function inventoryTrade(item)
-	// IMPLEMENT IN FUTURE
+	local tr = LocalPlayer():GetEyeTrace()
+	if not tr.Entity then return end
+	if not tr.Entity:IsPlayer() then return end
+	net.Start("InventoryTrade")
+		net.WriteEntity(tr.Entity)
+		net.WriteString(tostring(item))
+	net.SendToServer()
 end
 
 function inventoryMenu()
@@ -153,12 +159,13 @@ function inventoryMenu()
 						f:Close()
 					end)*/
 
-					if k == stars then
+					if k == "stars" then
 						buttons["Drop"] = (function()
 							inventoryDrop(k)
 							f:Close()
 						end)
 					end
+					//print(k)
 
 					buttons["Trade"] = (function()
 						inventoryTrade(k)

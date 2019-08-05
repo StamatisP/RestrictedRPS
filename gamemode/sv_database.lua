@@ -25,6 +25,18 @@ net.Receive("InventoryDrop",function(len, ply)
 	end
 end)
 
+net.Receive("InventoryTrade", function(len, ply)
+	local otherPly = net.ReadEntity()
+	local item = net.ReadString()
+	if not otherPly:IsPlayer() then return end
+	if ply:ReturnPlayerVar(item) >= 1 then
+		ply:TakeAwayFromPlayerVar(item, 1)
+		otherPly:TakeAwayFromPlayerVar(item, -1)
+	end
+	ply:ChatPrint("You have given " .. otherPly:Nick() .. " a " .. item)
+	otherPly:ChatPrint(ply:Nick() .. " has given you a " .. item)
+end)
+
 local idd = 0
 function CreateItem(ply, name, pos)
 	local itemT = getItems(name)

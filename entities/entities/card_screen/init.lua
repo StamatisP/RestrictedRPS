@@ -19,3 +19,23 @@ function ENT:Initialize()
 	phys:EnableMotion(false)
 	//self:SetPos(Vector(1225.0625, -4773.96875, 489.34375))
 end
+
+hook.Add("RoundStarted", "UpdateScreen", function()
+	timer.Create("UpdateCardScreen", 5, 0, function()
+		local rockcardAmount = 0
+		local papercardAmount = 0
+		local scissorscardAmount = 0
+		for k, v in pairs(player.GetAll()) do
+			if v:Team() == 1 then 
+				rockcardAmount = rockcardAmount + v:ReturnPlayerVar("rockcards")
+				papercardAmount = papercardAmount + v:ReturnPlayerVar("papercards")
+				scissorscardAmount = scissorscardAmount + v:ReturnPlayerVar("scissorscards")
+			end
+		end
+		net.Start("UpdateCardScreen")
+			net.WriteUInt(rockcardAmount, 9)
+			net.WriteUInt(papercardAmount, 9)
+			net.WriteUInt(scissorscardAmount, 9)
+		net.Broadcast()
+	end)
+end)

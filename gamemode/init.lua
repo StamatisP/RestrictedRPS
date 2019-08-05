@@ -55,6 +55,8 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("UpdateRoundCompoundTimes")
 	util.AddNetworkString("PlayerTableUpdate") // naming sucks... this is for when a player wins a match at table
 	util.AddNetworkString("PlayerTableStatusUpdate")
+	util.AddNetworkString("InventoryTrade")
+	util.AddNetworkString("UpdateCardScreen")
 end
 
 local playermodels = {
@@ -142,6 +144,11 @@ end*/
 
 hook.Add("InitPostEntity", "SpecSpawnFill", function()
 	specSpawns = ents.FindByClass("spectator_spawn")
+	local cardscreen = ents.FindByClass("card_screen")[1]
+	cardscreen:SetPos(Vector(1225.0625, -4773.96875, 489.34375))
+	cardscreen:SetAngles(Angle(90.000, -90.000, 180))
+	cardscreen:SetText("Card Screen Bro")
+	cardscreen:Activate()
 	//print(#ents.FindByClass("*"))
 	//print("printing spec spawns")
 	//PrintTable(specSpawns)
@@ -486,7 +493,7 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	return true
 end)
 
-hook.Add("RoundStarted", "SpawnCardScreen", function()
+/*hook.Add("RoundStarted", "SpawnCardScreen", function()
 	local cardscreen = ents.FindByClass("card_screen")[1]
 	cardscreen:SetPos(Vector(1225.0625, -4773.96875, 489.34375))
 	cardscreen:SetAngles(Angle(90.000, -90.000, 180))
@@ -494,7 +501,7 @@ hook.Add("RoundStarted", "SpawnCardScreen", function()
 	cardscreen:Activate()
 	print(cardscreen:GetPos())
 	print(cardscreen:GetAngles())
-end)
+end)*/
 
 /*hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len, ply)
 	net.Start("RRPS_VarDisconnect")
