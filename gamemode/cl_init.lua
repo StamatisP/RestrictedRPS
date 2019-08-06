@@ -89,6 +89,10 @@ function CreateGameFonts()
 	})
 end
 
+function CreateLanguages()
+	language.Add("table_tie", "This match ended in a tie! The match was ") // experiment with this in the future
+end
+
 local function keyUse()
 	if hook.Run("StartChat") then print("startchat true") return end
 	if gui.IsConsoleVisible() then return end
