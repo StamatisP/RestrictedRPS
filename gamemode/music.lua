@@ -51,7 +51,7 @@ musicPlaylist[6] = {
 }
 
 musicPlaylist[7] = {
-	song = "https://www.youtube.com/watch?v=OK0OmKLSgN0",
+	song = "https://www.youtube.com/watch?v=2OfQYRFIEAY",
 	title = "Line of Light",
 	luck = 80,
 	autoplay = false
