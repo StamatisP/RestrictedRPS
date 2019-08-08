@@ -268,14 +268,20 @@ local function CardChoiceGUI(enabled)
 		local confirmColor = Color(255, 255, 255, 255)
 		local defaultColor = Color(255, 255, 255, 150)
 		local frame = vgui.Create("DFrame")
+		local cardSpacing = 50
 		frame:SetSize(1075, 600)
-		frame:Center()
+		//frame:Center()
+		//print(frame:GetSize())
+		frame:SetPos((width / 2) - frame:GetSize() / 2, (height / 2) - frame:GetSize() / 1.8)
 		frame:SetVisible(true)
 		frame:ShowCloseButton(false)
-		frame:SetDraggable(true)
+		frame:SetDraggable(false)
 		frame:SetTitle("Check")
 		frame:MakePopup()
 		frame:SetKeyboardInputEnabled(false)
+		frame.Paint = function(self, w, h)
+
+		end
 
 		ChoiceTimer = draw.CreateCircle(CIRCLE_FILLED)
 		ChoiceTimer:SetRadius(35)
@@ -313,8 +319,8 @@ local function CardChoiceGUI(enabled)
 
 		local dButtonReady = vgui.Create("DButton", frame)
 		dButtonReady:SetText("Confirm Choice")
-		dButtonReady:SetPos((frame:GetWide() / 2) - 25, frame:GetTall() / 1.1)
-		dButtonReady:SetSize(100, 30)
+		dButtonReady:SetPos((frame:GetWide() / 2) - 100, frame:GetTall() / 1.1)
+		dButtonReady:SetSize(200, 60)
 		dButtonReady:SetEnabled(false)
 		dButtonReady.DoClick = function()
 			timer.Destroy("ChoiceTimeLimit")
@@ -511,7 +517,7 @@ net.Receive("TableSetPhase", function()
 
 	timer.Create("LowerTime", 1, phaseDelay, function()
 		timeLeft = timeLeft - 1
-		text:SetText(tostring(timeLeft))
+		//text:SetText(tostring(timeLeft))
 		if timeLeft <= 0 then
 			frame:Close()
 			timer.Destroy("LowerTime")

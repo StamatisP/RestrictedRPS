@@ -17,12 +17,22 @@ function OrbitCamera(p,a1,x)
 end
 
 function myCalcView(Player, Origin, Angles, FieldOfView)--LookAtPoint is where-ever you want to look at. 1000 is how far away you want the camera to be
-	if !Player:GetNWBool("TableView", false) then
+	//print(tableView)
+	if not tableView then
 		local view = {}
 		view.origin = Origin
 		view.angles = Angles
 		view.fov = FieldOfView
 		tableView = false
+		return view
+	elseif Player:GetNWBool("PlayingTable", false) then
+		local view = {}
+		local tableEnt = tableEnt or Player:GetNWEntity("TableUsing", NULL)
+		if not IsValid(tableEnt) then ErrorNoHalt("wtf table is null") return end
+		view.origin = tableEnt:LocalToWorld(Vector(-2, -90, 65)) // optimize this
+		view.angles = tableEnt:LocalToWorldAngles(Angle(0, 90, 0))
+		view.fov = FieldOfView
+		view.drawviewer = true
 		return view
 	else
 		local View = {};
@@ -39,8 +49,8 @@ hook.Add("CalcView", "CameraView", myCalcView)
 
 // problem here: pressing E makes you sometimes leave the table right when you enter it. the delay needs to be reset upon entering a table
 hook.Add("KeyRelease", "ExitTable", function(player, key)
-	if key != IN_USE || canExitTable == false then return end
-	if !LocalPlayer():GetNWBool("TableView") then print("tableview false") return end
+	if key != IN_USE or canExitTable == false then return end
+	if not LocalPlayer():GetNWBool("TableView") then print("tableview false") return end
 	if LocalPlayer():GetNWBool("PlayingTable", false) then print("playingtable true") return end
 	local timeElapsed = CurTime() - lastOccurrence
 	if timeElapsed < delay then
@@ -62,8 +72,14 @@ end)
 
 hook.Add("PlayerTableEnter", "PreventInstantExit", function()
 	canExitTable = false
+	tableView = true
 	timer.Simple(2, function()
 		canExitTable = true
 		print("can now exit table.")
 	end)
+end)
+
+hook.Add("PlayerTableExit", "UpdateCameraBack", function()
+	tableView = false
+	print("is htis even running")
 end)

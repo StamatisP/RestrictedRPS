@@ -150,6 +150,8 @@ net.Receive("AnnounceWinnerOfMatch", function(len, ply)
 	local player2Choice = net.ReadString()
 	local isTie = net.ReadBool()
 
+	hook.Run("PlayerTableExit")
+
 	if player1 != LocalPlayer():GetName() and player2 != LocalPlayer():GetName() then return end
 	if !isTie then 
 		chat.AddText(Color(0, 255, 0, 255), player1, Color(255, 255, 255, 255), " has beaten ", Color(255, 0, 0, 255), player2, Color(255, 255, 255, 255), ", with ", Color(0, 255, 0, 255), player1Choice, Color(255, 255, 255, 255), " vs ", Color(255, 0, 0, 255),  player2Choice .. ".")
@@ -190,6 +192,7 @@ net.Receive("PlayerTableUpdate", function()
 	else
 		hook.Run("PlayerTableLoss")
 	end
+	//hook.Run("PlayerTableExit")
 end)
 
 net.Receive("PlayerTableStatusUpdate", function()
