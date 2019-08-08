@@ -355,6 +355,7 @@ hook.Add("PlayerStartVoice", "QuietMusicSpeaking", function()
 	if isFading then return end
 	FadeOutMusic(vol / 1.5, 1, CLIP)*/
 	if not CLIP then return end
+	if isFading then return end
 	CLIP:setVolume(vol / 1.5)
 end)
 
@@ -363,5 +364,6 @@ hook.Add("PlayerEndVoice", "LouderMusicSpeaking", function()
 	if isFading then return end
 	FadeInMusic(vol * 1.5, 1, CLIP)*/
 	if not CLIP then return end
+	if isFading then return end
 	CLIP:setVolume(vol * 1.5)
 end)
