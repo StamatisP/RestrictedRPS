@@ -503,11 +503,11 @@ net.Receive("TableSetPhase", function()
 		draw.SimpleTextOutlined(tostring(timeLeft), "CardText", 0, 0, Color(255, 0, 0), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(255, 255, 255))
 	end
 
-	local text = vgui.Create("DLabel", frame)
+	/*local text = vgui.Create("DLabel", frame)
 	text:SetFont("CardText")
 	text:SetText(tostring(phaseDelay))
 	text:SetColor(Color(255, 0, 0))
-	text:SetSize(500, 500)
+	text:SetSize(500, 500)*/
 
 	timer.Create("LowerTime", 1, phaseDelay, function()
 		timeLeft = timeLeft - 1
