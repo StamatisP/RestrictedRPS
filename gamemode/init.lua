@@ -57,6 +57,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("PlayerTableStatusUpdate")
 	util.AddNetworkString("InventoryTrade")
 	util.AddNetworkString("UpdateCardScreen")
+	util.AddNetworkString("TableSetPhase")
 end
 
 local playermodels = {
@@ -98,10 +99,6 @@ local developerMode = false
 local pmeta = FindMetaTable("Player")
 local voiceDistance = 500 * 500
 local specSpawns = {}
-
-local startWeapons = {
-	"weapon_fists"
-}
 
 local function calcPlyCanHearPlayerVoice(listener)
 	if not IsValid(listener) then return end
@@ -161,7 +158,7 @@ function GM:PlayerSpawn(ply)
 			ply:UnSpectate()
 			ply:SetupHands()
 			ply:SetWalkSpeed(160)
-			ply:SetRunSpeed(320)
+			ply:SetRunSpeed(350)
 			ply:SetCrouchedWalkSpeed(0.4)
 			ply:SetAvoidPlayers(true)
 			ply:Give("weapon_fists")
@@ -192,7 +189,7 @@ function GM:PlayerSpawn(ply)
 		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
 		ply:SetupHands()
 		ply:SetWalkSpeed(150)
-		ply:SetRunSpeed(280)
+		ply:SetRunSpeed(320)
 		ply:SetCrouchedWalkSpeed(0.4)
 		ply:SetAvoidPlayers(true)
 		ply:SetTeam(3)
@@ -335,10 +332,19 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	//pm command
 	if (playerMsg[1] == "/pm") then
 		if not isstring(playerMsg[2]) then ply:ChatPrint("Usage: /pm \"player name\" \"message\"") return "" end
+		if not isstring(playerMsg[3]) then ply:ChatPrint("Usage: /pm \"player name\" \"message\"") return "" end
 		
+		local function AddAllMessages(pmtext)
+			local message = ""
+			for i = 3, #pmtext, 1 do
+				message = message .. " " .. pmtext[i]
+			end
+			return message
+		end // make this only initialize once
+
 		if FindPlayer(tostring(playerMsg[2])) then
 			net.Start("PrivateMessage")
-				net.WriteString(tostring(playerMsg[3]))
+				net.WriteString(tostring(AddAllMessages(playerMsg)))
 				net.WriteBool(false)
 				net.WriteString(ply:Nick())
 			net.Send(FindPlayer(tostring(playerMsg[2])))
@@ -352,11 +358,13 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 
 	if (playerMsg[1] == "/respawn") then
 		ply:SetPos(ents.FindByClass("info_player_start")[math.random(1, 10)])
+		return ""
 	end
 
 	if (playerMsg[1] == "/speccam") then
 		if not ply:IsSuperAdmin() or not developerMode then return "" end
 		GAMEMODE:PlayerSpawnAsSpectator(ply)
+		return ""
 	end
 
 	if (playerMsg[1] == "/dev") then

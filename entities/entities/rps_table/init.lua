@@ -76,7 +76,7 @@ function ENT:CheckPhase()
 	net.Start("PlayerTableCheckGUIEnable")
 	net.Send(self.playersTable)
 	// make timer for 30 seconds
-	timer.Create("TimeLimit", 30, 1, function()
+	timer.Create("TimeLimit", 31, 1, function()
 		self:CleanSlate()
 	end)
 end
@@ -118,19 +118,32 @@ function ENT:PlayerReadyCheck(name, ready)
 		self:SetPhase()
 	end
 
+	if player.GetCount() == 1 and ready then
+		self:SetPhase()
+		return
+	end
+
 end
 
 function ENT:SetPhase()
 	if !self:GetTableStarted() then return end
 	//card is placed down on table upside down
 	// you could bet here i guess, but thats for later
-	print("open phase!")
+	print("set phase!")
 	timer.Destroy("TimeLimit")
-	self:OpenPhase()
+	local setPhaseDelay = 3
+	net.Start("TableSetPhase")
+		net.WriteUInt(5, setPhaseDelay)
+	net.Send(self.playersTable)
+	timer.Simple(setPhaseDelay + 0.1, function()
+		self:OpenPhase()
+	end)
+	//self:OpenPhase()
 end
 
 function ENT:OpenPhase()
 	if !self:GetTableStarted() then return end
+	print("open phase")
 	if not self:GetPlayer1() || not self:GetPlayer2() then ErrorNoHalt("did someone disconnect? fuck em") return end
 	//cards are revealed, winner is decided
 	local _player1 = self:GetPlayer1()
@@ -260,6 +273,17 @@ function ENT:Use(activator, caller)
 
 	if (table.Count(self.playersTable) == 0) then
 		
+		if player.GetCount() == 1 then
+			self:SetPlayer1(activator)
+			self:SetPlayer2(activator)
+			table.insert(self.playersTable, activator)
+			print("dev path")
+			activator:SetNWBool("TableView", true)
+			net.Start("PlayerTableStatusUpdate")
+			net.Send(activator)
+			self:TableStart()
+			return
+		end
 		self:SetPlayer1(activator)
 		//table.insert(self.players, activator:GetName()) // why do we have two player tables...
 		table.insert(self.playersTable, activator)

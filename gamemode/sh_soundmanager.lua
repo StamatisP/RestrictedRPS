@@ -14,7 +14,7 @@ util.PrecacheSound("ambient/zawa7.wav")
 util.PrecacheSound("ambient/zawa8.wav")
 util.PrecacheSound("ambient/zawa9.wav")
 util.PrecacheSound("ambient/zawa10.wav")
-util.PrecacheSound("ambient/zawa11.wav")
+util.PrecacheSound("ambient/zawa11.wav") // use some file functions to do this automatically (sandbox stools, zombie survival)
 if CLIENT then
 	LoadedSounds = {} -- this table caches existing CSoundPatches
 	WinSounds = {}
@@ -89,6 +89,7 @@ end
 end)*/
 -- IDEA: A JUKEBOX LUA SCRIPT
 -- IT'S A CLIENTSIDE THING THAT RANDOMLY PICKS SONGS, OR YOU PICK THEM YOURSELF
+// oh younger me... if only you knew
 hook.Add("PlayerTableWin", "PlayWinSoundFX", function()
 	print("hook win!")
 	surface.PlaySound(WinSounds[math.random(#WinSounds)])

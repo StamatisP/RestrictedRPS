@@ -100,12 +100,15 @@ Network Strings
 		"PlayerTableStatusUpdate"
 		Called when player enters table.
 
+		"TableSetPhase"
+		Called when table enters set phase.
+
 	Client to Server
 		"StartGame"
 		Admin button to start the round.
 
 		"KEY_USE"
-		Called when player presses the E key. Useless?
+		Called when player presses the E key. Only used for inventory drop.
 
 		"ZawaPlay"
 		Plays a zawa sound on the clients position.

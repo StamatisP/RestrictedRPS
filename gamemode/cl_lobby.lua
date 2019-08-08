@@ -197,7 +197,7 @@ local function openLobby()
 		chromiumWarn:SetFont("CardText")
 		chromiumWarn:SetColor(Color(255, 0, 0))
 		chromiumWarn:SetPos(frame:GetWide() / 4, frame:GetTall() / 4)
-		chromiumWarn:SetText("You don't have Chromium! Make sure to switch to the Chromium branch for the best experience.")
+		chromiumWarn:SetText("You don't have Chromium! \nMake sure to switch to the Chromium branch \nfor the best experience.")
 	end
 
 	local discordButton = vgui.Create("DImageButton", frame)
@@ -258,7 +258,7 @@ end
 local function closeFrame()
 	if not IsValid(frame) then return end
 	print("frame closed")
-	print(frame)
+	//print(frame)
 	frame:Close()
 end
 
@@ -273,8 +273,6 @@ net.Receive("CloseLobby", function(len, ply)
 	timer.Destroy("AdminButton")
 	closeFrame()
 end)
-
-print("cl lobby load end")
 
 //net.Receive("OpenLobby", timer.Simple(2, openLobby))
 

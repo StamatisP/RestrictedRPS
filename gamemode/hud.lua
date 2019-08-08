@@ -489,3 +489,33 @@ function GM:HUDPaint()
     DrawInfo()
     DrawEntityDisplay()
 end
+
+net.Receive("TableSetPhase", function()
+	local phaseDelay = net.ReadUInt(5)
+	local frame = vgui.Create("DFrame")
+	frame:SetSize(500, 500)
+	frame:SetPos(width / 2, height / 6)
+	frame:ShowCloseButton(false)
+	frame:SetDraggable(false)
+	frame:SetTitle("")
+	frame.Paint = function(self, w, h)
+
+	end
+
+	local timeLeft = phaseDelay
+
+	local text = vgui.Create("DLabel", frame)
+	text:SetFont("CardText")
+	text:SetText(tostring(phaseDelay))
+	text:SetColor(Color(255, 0, 0))
+	text:SetSize(500, 500)
+
+	timer.Create("LowerTime", 1, phaseDelay, function()
+		timeLeft = timeLeft - 1
+		text:SetText(tostring(timeLeft))
+		if timeLeft <= 0 then
+			frame:Close()
+			timer.Destroy("LowerTime")
+		end
+	end)
+end)

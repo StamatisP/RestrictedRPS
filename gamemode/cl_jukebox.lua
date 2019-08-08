@@ -296,8 +296,10 @@ local function AutoPlaylist()
 end
 
 hook.Add("RoundStarted","JukeboxEnable",function()
-	timer.Create("AutoPlaylist", math.random(20, 40), 0, function()
-		CLIP = nil
+	local apDelay = math.random(20, 40)
+	timer.Create("AutoPlaylist", apDelay, 0, function()
+		apDelay = math.random(20, 40)
+		CLIP = nil // is this necessary?
 		//print("ap getting new song...")
 		math.randomseed(os.time())
 		AutoPlaylist()
@@ -312,9 +314,10 @@ concommand.Add("jukebox", JukeboxFrame)
 
 hook.Add("RoundEnded","JukeboxRoundEnded",function()
 	roundended = true
-	//FadeOutMusic(vol, 5, CLIP) i want a fadeout of the current song somehow...
-
-	PlayMusic(GetSpecificSong("Memories"))
+	FadeOutMusic(vol, 5, CLIP)
+	timer.Simple(6, function()
+		PlayMusic(GetSpecificSong("Memories"))
+	end)
 end)
 
 hook.Add("PlayerTableWin", "QuietMusic", function()
@@ -345,4 +348,20 @@ hook.Add("PlayerTableExit", "QuietMusicExit", function()
 	if not CLIP then return end
 	if isFading then return end
 	FadeOutMusic(vol / 1.5, 1, CLIP)
+end)
+
+hook.Add("PlayerStartVoice", "QuietMusicSpeaking", function()
+	/*if not CLIP then return end
+	if isFading then return end
+	FadeOutMusic(vol / 1.5, 1, CLIP)*/
+	if not CLIP then return end
+	CLIP:setVolume(vol / 1.5)
+end)
+
+hook.Add("PlayerEndVoice", "LouderMusicSpeaking", function()
+	/*if not CLIP then return end
+	if isFading then return end
+	FadeInMusic(vol * 1.5, 1, CLIP)*/
+	if not CLIP then return end
+	CLIP:setVolume(vol * 1.5)
 end)
