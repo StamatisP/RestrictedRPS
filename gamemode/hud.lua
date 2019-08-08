@@ -492,6 +492,7 @@ end
 
 net.Receive("TableSetPhase", function()
 	local phaseDelay = net.ReadUInt(5)
+	local timeLeft = phaseDelay
 	local frame = vgui.Create("DFrame")
 	frame:SetSize(500, 500)
 	frame:SetPos(width / 2, height / 6)
@@ -499,10 +500,8 @@ net.Receive("TableSetPhase", function()
 	frame:SetDraggable(false)
 	frame:SetTitle("")
 	frame.Paint = function(self, w, h)
-
+		draw.SimpleTextOutlined(tostring(timeLeft), "CardText", 0, 0, Color(255, 0, 0), TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(255, 255, 255))
 	end
-
-	local timeLeft = phaseDelay
 
 	local text = vgui.Create("DLabel", frame)
 	text:SetFont("CardText")

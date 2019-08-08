@@ -133,7 +133,7 @@ function ENT:SetPhase()
 	timer.Destroy("TimeLimit")
 	local setPhaseDelay = 3
 	net.Start("TableSetPhase")
-		net.WriteUInt(5, setPhaseDelay)
+		net.WriteUInt(setPhaseDelay, 5)
 	net.Send(self.playersTable)
 	timer.Simple(setPhaseDelay + 0.1, function()
 		self:OpenPhase()
