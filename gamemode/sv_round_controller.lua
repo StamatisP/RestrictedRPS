@@ -24,6 +24,7 @@ function GM:BeginRound()
 	SetGlobalFloat("roundstart", self.roundstart)
 	SetGlobalBool("IsRoundStarted", true)
 	print("beginning round!")
+
 	for k, v in pairs(players) do
 		// no more nwvars, they exponentially scale data
 		v:UpdatePlayerVar("rockcards", 4)
@@ -35,20 +36,20 @@ function GM:BeginRound()
 	end
 
 	timer.Create("PlayerStarsPunishment", 4, 0, function()
-	for k, ply in pairs(player.GetAll()) do
-		if ply:Team() != 2 and ply:Team() != 3 then
-			if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
-				if not ply:GetNWBool("Defeated", false) then 
-					ply:SetNWBool("Defeated", true)
-					//ply:ChatPrint(ply:Nick() .. " has been defeated!")
-					ChatPrintToAllPlayers(ply:Nick() .. " has been defeated!")
-					ply:SetNWInt("Luck", 0)
-					print(ply:Nick() .. " has been defeated!")
+		for k, ply in pairs(player.GetAll()) do
+			if ply:Team() != 2 and ply:Team() != 3 then
+				if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
+					if not ply:GetNWBool("Defeated", false) then 
+						ply:SetNWBool("Defeated", true)
+						//ply:ChatPrint(ply:Nick() .. " has been defeated!")
+						ChatPrintToAllPlayers(ply:Nick() .. " has been defeated!")
+						ply:SetNWInt("Luck", 0)
+						print(ply:Nick() .. " has been defeated!")
+					end
 				end
 			end
 		end
-	end
-end)
+	end)
 
 	timer.Create("PlayerWinCondition", 4, 0, function()
 		for k, ply in pairs(player.GetAll()) do
