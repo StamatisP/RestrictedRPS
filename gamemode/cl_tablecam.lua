@@ -31,7 +31,7 @@ function myCalcView(Player, Origin, Angles, FieldOfView)--LookAtPoint is where-e
 		if not IsValid(tableEnt) then ErrorNoHalt("wtf table is null") return end
 		view.origin = tableEnt:LocalToWorld(Vector(-2, -90, 65)) // optimize this
 		view.angles = tableEnt:LocalToWorldAngles(Angle(0, 90, 0))
-		view.fov = FieldOfView
+		view.fov = 75
 		view.drawviewer = true
 		return view
 	else

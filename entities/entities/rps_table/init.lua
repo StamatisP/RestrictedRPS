@@ -72,11 +72,13 @@ end
 function ENT:CheckPhase()
 	if !self:GetTableStarted() then return end
 	//players must select their card, do a net send/broadcast or something
+	local timeLimit = 7
 	print("check phase")
 	net.Start("PlayerTableCheckGUIEnable")
+		net.WriteUInt(timeLimit, 12)
 	net.Send(self.playersTable)
 	// make timer for 30 seconds
-	timer.Create("TimeLimit", 31, 1, function()
+	timer.Create("TimeLimit", timeLimit + 1, 1, function()
 		self:CleanSlate()
 	end)
 end
