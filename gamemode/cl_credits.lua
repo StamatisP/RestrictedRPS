@@ -45,6 +45,7 @@ local function CreditsMenu()
 		text:AppendText("Various Ideas and Functions: DarkRP (Falco)\n")
 		text:AppendText("Chair Functionality: Cinema\n")
 		text:AppendText("LED Screen Help: MacTavish\n")
+		text:AppendText("HUD Help: Loops and my Discord\n")
 
 		function text:PerformLayout()
 			self:SetFontInternal("ChatFont")

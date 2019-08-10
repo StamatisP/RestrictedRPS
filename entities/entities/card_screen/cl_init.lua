@@ -27,13 +27,13 @@ function DrawText(self,w,h)
 	draw.DrawText(rockCards, "InfoRUS4", -199, 1, Color(255, 255, 255), 1)
 	draw.DrawText(rockCards, "InfoRUS4", -200, 0, Color(255, 0, 0), 1)
 	
-	draw.DrawText("Paper", "InfoRUS3", 0, 80, Color(255, 200, 0), 1)
+	draw.DrawText("Paper", "InfoRUS3", 0, 80, Color(0, 100, 255), 1)
 	draw.DrawText(paperCards, "InfoRUS4", 1, 161, Color(255, 255, 255), 1)
-	draw.DrawText(paperCards, "InfoRUS4", 0, 160, Color(255, 200, 0), 1)
+	draw.DrawText(paperCards, "InfoRUS4", 0, 160, Color(0, 100, 255), 1)
 	
-	draw.DrawText("Scissors", "InfoRUS3", 200, -80, Color(0, 100, 255), 1)
+	draw.DrawText("Scissors", "InfoRUS3", 200, -80, Color(255, 200, 0), 1)
 	draw.DrawText(scissorsCards, "InfoRUS4", 201, 1, Color(255, 255, 255), 1)
-	draw.DrawText(scissorsCards, "InfoRUS4", 200, 0, Color(0, 100, 255), 1)
+	draw.DrawText(scissorsCards, "InfoRUS4", 200, 0, Color(255, 200, 0), 1)
 end
 	
 function ENT:Draw()
