@@ -361,7 +361,7 @@ local function CardChoiceGUI(enabled)
 		rockBorder:SetDraggable(false)
 		rockBorder:SetTitle("")
 		rockBorder.Paint = function(self, w, h)
-			draw.RoundedBox(8, 0, 0, w, h, Color(200, 200, 0))
+			draw.RoundedBox(8, 0, 0, w, h, Color(237, 135, 209))
 		end
 
 		local paperBorder = vgui.Create("DFrame", frame)
@@ -371,7 +371,7 @@ local function CardChoiceGUI(enabled)
 		paperBorder:SetDraggable(false)
 		paperBorder:SetTitle("")
 		paperBorder.Paint = function(self, w, h)
-			draw.RoundedBox(8, 0, 0, w, h, Color(200, 200, 0))
+			draw.RoundedBox(8, 0, 0, w, h, Color(95, 226, 246))
 		end
 
 		local scissorsBorder = vgui.Create("DFrame", frame)
@@ -381,7 +381,7 @@ local function CardChoiceGUI(enabled)
 		scissorsBorder:SetDraggable(false)
 		scissorsBorder:SetTitle("")
 		scissorsBorder.Paint = function(self, w, h)
-			draw.RoundedBox(8, 0, 0, w, h, Color(200, 200, 0))
+			draw.RoundedBox(8, 0, 0, w, h, Color(220, 232, 120))
 		end
 
 		local function SetButtonColors()
