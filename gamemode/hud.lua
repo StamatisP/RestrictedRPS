@@ -9,7 +9,7 @@ local papercards = 0
 local scissorscards = 0
 local stars = 0
 local _roundstart = false
-local rockmat, papermat, scissorsmat, timemat, zawamat
+local rockmat, papermat, scissorsmat, timemat, zawamat, feltmat
 local _curtimesubtract = nil
 local ChoiceTimer, totalTime
 local choiceTime = 0
@@ -262,15 +262,35 @@ function GM:Think()
 	compoundTimeLeft = compoundTimeRate - CurTime()
 end
 
+function draw.OutlinedBox( x, y, w, h, thickness, clr )
+	surface.SetDrawColor( clr )
+	for i=0, thickness - 1 do
+		surface.DrawOutlinedRect( x + i, y + i, w - i * 2, h - i * 2 )
+	end
+end // gmod wiki
+
 local function CardChoiceGUI(enabled)
 	if enabled then
 		local choice = nil
 		local dButtonRock, dButtonPaper, dButtonScissors
 		local confirmColor = Color(255, 255, 255, 255)
 		local defaultColor = Color(255, 255, 255, 150)
-		local frame = vgui.Create("DFrame")
 		local cardSpacing = 50
 		local guiScale = ScrW() / 1920
+
+		local bgFrame = vgui.Create("DFrame")
+		bgFrame:SetSize(845 / guiScale, 470 / guiScale)
+		bgFrame:CenterHorizontal()
+		bgFrame:SetPos(bgFrame:GetPos(), 390 / guiScale)
+		bgFrame:ShowCloseButton(false)
+		bgFrame:SetDraggable(false)
+		bgFrame:SetTitle("")
+		bgFrame.Paint = function(self, w, h)
+			//surface.SetDrawColor(131, 131, 7, 255)
+			draw.OutlinedBox(0, 0, w, h, 10, Color(131, 131, 7, 255))
+		end
+
+		local frame = vgui.Create("DFrame")	
 		frame:SetSize(825 / guiScale, 450 / guiScale)
 		//frame:Center()
 		//print(frame:GetSize())
@@ -283,7 +303,9 @@ local function CardChoiceGUI(enabled)
 		frame:MakePopup()
 		frame:SetKeyboardInputEnabled(false)
 		frame.Paint = function(self, w, h)
-
+			surface.SetDrawColor(255, 255, 255, 190)
+			surface.SetMaterial(feltmat)
+			surface.DrawTexturedRect(0, 0, w, h)
 		end
 
 		local timeText = vgui.Create("DFrame")
@@ -329,6 +351,7 @@ local function CardChoiceGUI(enabled)
 			net.SendToServer()
 			frame:Close()
 			timeText:Close()
+			bgFrame:Close()
 			// i need to write the entity that the player is looking at...
 		end)
 
@@ -352,6 +375,7 @@ local function CardChoiceGUI(enabled)
 			net.SendToServer()
 			frame:Close()
 			timeText:Close()
+			bgFrame:Close()
 		end
 
 		local rockBorder = vgui.Create("DFrame", frame)
@@ -524,6 +548,7 @@ hook.Add("RoundStarted", "roundstarthud", function()
 	papermat = Material("hud_paper.png")
 	scissorsmat = Material("hud_scissors.png")
 	timemat = Material("time_bg.png")
+	feltmat = Material("felt_bg.png")
 	//zawamat = Material("zawa")
 	timer.Create("UpdateMoney", 0.5, 0, UpdateMoney)
 	timer.Create("UpdateDebt", 0.5, 0, UpdateDebt)
