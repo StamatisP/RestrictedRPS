@@ -7,6 +7,7 @@ surface.CreateFont( "InfoRUS4", { font = "Enhanced Dot Digital-7", extended = tr
 local multiplier = 155
 local font = "InfoRUS2"
 local rockCards, paperCards, scissorsCards
+local roundtime = 0
 
 function ENT:Initialize()
 	self.frame = vgui.Create( "DPanel" )
@@ -22,18 +23,24 @@ function DrawText(self,w,h)
 	surface.DisableClipping( true )
 	surface.SetFont(font)
 	local ww,hh = surface.GetTextSize(self.Text)	
-	draw.DrawText("CARDS",font,0,-200,Color(self.col.x * 100, self.col.y * 100, self.col.z * 100),1)
-	draw.DrawText("Rock", "InfoRUS3", -200, -80, Color(255, 0, 0), 1)
-	draw.DrawText(rockCards, "InfoRUS4", -199, 1, Color(255, 255, 255), 1)
-	draw.DrawText(rockCards, "InfoRUS4", -200, 0, Color(255, 0, 0), 1)
+	draw.DrawText("TIME","InfoRUS2",0,-200,Color(255, 200, 0),1)
+	draw.DrawText(string.ToMinutesSeconds(roundtime), "InfoRUS4", 0, -100, Color(200, 200, 0), 1)
+	surface.SetDrawColor(Color(255, 200, 0))
+	surface.DrawRect(-350, 50, 350 * 2, 5)
+	surface.DrawRect(-100, 50, 5, 350)
+	surface.DrawRect(100, 50, 5, 350)
+
+	draw.DrawText("R", "InfoRUS3", -200, 80, Color(255, 0, 0), 1)
+	draw.DrawText(rockCards, "InfoRUS4", -199, 161, Color(255, 255, 255), 1)
+	draw.DrawText(rockCards, "InfoRUS4", -200, 160, Color(255, 0, 0), 1)
 	
-	draw.DrawText("Paper", "InfoRUS3", 0, 80, Color(0, 100, 255), 1)
+	draw.DrawText("P", "InfoRUS3", 0, 80, Color(0, 100, 255), 1)
 	draw.DrawText(paperCards, "InfoRUS4", 1, 161, Color(255, 255, 255), 1)
 	draw.DrawText(paperCards, "InfoRUS4", 0, 160, Color(0, 100, 255), 1)
 	
-	draw.DrawText("Scissors", "InfoRUS3", 200, -80, Color(255, 200, 0), 1)
-	draw.DrawText(scissorsCards, "InfoRUS4", 201, 1, Color(255, 255, 255), 1)
-	draw.DrawText(scissorsCards, "InfoRUS4", 200, 0, Color(255, 200, 0), 1)
+	draw.DrawText("S", "InfoRUS3", 200, 80, Color(255, 200, 0), 1)
+	draw.DrawText(scissorsCards, "InfoRUS4", 201, 161, Color(255, 255, 255), 1)
+	draw.DrawText(scissorsCards, "InfoRUS4", 200, 160, Color(255, 200, 0), 1)
 end
 	
 function ENT:Draw()
@@ -56,4 +63,12 @@ net.Receive("UpdateCardScreen", function()
 	rockCards = net.ReadUInt(9)
 	paperCards = net.ReadUInt(9)
 	scissorsCards = net.ReadUInt(9)
+end)
+
+hook.Add("RoundStarted", "UpdateRoundTimeScreen", function()
+	roundtime = GetConVar("rps_roundtime"):GetFloat()
+	timer.Create("CardScreenTick", 1, 0, function()
+		if roundtime == 0 then return end
+		roundtime = roundtime - 1	
+	end)
 end)

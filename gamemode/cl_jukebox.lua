@@ -314,10 +314,8 @@ concommand.Add("jukebox", JukeboxFrame)
 
 hook.Add("RoundEnded","JukeboxRoundEnded",function()
 	roundended = true
-	FadeOutMusic(vol, 5, CLIP)
-	timer.Simple(6, function()
-		PlayMusic(GetSpecificSong("Memories"))
-	end)
+	//FadeOutMusic(0, 2, CLIP)
+	PlayMusic(GetSpecificSong("Memories"))
 end)
 
 hook.Add("PlayerTableWin", "QuietMusic", function()

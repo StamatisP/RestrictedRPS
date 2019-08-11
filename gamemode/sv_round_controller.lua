@@ -76,7 +76,7 @@ end
 
 function AdjustRoundLength()
 	roundtime = (player.GetCount() * 70) 
-	if player.GetCount() == 1 then roundtime = 20000 end
+	//if player.GetCount() == 1 then roundtime = 20000 end
 	GetConVar("rps_roundtime"):SetInt(roundtime)
 	//SetGlobalInt("RoundTime", GetConVar("rps_roundtime"):GetInt())
 	//print(GetConVar("rps_roundtime"):GetInt())
@@ -134,7 +134,7 @@ function GM:EndRound()
 			local playerDebtSQL = ReturnPlayerVarSQL(v, "debt")
 
 			if (playerMoney > 0) then
-				playerMoney = playerMoney + v:ReturnPlayerVar("stars") * 300000
+				playerMoney = playerMoney + v:ReturnPlayerVar("stars") * 100000
 				v:UpdatePlayerVar("money", playerMoney)
 				local newdebt = playerMoney - playerDebt
 				//if v:GetNWBool("Defeated", false) then newdebt = newdebt + 2000000 end
@@ -146,6 +146,7 @@ function GM:EndRound()
 
 				if newdebt > 0 then 
 					// player has more money than debt
+					print("newdebt > 0")
 					UpdatePlayerVarSQL(v, newdebt + playerMoneySQL, "money") 
 					//UpdatePlayerVarSQL(v, playerDebt - newdebt, "debt")
 					UpdatePlayerVarSQL(v, playerDebtSQL - newdebt, "debt")
@@ -156,11 +157,12 @@ function GM:EndRound()
 
 				if newdebt < 0 then 
 					// player has more DEBT than money
+					print("newdebt < 0")
 					if playerMoneySQL - newdebt <= 0 then
 						UpdatePlayerVarSQL(v, 0, "money") // sets your money to 0 if you cant cover debt
 						UpdatePlayerVarSQL(v, playerDebtSQL + math.abs(newdebt), "debt")
 					else
-						UpdatePlayerVarSQL(v, playerMoneySQL - newdebt, "money")
+						UpdatePlayerVarSQL(v, playerMoneySQL + newdebt, "money")
 						// dont need to set debt here because you could cover debt
 					end
 					
