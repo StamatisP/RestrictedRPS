@@ -152,6 +152,7 @@ hook.Add("InitPostEntity", "SpecSpawnFill", function()
 end)
 
 function GM:PlayerSpawn(ply)
+	math.randomseed(os.time())
 	if self.round_status == 1 then
 		if ply:Team() == 2 then
 			print("making " .. ply:Nick() .. " a blacksuit during the round")
@@ -186,7 +187,7 @@ function GM:PlayerSpawn(ply)
 		//print(math.random(#specSpawns))
 		//print(#specSpawns)
 		ply:SetModel(playermodels[math.random(#playermodels)])
-		ply:SetPlayerColor(Vector(math.Rand(0.05, 1), math.Rand(0.05, 1), math.Rand(0.05, 1)))
+		ply:SetPlayerColor(Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1)))
 		ply:SetupHands()
 		ply:SetWalkSpeed(150)
 		ply:SetRunSpeed(320)
@@ -201,7 +202,7 @@ function GM:PlayerSpawn(ply)
 		ply:UnSpectate()
 		math.randomseed(os.time())
 		ply:SetModel(playermodels[math.random(#playermodels)])
-		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
+		ply:SetPlayerColor(Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1)))
 		ply:SetupHands()
 		ply:SetWalkSpeed(150)
 		ply:SetRunSpeed(280)
@@ -501,22 +502,6 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	return true
 end)
 
-/*hook.Add("RoundStarted", "SpawnCardScreen", function()
-	local cardscreen = ents.FindByClass("card_screen")[1]
-	cardscreen:SetPos(Vector(1225.0625, -4773.96875, 489.34375))
-	cardscreen:SetAngles(Angle(90.000, -90.000, 180))
-	cardscreen:SetText("Card Screen Bro")
-	cardscreen:Activate()
-	print(cardscreen:GetPos())
-	print(cardscreen:GetAngles())
-end)*/
-
-/*hook.Add("PlayerDisconnected", "DisconnectRRPSVars", function(len, ply)
-	net.Start("RRPS_VarDisconnect")
-		net.WriteUInt(ply:UserID(), 16)
-	net.Broadcast()
-end)*/
-
 function GM:PlayerDisconnected(ply)
 	local ent = ply:GetNWEntity("TableUsing", NULL)
 	if IsValid(ent) then
@@ -664,5 +649,3 @@ Curry = function(func, num_args)
       return func
    end
 end
-
-//MySQLite.initialize()

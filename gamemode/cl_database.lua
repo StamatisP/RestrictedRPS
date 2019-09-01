@@ -161,15 +161,19 @@ function inventoryMenu()
 
 					if k == "stars" then
 						buttons["Drop"] = (function()
-							inventoryDrop(k)
-							f:Close()
+							if v > 0 then
+								inventoryDrop(k)
+								f:Close()
+							end
 						end)
 					end
 					//print(k)
 
 					buttons["Trade"] = (function()
-						inventoryTrade(k)
-						f:Close()
+						if v > 0 then
+							inventoryTrade(k)
+							f:Close()
+						end
 					end)
 
 					local b = inventoryItemButton(k, i.name .. "(" .. v .. ")", v, i.description, i.model, items, i.buttonDist, buttons)

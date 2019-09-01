@@ -18,15 +18,9 @@ local lastOccurrence = -delay
 RoundStarted = false
 CompoundTimer = nil
 RoundTimer = nil
-//TablePlayerIsUsing = LocalPlayer():GetNWEntity("TableUsing", NULL) or nil
 local RRPSvars = {}
 local pmeta = FindMetaTable("Player")
 local _OLDSCRW
-
-MySelf = MySelf or NULL
-hook.Add("InitPostEntity", "GetLocal", function() 
-	MySelf = LocalPlayer()
-end)
 
 CreateClientConVar("rps_roundtime", 30, false, false, "Round time.")
 

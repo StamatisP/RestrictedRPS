@@ -1,6 +1,4 @@
 local ply = FindMetaTable("Player")
-// i should replace it all with util.tabletojson or somethin
-//util.AddNetworkString("inventory_use")
 print("sv_database load")
 
 function ply:ShortSteamID()
@@ -32,9 +30,9 @@ net.Receive("InventoryTrade", function(len, ply)
 	if ply:ReturnPlayerVar(item) >= 1 then
 		ply:TakeAwayFromPlayerVar(item, 1)
 		otherPly:TakeAwayFromPlayerVar(item, -1)
+		ply:ChatPrint("You have given " .. otherPly:Nick() .. " a " .. item)
+		otherPly:ChatPrint(ply:Nick() .. " has given you a " .. item)
 	end
-	ply:ChatPrint("You have given " .. otherPly:Nick() .. " a " .. item)
-	otherPly:ChatPrint(ply:Nick() .. " has given you a " .. item)
 end)
 
 local idd = 0

@@ -264,7 +264,6 @@ end
 
 net.Receive("CloseLobby", function(len, ply)
 	print("closelobby received")
-	--LocalPlayer():StopSound("little_zawa")
 	if (lobbysound ~= nil) then
 		lobbysound:FadeOut(2)
 	end
@@ -274,17 +273,6 @@ net.Receive("CloseLobby", function(len, ply)
 	closeFrame()
 end)
 
-//net.Receive("OpenLobby", timer.Simple(2, openLobby))
-
-/*hook.Add("InitPostEntity", "stupid_music", function()
-	if MySelf:IsValid() then
-		if GetGlobalBool("RoundStarted", false) then
-			return
-		end
-		openLobby()
-	end
-end)*/
-
 net.Receive("OpenLobby", function()
 	openLobby()
 end)
@@ -292,13 +280,6 @@ end)
 hook.Add("RoundStarted","LobbyStart", function()
 	_roundstart = true
 end)
-
-/*timer.Create("CheckRoundStart", 1, 0, function()
-	if _roundstart and not frame then 
-		closeFrame() 
-		timer.Destroy("CheckRoundStart")
-	end
-end)*/
 
 net.Receive("SendLeaderboardInfo", function()
 	local len = net.ReadUInt(16)
