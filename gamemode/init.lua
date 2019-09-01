@@ -93,7 +93,7 @@ resource.AddFile("materials/logo.png")*/
 resource.AddFile("DSMarkerFelt.ttf")
 resource.AddWorkshop("1694325066")
 
-CreateConVar("rps_roundtime", player.GetCount() * 30, FCVAR_REPLICATED + FCVAR_ARCHIVE + FCVAR_NOTIFY, "Amount of time it takes for RRPS round to end.")
+CreateConVar("rps_roundtime", player.GetCount() * 30, FCVAR_REPLICATED + FCVAR_ARCHIVE, "Amount of time it takes for RRPS round to end.")
 
 local developerMode = false
 local pmeta = FindMetaTable("Player")
@@ -186,7 +186,7 @@ function GM:PlayerSpawn(ply)
 		//print(math.random(#specSpawns))
 		//print(#specSpawns)
 		ply:SetModel(playermodels[math.random(#playermodels)])
-		ply:SetPlayerColor(Vector(math.Rand(0.1, 1), math.Rand(0.1, 1), math.Rand(0.1, 1)))
+		ply:SetPlayerColor(Vector(math.Rand(0.05, 1), math.Rand(0.05, 1), math.Rand(0.05, 1)))
 		ply:SetupHands()
 		ply:SetWalkSpeed(150)
 		ply:SetRunSpeed(320)

@@ -29,16 +29,17 @@ function DrawText(self,w,h)
 	surface.DrawRect(-350, 50, 350 * 2, 5)
 	surface.DrawRect(-100, 50, 5, 350)
 	surface.DrawRect(100, 50, 5, 350)
+	surface.DrawRect(-350, 130, 350 * 2, 5)
 
-	draw.DrawText("R", "InfoRUS3", -200, 80, Color(255, 0, 0), 1)
+	draw.DrawText("R", "InfoRUS3", -200, 60, Color(255, 0, 0), 1)
 	draw.DrawText(rockCards, "InfoRUS4", -199, 161, Color(255, 255, 255), 1)
 	draw.DrawText(rockCards, "InfoRUS4", -200, 160, Color(255, 0, 0), 1)
 	
-	draw.DrawText("P", "InfoRUS3", 0, 80, Color(0, 100, 255), 1)
+	draw.DrawText("P", "InfoRUS3", 0, 60, Color(0, 100, 255), 1)
 	draw.DrawText(paperCards, "InfoRUS4", 1, 161, Color(255, 255, 255), 1)
 	draw.DrawText(paperCards, "InfoRUS4", 0, 160, Color(0, 100, 255), 1)
 	
-	draw.DrawText("S", "InfoRUS3", 200, 80, Color(255, 200, 0), 1)
+	draw.DrawText("S", "InfoRUS3", 200, 60, Color(255, 200, 0), 1)
 	draw.DrawText(scissorsCards, "InfoRUS4", 201, 161, Color(255, 255, 255), 1)
 	draw.DrawText(scissorsCards, "InfoRUS4", 200, 160, Color(255, 200, 0), 1)
 end
@@ -66,9 +67,11 @@ net.Receive("UpdateCardScreen", function()
 end)
 
 hook.Add("RoundStarted", "UpdateRoundTimeScreen", function()
-	roundtime = GetConVar("rps_roundtime"):GetFloat()
-	timer.Create("CardScreenTick", 1, 0, function()
-		if roundtime == 0 then return end
-		roundtime = roundtime - 1	
+	timer.Simple(0.5, function()
+		roundtime = GetConVar("rps_roundtime"):GetFloat()
+		timer.Create("CardScreenTick", 1, 0, function()
+			if roundtime == 0 then return end
+			roundtime = roundtime - 1	
+		end)
 	end)
 end)

@@ -28,6 +28,8 @@ hook.Add("InitPostEntity", "GetLocal", function()
 	MySelf = LocalPlayer()
 end)
 
+CreateClientConVar("rps_roundtime", 30, false, false, "Round time.")
+
 function CreateGameFonts()
 	surface.CreateFont( "SongTitle", {
 		font = "Arial", -- Use the font-name which is shown to you by your operating system Font Viewer, not the file name

@@ -114,7 +114,7 @@ function inventoryMenu()
 		f:SetTitle("Inventory")
 		f:SetDraggable(true)
 		f:ShowCloseButton(true)
-		f:SetDeleteOnClose(false)
+		f:SetDeleteOnClose(true)
 		f:MakePopup()
 		f.Paint = function()
 			SKINS:DrawFrame(f:GetWide(), f:GetTall())
@@ -186,7 +186,8 @@ function inventoryMenu()
 		ps:AddSheet("Items", items,"icon16/box.png", false, false, "Your items are here...")
 		invOpen = true
 	else
-		f:ToggleVisible()
+		f:Close()
+		invOpen = false
 	end
 	
 end
