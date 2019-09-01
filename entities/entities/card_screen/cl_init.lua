@@ -67,11 +67,9 @@ net.Receive("UpdateCardScreen", function()
 end)
 
 hook.Add("RoundStarted", "UpdateRoundTimeScreen", function()
-	timer.Simple(0.5, function()
-		roundtime = GetConVar("rps_roundtime"):GetFloat()
-		timer.Create("CardScreenTick", 1, 0, function()
-			if roundtime == 0 then return end
-			roundtime = roundtime - 1	
-		end)
+	roundtime = GetConVar("rps_roundtime"):GetFloat()
+	timer.Create("CardScreenTick", 1, 0, function()
+		if roundtime == 0 then return end
+		roundtime = roundtime - 1	
 	end)
 end)
