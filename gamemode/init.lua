@@ -57,6 +57,7 @@ function GM:AddNetworkStrings()
 	util.AddNetworkString("InventoryTrade")
 	util.AddNetworkString("UpdateCardScreen")
 	util.AddNetworkString("TableSetPhase")
+	util.AddNetworkString("PlayYT")
 end
 
 local playermodels = {
@@ -439,6 +440,13 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		print(ply:Nick() .. " is victorious")
 		net.Start("AnnounceVictory")
    		net.Send(ply)
+		return ""
+	end
+	if (playerMsg[1] == "/playmusic") then
+		if not developerMode or not playerMsg[2] then return "" end
+		net.Start("PlayYT")
+			net.WriteString(playerMsg[2])
+		net.Broadcast()
 		return ""
 	end
 	if (playerMsg[1] == "/help") then

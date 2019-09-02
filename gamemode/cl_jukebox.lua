@@ -295,6 +295,13 @@ local function AutoPlaylist()
 	label:SetContentAlignment(5)
 end
 
+net.Receive("PlayYT", function()
+	local temptab = { }
+	temptab.song = net.ReadString()
+	temptab.title = "Custom"
+	PlayMusic(temptab)
+end)
+
 hook.Add("RoundStarted","JukeboxEnable",function()
 	local apDelay = math.random(20, 40)
 	timer.Create("AutoPlaylist", apDelay, 0, function()
