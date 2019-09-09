@@ -99,6 +99,7 @@ local developerMode = false
 local pmeta = FindMetaTable("Player")
 local voiceDistance = 500 * 500
 local specSpawns = {}
+local _roundStarted = false
 
 local function calcPlyCanHearPlayerVoice(listener)
 	if not IsValid(listener) then return end
@@ -123,6 +124,7 @@ hook.Add("PlayerDisconnected", "CanHearVoice", function(ply)
 end)
 
 function GM:PlayerCanHearPlayersVoice(listener, talker)
+	if not _roundStarted then return true, false end
 	if not talker:Alive() then return false end
 
 	local canHear = listener.CanHear and listener.CanHear[talker]
@@ -154,7 +156,7 @@ end)
 function GM:PlayerSpawn(ply)
 	math.randomseed(os.time())
 	if self.round_status == 1 then
-		if ply:Team() == 2 then
+		if ply:Team() == TEAM_BLACKSUITS then
 			print("making " .. ply:Nick() .. " a blacksuit during the round")
 			ply:UnSpectate()
 			ply:SetupHands()
@@ -187,13 +189,13 @@ function GM:PlayerSpawn(ply)
 		//print(math.random(#specSpawns))
 		//print(#specSpawns)
 		ply:SetModel(playermodels[math.random(#playermodels)])
-		ply:SetPlayerColor(Vector(math.Rand(0, 1), math.Rand(0, 1), math.Rand(0, 1)))
+		ply:SetPlayerColor(Vector(1, 1, 1))
 		ply:SetupHands()
 		ply:SetWalkSpeed(150)
 		ply:SetRunSpeed(320)
 		ply:SetCrouchedWalkSpeed(0.4)
 		ply:SetAvoidPlayers(true)
-		ply:SetTeam(3)
+		ply:SetTeam(TEAM_SPECTATORS_RRPS)
 		ply:SetPos(newpos:GetPos())
 		net.Start("CloseLobby")
 		net.Send(ply)
@@ -208,7 +210,7 @@ function GM:PlayerSpawn(ply)
 		ply:SetRunSpeed(280)
 		ply:SetCrouchedWalkSpeed(0.4)
 		ply:SetAvoidPlayers(true)
-		ply:SetTeam(1)
+		ply:SetTeam(TEAM_PLAYERS)
 		net.Start("OpenLobby")
 		net.Send(ply)
 	end
@@ -221,8 +223,8 @@ end
 function GM:PlayerInitialSpawn(ply) 
 	print("Player "..ply:Name().." has spawned.")
 	ply.RRPSvars = ply.RRPSvars or {}
-	if GetGlobalBool("IsRoundStarted", false) then
-		ply:SetTeam(3)
+	if _roundStarted then
+		ply:SetTeam(TEAM_SPECTATORS_RRPS)
 	end
 end
 
@@ -235,7 +237,7 @@ function GM:PlayerConnect(name, ip)
 end
 
 function GM:ShowHelp(ply)
-	if not GetGlobalBool("IsRoundStarted") then return end
+	if not _roundStarted then return end
 	ply:ConCommand("inventory")
 end
 
@@ -244,7 +246,7 @@ function GM:ShowTeam(ply)
 end
 
 function GM:ShowSpare1(ply)
-	if not GetGlobalBool("IsRoundStarted", false) then return end
+	if not _roundStarted then return end
 	ply:ConCommand("rps_buyout")
 end
 
@@ -321,7 +323,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 		for k, v in pairs(player.GetAll()) do
 			//if (v:databaseGetValue("rockcards") == nil) then ErrorNoHalt("what is goin on") return end
 			//print(v:inventoryGetItemAmount("rockcards"))
-			if v:Team() == 1 then 
+			if v:Team() == TEAM_PLAYERS then 
 				rockcardAmount = rockcardAmount + v:ReturnPlayerVar("rockcards")
 				papercardAmount = papercardAmount + v:ReturnPlayerVar("papercards")
 				scissorscardAmount = scissorscardAmount + v:ReturnPlayerVar("scissorscards")
@@ -421,7 +423,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/blacksuit") then
 		if not developerMode then return "" end
 		local newpos = ply:GetPos()
-		ply:SetTeam(2)
+		ply:SetTeam(TEAM_BLACKSUITS)
 		ply:SetPlayerColor(Vector(0, 0, 0))
 		ply:Spawn()
 		ply:SetPos(newpos)
@@ -430,7 +432,7 @@ hook.Add("PlayerSay", "CommandIdent", function(ply, text, team)
 	if (playerMsg[1] == "/becomeplayer") then
 		if not developerMode then return "" end
 		local newpos = ply:GetPos()
-		ply:SetTeam(1)
+		ply:SetTeam(TEAM_PLAYERS)
 		ply:Spawn()
 		ply:SetPos(newpos)
 	end
@@ -480,7 +482,7 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	//print(ent:GetName())
 
 	if (ent:GetName() == "upper_button") then
-		if not (ply:Team() == 2) and not (ply:GetNWBool("Victorious", false)) then
+		if not (ply:Team() == TEAM_BLACKSUITS) and not (ply:GetNWBool("Victorious", false)) then
 			//ply:ChatPrint("You cannot access the upper level until you are Victorious.")
 			//print("ply is not a blacksuit and not victorious")
 			return false
@@ -494,7 +496,7 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 
 	if (ent:GetClass() == "func_button") then
 		//print(ply:Team())
-		if not (ply:Team() == 2) then 
+		if not (ply:Team() == TEAM_BLACKSUITS) then 
 			//print("non-blacksuits cannot use") 
 			return false 
 		end
@@ -507,6 +509,10 @@ hook.Add("PlayerUse", "PreventUseTable", function(ply, ent)
 	end
 
 	return true
+end)
+
+hook.Add("RoundStarted", "isroundstart", function()
+	_roundStarted = true
 end)
 
 function GM:PlayerDisconnected(ply)

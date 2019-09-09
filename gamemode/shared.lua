@@ -10,6 +10,10 @@ local RRPSvars = {}
 local RRPSvarById = {}
 local _roundstart = false
 
+TEAM_PLAYERS = 1
+TEAM_BLACKSUITS = 2
+TEAM_SPECTATORS_RRPS = 3
+
 DeriveGamemode("base")
 
 function GM:Initialize()
