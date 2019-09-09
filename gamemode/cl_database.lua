@@ -102,6 +102,29 @@ local function inventoryTrade(item)
 	net.SendToServer()
 end
 
+local RockPanel = {}
+function RockPanel:Paint()
+	surface.SetDrawColor(255, 255, 255, 255)
+	surface.SetMaterial(Material("inv_rock.png"))
+	surface.DrawTexturedRect(0, 0, 171, 250)
+end
+local PaperPanel = {}
+function PaperPanel:Paint()
+	surface.SetDrawColor(255, 255, 255, 255)
+	surface.SetMaterial(Material("inv_paper.png"))
+	surface.DrawTexturedRect(0, 0, 171, 250)
+end
+local ScissorsPanel = {}
+function ScissorsPanel:Paint()
+	surface.SetDrawColor(255, 255, 255, 255)
+	surface.SetMaterial(Material("inv_scissors.png"))
+	surface.DrawTexturedRect(0, 0, 171, 250)
+end
+
+vgui.Register("RockPanel", RockPanel, "DPanel")
+vgui.Register("PaperPanel", PaperPanel, "DPanel")
+vgui.Register("ScissorsPanel", ScissorsPanel, "DPanel")
+
 function inventoryMenu()
 	if LocalPlayer():Team() == TEAM_SPECTATORS_RRPS then return end
 	if not invOpen then
@@ -122,32 +145,55 @@ function inventoryMenu()
 			Derma_DrawBackgroundBlur(s, s.startTime)
 		end
 
-		local _rocks = vgui.Create("DFrame", f)
-		_rocks:SetSize(20 + 171 * LocalPlayer():ReturnPlayerVar("rockcards"), 250)
-		_rocks:Center()
-		_rocks:SetDraggable(false)
-		_rocks:ShowCloseButton(false)
-		_rocks:SetDeleteOnClose(true)
-		_rocks:SetTitle("")
-		_rocks:SetKeyboardInputEnabled(false)
+		local numrocks = LocalPlayer():ReturnPlayerVar("rockcards")
+		local numpapers = LocalPlayer():ReturnPlayerVar("papercards")
+		local numscissors = LocalPlayer():ReturnPlayerVar("scissorscards")
+
+		local _rocks = vgui.Create("DIconLayout", f)
+		_rocks:SetSize((20 * numrocks) + (171 * numrocks), 250)
+		_rocks:SetPos(0, ScrH() / 8)
+		_rocks:CenterHorizontal(0.5)
+		_rocks:SetSpaceX(10)
+		_rocks:SetSpaceY(10)
 		_rocks.Paint = function(s, w, h)
 			draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,10))
 		end
-		for i = 1, LocalPlayer():ReturnPlayerVar("rockcards") do
-			local _rckcard = vgui.Create("DFrame", _rocks)
+		for i = 1, numrocks do
+			local _rckcard = _rocks:Add("RockPanel")
 			_rckcard:SetSize(171, 250)
-			_rckcard:SetPos((i * 171) - 171)
-			_rckcard:SetTitle("")
-			_rckcard:SetDraggable(false)
-			_rckcard:ShowCloseButton(false)
-			_rckcard:SetDeleteOnClose(true)
-			_rckcard:SetKeyboardInputEnabled(false)
-			_rckcard.Paint = function()
-				surface.SetDrawColor(255, 255, 255, 255)
-				surface.SetMaterial(Material("inv_rock.png"))
-				surface.DrawTexturedRect(0, 0, 171, 250)
-			end
+			//_rckcard:SetPos( ( (i * 171) - 171) + 20) // first card is at 10, second card is at 181
 		end
+
+		local _papers = vgui.Create("DIconLayout", f)
+		_papers:SetSize((20 * numpapers) + (171 * numpapers), 250)
+		_papers:Center()
+		_papers:SetSpaceX(10)
+		_papers:SetSpaceY(10)
+		_papers.Paint = function(s, w, h)
+			draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,10))
+		end
+		for i = 1, numpapers do
+			local _pprcard = _papers:Add("PaperPanel")
+			_pprcard:SetSize(171, 250)
+			//_pprcard:SetPos((i * 171) - 171 + 10)
+		end
+
+		local _scissors = vgui.Create("DIconLayout", f)
+		_scissors:SetSize((20 * numscissors) + (171 * numscissors), 250)
+		_scissors:SetPos(0, ScrH() * 0.6435)
+		_scissors:CenterHorizontal(0.5)
+		_scissors:SetSpaceX(10)
+		_scissors:SetSpaceY(10)
+		_scissors.Paint = function(s, w, h)
+			draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,10))
+		end
+		for i = 1, numscissors do
+			local _scrscard = _scissors:Add("ScissorsPanel")
+			_scrscard:SetSize(171, 250)
+			//_scrscard:SetPos((i * 171) - 171 + 10)
+		end
+
+
 		/*local w = 564
 		local h = 210
 
