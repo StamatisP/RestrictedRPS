@@ -105,7 +105,50 @@ end
 function inventoryMenu()
 	if LocalPlayer():Team() == TEAM_SPECTATORS_RRPS then return end
 	if not invOpen then
-		local w = 564
+		f = vgui.Create("DFrame")
+		f:SetSize(ScrW(), ScrH())
+		f:SetBackgroundBlur(true)
+		f:SetDraggable(false)
+		f:ShowCloseButton(false)
+		f:SetDeleteOnClose(true)
+		f:SetTitle("")
+		f:MakePopup()
+		f:SetKeyboardInputEnabled(false)
+		f.Init = function(s)
+			s.startTime = SysTime()
+		end
+		f.Paint = function(s, w, h)
+			draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0, 0))
+			Derma_DrawBackgroundBlur(s, s.startTime)
+		end
+
+		local _rocks = vgui.Create("DFrame", f)
+		_rocks:SetSize(20 + 171 * LocalPlayer():ReturnPlayerVar("rockcards"), 250)
+		_rocks:Center()
+		_rocks:SetDraggable(false)
+		_rocks:ShowCloseButton(false)
+		_rocks:SetDeleteOnClose(true)
+		_rocks:SetTitle("")
+		_rocks:SetKeyboardInputEnabled(false)
+		_rocks.Paint = function(s, w, h)
+			draw.RoundedBox(0,0,0,w,h,Color(0, 0, 0,10))
+		end
+		for i = 1, LocalPlayer():ReturnPlayerVar("rockcards") do
+			local _rckcard = vgui.Create("DFrame", _rocks)
+			_rckcard:SetSize(171, 250)
+			_rckcard:SetPos((i * 171) - 171)
+			_rckcard:SetTitle("")
+			_rckcard:SetDraggable(false)
+			_rckcard:ShowCloseButton(false)
+			_rckcard:SetDeleteOnClose(true)
+			_rckcard:SetKeyboardInputEnabled(false)
+			_rckcard.Paint = function()
+				surface.SetDrawColor(255, 255, 255, 255)
+				surface.SetMaterial(Material("inv_rock.png"))
+				surface.DrawTexturedRect(0, 0, 171, 250)
+			end
+		end
+		/*local w = 564
 		local h = 210
 
 		f = vgui.Create("DFrame")
@@ -154,10 +197,10 @@ function inventoryMenu()
 					//PrintTable(i)
 					local buttons = {}
 
-					/*buttons["use"] = (function()
-						//add use function here
-						f:Close()
-					end)*/
+					//buttons["use"] = (function()
+					//	//add use function here
+					//	f:Close()
+					//end)
 
 					if k == "stars" then
 						buttons["Drop"] = (function()
@@ -186,8 +229,9 @@ function inventoryMenu()
 		end
 
 		ItemButtons()
-
 		ps:AddSheet("Items", items,"icon16/box.png", false, false, "Your items are here...")
+		*/
+
 		invOpen = true
 	else
 		f:Close()
