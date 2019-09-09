@@ -94,8 +94,8 @@ end
 
 local function inventoryTrade(item)
 	local tr = LocalPlayer():GetEyeTrace()
-	if not tr.Entity then return end
-	if not tr.Entity:IsPlayer() then return end
+	if not tr.Entity then LocalPlayer():ChatPrint("You need to look at a player!") return end
+	if not tr.Entity:IsPlayer() then LocalPlayer():ChatPrint("You need to look at a player!") return end
 	net.Start("InventoryTrade")
 		net.WriteEntity(tr.Entity)
 		net.WriteString(tostring(item))
@@ -121,9 +121,9 @@ function ScissorsPanel:Paint()
 	surface.DrawTexturedRect(0, 0, 171, 250)
 end
 
-vgui.Register("RockPanel", RockPanel, "DPanel")
-vgui.Register("PaperPanel", PaperPanel, "DPanel")
-vgui.Register("ScissorsPanel", ScissorsPanel, "DPanel")
+vgui.Register("RockPanel", RockPanel, "DButton")
+vgui.Register("PaperPanel", PaperPanel, "DButton")
+vgui.Register("ScissorsPanel", ScissorsPanel, "DButton")
 
 function inventoryMenu()
 	if LocalPlayer():Team() == TEAM_SPECTATORS_RRPS then return end
@@ -160,7 +160,20 @@ function inventoryMenu()
 		end
 		for i = 1, numrocks do
 			local _rckcard = _rocks:Add("RockPanel")
+			_rckcard:SetText("")
 			_rckcard:SetSize(171, 250)
+			_rckcard.DoClick = function()
+				local opt = DermaMenu(_rckcard)
+				opt:AddOption("Trade", function()
+					if numrocks > 0 then
+						inventoryTrade("rockcards")
+						f:Close()
+						invOpen = false
+						//in the future this should revalidate the cards so you can keep trading without pressing f1 but im tired
+					end
+				end)
+				opt:Open()
+			end
 			//_rckcard:SetPos( ( (i * 171) - 171) + 20) // first card is at 10, second card is at 181
 		end
 
@@ -175,6 +188,18 @@ function inventoryMenu()
 		for i = 1, numpapers do
 			local _pprcard = _papers:Add("PaperPanel")
 			_pprcard:SetSize(171, 250)
+			_pprcard:SetText("")
+			_pprcard.DoClick = function()
+				local opt = DermaMenu(_pprcard)
+				opt:AddOption("Trade", function()
+					if numpapers > 0 then
+						inventoryTrade("papercards")
+						f:Close()
+						invOpen = false
+					end
+				end)
+				opt:Open()
+			end
 			//_pprcard:SetPos((i * 171) - 171 + 10)
 		end
 
@@ -190,6 +215,18 @@ function inventoryMenu()
 		for i = 1, numscissors do
 			local _scrscard = _scissors:Add("ScissorsPanel")
 			_scrscard:SetSize(171, 250)
+			_scrscard:SetText("")
+			_scrscard.DoClick = function()
+				local opt = DermaMenu(_scrscard)
+				opt:AddOption("Trade", function()
+					if numscissors > 0 then
+						inventoryTrade("scissorscards")
+						f:Close()
+						invOpen = false
+					end
+				end)
+				opt:Open()
+			end
 			//_scrscard:SetPos((i * 171) - 171 + 10)
 		end
 
