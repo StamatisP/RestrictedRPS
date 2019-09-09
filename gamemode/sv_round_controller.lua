@@ -37,7 +37,7 @@ function GM:BeginRound()
 
 	timer.Create("PlayerStarsPunishment", 4, 0, function()
 		for k, ply in pairs(player.GetAll()) do
-			if ply:Team() != 2 and ply:Team() != 3 then
+			if ply:Team() == TEAM_PLAYERS then
 				if ply:ReturnPlayerVar("stars") == 0 and not ply:GetNWBool("Defeated") then
 					if not ply:GetNWBool("Defeated", false) then 
 						ply:SetNWBool("Defeated", true)
@@ -54,7 +54,7 @@ function GM:BeginRound()
 	timer.Create("PlayerWinCondition", 4, 0, function()
 		for k, ply in pairs(player.GetAll()) do
 			//print(ply:Nick() .. " " .. ply:Team())
-			if ply:Team() != 2 and ply:Team() != 3 then
+			if ply:Team() == TEAM_PLAYERS then
 				if ply:ReturnPlayerVar("stars") >= 3 
 				and ply:ReturnPlayerVar("rockcards") == 0 
 				and ply:ReturnPlayerVar("papercards") == 0 
@@ -107,7 +107,7 @@ function CompoundInterest()
 	//PrintTable(players)
 	local body = 1 + GetConVar("rps_interestrate"):GetFloat()
 	for k, v in pairs(player.GetAll()) do// it don't gotta check all players...  ; edit from future: what the hell do you mean you don't have to
-		if v:Team() ~= 1 or v:GetNWBool("Victorious", false) then return end
+		if v:Team() ~= TEAM_PLAYERS or v:GetNWBool("Victorious", false) then return end
 		//print(body)
 		local money = v:ReturnPlayerVar("debt")
 		//print(money)
@@ -127,7 +127,7 @@ function GM:EndRound()
 	sql.Begin()
 	for k, v in pairs(player.GetAll()) do
 		if not v then ErrorNoHalt("what???") return end
-		if v:Team() == 1 then 
+		if v:Team() == TEAM_PLAYERS then 
 			local playerMoney = v:ReturnPlayerVar("money")
 			local playerMoneySQL = ReturnPlayerVarSQL(v, "money")
 			local playerDebt = v:ReturnPlayerVar("debt")

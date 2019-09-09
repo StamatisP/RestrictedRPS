@@ -103,7 +103,7 @@ local function inventoryTrade(item)
 end
 
 function inventoryMenu()
-	if LocalPlayer():Team() == 3 then return end
+	if LocalPlayer():Team() == TEAM_SPECTATORS_RRPS then return end
 	if not invOpen then
 		local w = 564
 		local h = 210
