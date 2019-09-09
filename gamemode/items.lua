@@ -71,7 +71,7 @@ items["stars"] = {
 	name = "Star",
 	description = "A velcro star.",
 	ent = "item_basic",
-	model = "models/props_junk/PopCan01a.mdl",
+	model = "models/star/star.mdl",
 	use = (function(ply, ent)
 		if ply:IsValid() then
 			//ply:AddHealth
