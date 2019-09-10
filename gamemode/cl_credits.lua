@@ -31,7 +31,7 @@ local function CreditsMenu()
 		text:InsertClickableTextEnd()
 
 		text:InsertClickableTextStart("OpenNanner")
-		text:AppendText("Table Model and Textures: NannerCoco\n")
+		text:AppendText("Table and Star Model and Textures: NannerCoco\n")
 		text:InsertClickableTextEnd()
 
 		text:AppendText("Music: Hideki Taniuchi\n")
