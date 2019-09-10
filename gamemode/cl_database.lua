@@ -31,14 +31,29 @@ local RockPanel = {}
 function RockPanel:Paint()
 	surface.SetDrawColor(255, 255, 255, 255)
 	surface.SetMaterial(Material("inv_rock.png"))
-	surface.DrawTexturedRect(0, 0, 171, 250)
+	if self:IsHovered() then
+		//surface.DrawTexturedRect(0, 0, 205, 300)
+		//draw.RoundedBox(8, -10, -10, 191, 270, Color(255, 191, 0, 200))
+		surface.DrawTexturedRect(0, 0, 171, 250)
+	else
+		surface.DrawTexturedRect(0, 0, 171, 250)
+	end
 end
+/*function RockPanel:Think()
+	if self:IsHovered() then
+		self:SetSize(205, 300)
+	else
+		self:SetSize(171, 250)
+	end
+end*/
+
 local PaperPanel = {}
 function PaperPanel:Paint()
 	surface.SetDrawColor(255, 255, 255, 255)
 	surface.SetMaterial(Material("inv_paper.png"))
 	surface.DrawTexturedRect(0, 0, 171, 250)
 end
+
 local ScissorsPanel = {}
 function ScissorsPanel:Paint()
 	surface.SetDrawColor(255, 255, 255, 255)
