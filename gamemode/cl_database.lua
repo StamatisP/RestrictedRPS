@@ -156,7 +156,6 @@ function inventoryMenu()
 				end)
 				opt:Open()
 			end
-			//_rckcard:SetPos( ( (i * 171) - 171) + 20) // first card is at 10, second card is at 181
 		end
 
 		local _papers = vgui.Create("DIconLayout", f)
@@ -182,7 +181,6 @@ function inventoryMenu()
 				end)
 				opt:Open()
 			end
-			//_pprcard:SetPos((i * 171) - 171 + 10)
 		end
 
 		local _scissors = vgui.Create("DIconLayout", f)
@@ -209,13 +207,7 @@ function inventoryMenu()
 				end)
 				opt:Open()
 			end
-			//_scrscard:SetPos((i * 171) - 171 + 10)
 		end
-
-		/*local plaque_bg = vgui.Create("DImage", f)
-		plaque_bg:SetSize((128 * 3) + 16, (128 * 2) + 16)
-		plaque_bg:SetPos(ScrW() / 20, ScrH() / 3)
-		plaque_bg:SetImage("star_plaque.png")*/
 
 		local star_plaque = vgui.Create("DIconLayout", f)
 		star_plaque:SetSize((128 * 3) + 16, (128 * 2) + 16)
@@ -233,56 +225,6 @@ function inventoryMenu()
 		for i = 1, numstars do
 			local _star = star_plaque:Add("StarsPanel")
 		end
-
-		/*local star_model = vgui.Create("DModelPanel", f)
-		star_model:SetSize(256, 256)
-		star_model:SetPos(ScrW() / 8)
-		star_model:CenterVertical(0.5)
-		star_model:SetModel("models/star/star.mdl")
-		local mn, mx = star_model.Entity:GetRenderBounds()
-		local size = 0
-		size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
-		size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
-		size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
-		star_model:SetFOV( 45 )
-		star_model:SetCamPos( Vector( size, size, size ) )
-		star_model:SetLookAt( ( mn + mx ) * 0.5 )
-		star_model.DoClick = function()
-			local opt = DermaMenu(star_model)
-			opt:AddOption("Trade", function()
-				if numstars > 0 then
-					inventoryTrade("stars")
-					f:Close()
-					invOpen = false
-				end
-			end)
-			opt:AddOption("Drop", function()
-				if numstars > 0 then
-					inventoryDrop("stars")
-					f:Close()
-					invOpen = false
-				end
-			end)
-			opt:Open()
-		end
-		function star_model:LayoutEntity(ent)
-			-- Point camera toward the look pos
-			local lookAng = ( self.vLookatPos-self.vCamPos ):Angle()
-			-- Set camera look angles
-			self:SetLookAng( lookAng )
-			-- Make entity rotate like normal
-			ent:SetAngles( Angle(0, RealTime()*30, 0 ) )
-		end
-
-		local starslabel = vgui.Create("DLabel", star_model)
-		starslabel:SetText("")
-		starslabel:SetSize(256, 256)
-		starslabel:SetContentAlignment(7)
-		starslabel:SetFont("CardText")
-		starslabel:SetColor(Color(255, 0, 0))
-		starslabel.Paint = function(s, w, h)
-			draw.SimpleTextOutlined(numstars, "CardText", 0, 0, Color(255, 191, 0, 255),TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(255, 255, 255, 255))
-		end*/
 
 		invOpen = true
 	else
