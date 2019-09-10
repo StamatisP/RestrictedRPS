@@ -61,9 +61,50 @@ function ScissorsPanel:Paint()
 	surface.DrawTexturedRect(0, 0, 171, 250)
 end
 
+local StarsPanel = {}
+function StarsPanel:Init()
+	self:SetSize(128, 128)
+	self:SetModel("models/star/star.mdl")
+	local mn, mx = self.Entity:GetRenderBounds()
+	local size = 0
+	size = math.max( size, math.abs( mn.x ) + math.abs( mx.x ) )
+	size = math.max( size, math.abs( mn.y ) + math.abs( mx.y ) )
+	size = math.max( size, math.abs( mn.z ) + math.abs( mx.z ) )
+	self:SetFOV( 45 )
+	self:SetCamPos( Vector( size, size, size ) )
+	self:SetLookAt( ( mn + mx ) * 0.5 )
+	self.DoClick = function()
+		local opt = DermaMenu(self)
+		opt:AddOption("Trade", function()
+			if numstars > 0 then
+				inventoryTrade("stars")
+				f:Close()
+				invOpen = false
+			end
+		end)
+		opt:AddOption("Drop", function()
+			if numstars > 0 then
+				inventoryDrop("stars")
+				f:Close()
+				invOpen = false
+			end
+		end)
+		opt:Open()
+	end
+	function self:LayoutEntity(ent)
+		-- Point camera toward the look pos
+		local lookAng = ( self.vLookatPos-self.vCamPos ):Angle()
+		-- Set camera look angles
+		self:SetLookAng( lookAng )
+		-- Make entity rotate like normal
+		ent:SetAngles( Angle(0, RealTime()*30, 0 ) )
+	end
+end
+
 vgui.Register("RockPanel", RockPanel, "DButton")
 vgui.Register("PaperPanel", PaperPanel, "DButton")
 vgui.Register("ScissorsPanel", ScissorsPanel, "DButton")
+vgui.Register("StarsPanel", StarsPanel, "DModelPanel")
 
 function inventoryMenu()
 	if LocalPlayer():Team() == TEAM_SPECTATORS_RRPS then return end
@@ -171,7 +212,29 @@ function inventoryMenu()
 			//_scrscard:SetPos((i * 171) - 171 + 10)
 		end
 
-		local star_model = vgui.Create("DModelPanel", f)
+		/*local plaque_bg = vgui.Create("DImage", f)
+		plaque_bg:SetSize((128 * 3) + 16, (128 * 2) + 16)
+		plaque_bg:SetPos(ScrW() / 20, ScrH() / 3)
+		plaque_bg:SetImage("star_plaque.png")*/
+
+		local star_plaque = vgui.Create("DIconLayout", f)
+		star_plaque:SetSize((128 * 3) + 16, (128 * 2) + 16)
+		star_plaque:SetPos(ScrW() / 20, ScrH() / 3)
+		print(star_plaque:GetSize())
+		star_plaque:SetSpaceX(8)
+		star_plaque:SetSpaceY(8)
+		star_plaque:SetStretchHeight(true)
+		star_plaque.Paint = function(s, w, h)
+			//draw.RoundedBox(0,0,0,w,h,Color(0, 255, 0,10))
+			surface.SetDrawColor(255, 255, 255, 255)
+			surface.SetMaterial(Material("star_plaque.png"))
+			surface.DrawTexturedRect(0, 0, w, h)
+		end
+		for i = 1, numstars do
+			local _star = star_plaque:Add("StarsPanel")
+		end
+
+		/*local star_model = vgui.Create("DModelPanel", f)
 		star_model:SetSize(256, 256)
 		star_model:SetPos(ScrW() / 8)
 		star_model:CenterVertical(0.5)
@@ -219,7 +282,7 @@ function inventoryMenu()
 		starslabel:SetColor(Color(255, 0, 0))
 		starslabel.Paint = function(s, w, h)
 			draw.SimpleTextOutlined(numstars, "CardText", 0, 0, Color(255, 191, 0, 255),TEXT_ALIGN_LEFT, TEXT_ALIGN_TOP, 2, Color(255, 255, 255, 255))
-		end
+		end*/
 
 		invOpen = true
 	else

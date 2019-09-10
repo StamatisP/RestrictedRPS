@@ -76,7 +76,7 @@ end
 
 function AdjustRoundLength()
 	roundtime = (player.GetCount() * 70) 
-	//if player.GetCount() == 1 then roundtime = 20000 end
+	if player.GetCount() == 1 then roundtime = 20000 end
 	GetConVar("rps_roundtime"):SetInt(roundtime)
 	//SetGlobalInt("RoundTime", GetConVar("rps_roundtime"):GetInt())
 	//print(GetConVar("rps_roundtime"):GetInt())
