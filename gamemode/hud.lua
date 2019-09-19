@@ -169,8 +169,7 @@ function InterpolateColor(startcolor, finishcolor, maxvalue, currentvalue, minva
 	local hsvFinish = ColorToHSV(startcolor)
 	minvalue = minvalue or 0
 	local hueLerp = Lerp(normalize(minvalue, maxvalue, currentvalue), hsvStart, hsvFinish)
-	local finalHsv = HSVToColor(hueLerp, 1, 1)
-	return finalHsv
+	return HSVToColor(hueLerp, 1, 1)
 end
 
 local function UpdateDebt()
